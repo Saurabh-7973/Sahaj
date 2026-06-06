@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/router/routes.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../../me/me_dashboard.dart';
 import '../../onboarding/onboarding_controller.dart';
 import '../../sessions/progress_controller.dart';
 
@@ -14,19 +15,14 @@ class MePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-
     return AppScaffold(
       title: 'Me',
       scrollable: true,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Progress, settings, and your plan live here.',
-            style: theme.textTheme.bodyMedium,
-          ),
-          const SizedBox(height: AppSpacing.lg),
+          const ProgressDashboard(),
+          const SizedBox(height: AppSpacing.xl),
           AppCard(
             padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
             child: Column(
