@@ -31,6 +31,19 @@ class ProgressController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// All stored session logs, decoded (empty when no log store).
+  List<SessionLog> logs() =>
+      (_logStore?.all() ?? const <Map<String, dynamic>>[])
+          .map(SessionLog.fromJson)
+          .toList();
+
+  /// Records a free-practice session: logs it but does NOT advance the plan
+  /// day (practice counts as activity, but never consumes a scheduled day).
+  void logPractice(SessionLog log) {
+    _logStore?.append(log.toJson());
+    notifyListeners();
+  }
+
   void reset() {
     state = const ProgressState();
     _store?.clear();
