@@ -39,6 +39,7 @@ class OnboardingController extends ChangeNotifier {
   final Map<String, int> baselineRaw = <String, int>{};
   final Map<String, int> mindBodyRaw = <String, int>{};
   bool complete = false;
+  bool biometricLock = false;
 
   // Derived/result state (computed on finish()).
   TriageResult? triage;
@@ -85,6 +86,11 @@ class OnboardingController extends ChangeNotifier {
     _persist();
   }
 
+  void setBiometricLock(bool v) {
+    biometricLock = v;
+    _persist();
+  }
+
   void setMedicalClearance(MedicalClearance c) {
     medicalClearance = c;
     _persist();
@@ -123,6 +129,7 @@ class OnboardingController extends ChangeNotifier {
     medicalClearance = null;
     plan = null;
     complete = false;
+    biometricLock = false;
     _store?.clear();
     notifyListeners();
   }
@@ -140,6 +147,7 @@ class OnboardingController extends ChangeNotifier {
         'mindBody': mindBodyRaw,
         'medicalClearance': medicalClearance?.name,
         'complete': complete,
+        'biometricLock': biometricLock,
       };
 
   void loadFrom(Map<String, dynamic> json) {
@@ -161,6 +169,7 @@ class OnboardingController extends ChangeNotifier {
     medicalClearance =
         _enumByName(MedicalClearance.values, json['medicalClearance'] as String?);
     complete = (json['complete'] as bool?) ?? false;
+    biometricLock = (json['biometricLock'] as bool?) ?? false;
     if (complete) finish(); // recompute triage + plan from stored answers
   }
 

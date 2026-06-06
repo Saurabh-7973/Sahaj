@@ -447,19 +447,13 @@ class PlanRevealPage extends ConsumerWidget {
 }
 
 // ── Screen 11: Privacy & discreet mode ───────────────────────────────────
-class PrivacyPage extends StatefulWidget {
+class PrivacyPage extends ConsumerWidget {
   const PrivacyPage({super.key});
 
   @override
-  State<PrivacyPage> createState() => _PrivacyPageState();
-}
-
-class _PrivacyPageState extends State<PrivacyPage> {
-  bool _biometric = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final c = ref.watch(onboardingControllerProvider);
     return OnbBody(
       children: [
         const OnbHeader(
@@ -486,8 +480,9 @@ class _PrivacyPageState extends State<PrivacyPage> {
                 ),
               ),
               Switch(
-                value: _biometric,
-                onChanged: (v) => setState(() => _biometric = v),
+                value: c.biometricLock,
+                onChanged: (v) =>
+                    ref.read(onboardingControllerProvider).setBiometricLock(v),
               ),
             ],
           ),

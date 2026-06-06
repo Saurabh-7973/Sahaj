@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/security/biometric_gate.dart';
 
 class SahajApp extends ConsumerWidget {
   const SahajApp({super.key});
@@ -16,6 +17,7 @@ class SahajApp extends ConsumerWidget {
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.dark,
       routerConfig: ref.watch(routerProvider),
+      builder: (context, child) => BiometricGate(child: child ?? const SizedBox.shrink()),
     );
   }
 }
