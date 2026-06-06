@@ -80,8 +80,8 @@ The existing `lib/features/home/tabs/me_page.dart` keeps its dev/settings tiles 
 
 ### 4. Library — `lib/features/library/`
 
-- `library_catalog.dart` — pure grouping: `Map<SessionType, List<SessionDef>> groupByType(SessionCatalog)` ordered for display (kegel+reverseKegel → "Exercises", breathwork → "Breathwork", mindset+sensate → "Practice", education → "Learn"). Group labels defined here.
-- `library_page.dart` — a `ConsumerWidget` for the Library tab: reads `sessionCatalogProvider`, lists grouped sessions as `AppCard`s (title, type, `~N min`), each tap → launches the **existing** player via `Navigator.push(SessionPlayerPage(session, onComplete))`. Free practice: completion here writes a `SessionLog` (so practice counts toward totals/metrics) but does **not** advance plan position (`currentDay`) — i.e. it logs without `advanceAfterCompletion`. Add `ProgressController.logPractice(SessionLog)` that appends to the log store + notifies, without touching `state`.
+- `lib/features/library/library_catalog.dart` — pure grouping: an ordered list of `(label, List<SessionDef>)` groups from a `SessionCatalog` (kegel+reverseKegel → "Exercises", breathwork → "Breathwork", mindset+sensate → "Practice", education → "Learn"); empty groups omitted. Group labels + order defined here.
+- The Library **tab** is the existing `lib/features/home/tabs/library_page.dart` (currently a `StatelessWidget` stub routed by `app_router.dart`). Convert it to a `ConsumerWidget`: read `sessionCatalogProvider`, render the grouped sessions as `AppCard`s (title, type, `~N min`), each tap → launch the **existing** player via `Navigator.push(SessionPlayerPage(session, onComplete))`. Free practice: completion here writes a `SessionLog` (so practice counts toward totals/metrics) but does **not** advance plan position (`currentDay`). Add `ProgressController.logPractice(SessionLog)` that appends to the log store + notifies, without touching `state`.
   - Rationale: practice should count as activity (and feed the dashboard) but must not consume a plan day. Keeps the daily-loop gating intact.
 - Library uses no mood check-in or reflection (free practice = just play). After the player pops, show a brief "Nice work" snackbar.
 
@@ -111,13 +111,12 @@ Created:
 - `lib/features/me/logic/progress_metrics.dart`
 - `lib/features/me/me_dashboard.dart`
 - `lib/features/library/library_catalog.dart`
-- `lib/features/library/library_page.dart`
 - Tests: `test/me/progress_metrics_test.dart`, `test/me/dashboard_widget_test.dart`, `test/library/library_catalog_test.dart`, `test/library/library_widget_test.dart`, plus `logs()`/`logPractice()` cases added to the sessions controller tests.
 
 Modified:
 - `lib/features/sessions/progress_controller.dart` — add `logs()` + `logPractice(SessionLog)`.
 - `lib/features/home/tabs/me_page.dart` — mount `ProgressDashboard` above existing tiles.
-- The Library tab host (the Phase 2 shell's Library branch / stub) — render `LibraryPage`.
+- `lib/features/home/tabs/library_page.dart` — replace stub with the grouped, playable catalog (already routed in `app_router.dart`; no router change).
 - `docs/CHANGELOG.md` — Phase 5 entry.
 
 ## Open defaults (locked unless changed)
