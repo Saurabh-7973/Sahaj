@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sahaj/features/sessions/logic/models/session_models.dart';
 import 'package:sahaj/features/sessions/progress_controller.dart';
 
 SessionLog _log() => SessionLog(
