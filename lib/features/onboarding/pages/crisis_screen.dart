@@ -18,6 +18,19 @@ class CrisisScreen extends StatelessWidget {
     ('AASRA', '9820466726'),
   ];
 
+  /// Opens the dialer for [number]. Best-effort and never throws — a crisis
+  /// screen must not crash if no dialer is available (e.g. a tablet).
+  Future<void> _dial(String number) async {
+    try {
+      await launchUrl(
+        Uri.parse('tel:$number'),
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (_) {
+      // Swallow: the number is also shown on screen to dial manually.
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -40,7 +53,7 @@ class CrisisScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: AppSpacing.md),
               child: AppCard(
-                onTap: () => launchUrl(Uri.parse('tel:${line.$2}')),
+                onTap: () => _dial(line.$2),
                 child: Row(
                   children: [
                     Icon(Icons.call_outlined, color: theme.colorScheme.primary),
