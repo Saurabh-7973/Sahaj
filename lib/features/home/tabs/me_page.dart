@@ -6,6 +6,7 @@ import '../../../core/router/routes.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../onboarding/onboarding_controller.dart';
+import '../../sessions/progress_controller.dart';
 
 /// Me tab — progress dashboard, settings, subscription (later phases).
 class MePage extends ConsumerWidget {
@@ -55,6 +56,7 @@ class MePage extends ConsumerWidget {
                   subtitle: 'Clear answers and replay the intake',
                   onTap: () {
                     ref.read(onboardingControllerProvider).reset();
+                    ref.read(progressControllerProvider).reset();
                     context.go(Routes.onboarding);
                   },
                 ),

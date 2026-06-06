@@ -137,3 +137,49 @@ Full logic layer wired into the existing onboarding shell.
 - **Drift layer** — structured session/log persistence; next phase.
 - **Platform config — `tel:` URI launch**: Android needs `<queries><intent><action android:name="android.intent.action.DIAL"/>` in `AndroidManifest.xml`; iOS needs `LSApplicationQueriesSchemes: [tel]` in `Info.plist`.
 - **Platform config — `local_auth`**: iOS needs `NSFaceIDUsageDescription` in `Info.plist`; Android needs `USE_BIOMETRIC` permission and `FlutterFragmentActivity` (not `FlutterActivity`) in `AndroidManifest.xml`.
+
+---
+
+## Phase 4 — Lean session player slice — 2026-06-06
+
+Full end-to-end daily loop: content catalog → scheduler → mood check-in → stepper player → reflection → progress/streak write-back.
+
+**JSON session content catalog** (`assets/content/sessions.json`, `lib/features/sessions/logic/catalog_parser.dart`, `session_catalog.dart`):
+- 13 modules covering the Foundation, Integration, and Mastery spines. Keyed by `moduleTag`; loaded at startup into `sessionCatalogProvider`.
+
+**Runtime scheduler** (`lib/features/sessions/logic/scheduler.dart`):
+- `todaysSession(plan:, week:, day:, catalog:)` — filters each week's tags to those present in the catalog, then selects by `(day − 1) % playable.length` with wraparound. Returns null on rest days or missing weeks.
+
+**Calendar-gated progress + streak** (`lib/features/sessions/logic/progress_logic.dart`, `progress_controller.dart`, `data/progress_store.dart`, `data/session_log_store.dart`):
+- `ProgressState` (currentWeek/currentDay/streak/longestStreak/lastCompletedDate) persisted in Hive.
+- `isDoneToday` gates repeat sessions within a calendar day.
+- `completeToday(SessionLog)` advances day/week counters, updates streak, writes the log entry.
+
+**Pre-session mood check-in** (`lib/features/sessions/pages/mood_checkin_sheet.dart`):
+- `showMoodCheckin(context)` — modal bottom sheet; up to 3 mood tags from `kCheckinMoods`. Returns null on dismiss (aborts the flow).
+
+**Stepper player** (`lib/features/sessions/pages/session_player_page.dart`):
+- Text/timer only (no audio). `AppProgressRing` per-step countdown, pause/prev/next controls. Calls `onComplete(1.0)` when last step finishes or user skips forward.
+
+**Post-session reflection + SessionLog** (`lib/features/sessions/pages/reflection_page.dart`):
+- `ReflectionPage` collects `PerceivedDifficulty` + optional blurred journal note; returns `ReflectionResult`. `SessionLog` written with start/end timestamps, completion fraction, mood tags, difficulty, and note.
+
+**Today daily loop** (`lib/features/home/tabs/today_page.dart`):
+- `TodayPage` rewritten: reads plan + progress state, resolves today's `SessionDef` via scheduler, renders session card or contextual state (no plan / rest day / done today). "Start session" triggers `_startFlow`: mood → player → reflection → `completeToday`. No log written on mid-session abandon (intentional — completion == 0.0 guard).
+- Removed `unnecessary_import` of `session_models.dart`; symbols resolve through `progress_controller.dart` re-export.
+
+**Dev reset extended** (`lib/features/home/tabs/me_page.dart`):
+- "Reset onboarding (dev)" tile now also calls `progressControllerProvider.reset()`, clearing week/day/streak/logs alongside the onboarding state.
+
+**Test** (`test/sessions/today_widget_test.dart`):
+- Smoke test: override `onboardingControllerProvider` + `sessionCatalogProvider`; confirms session card ("Know the ground") and "Start session" button render for a solo week-1 plan. Passes.
+
+### Deferred
+
+- **Real audio + lock-screen controls** — `just_audio` + `audio_service` integration; no audio assets yet.
+- **Firestore content sync** — catalog currently bundled as a static asset; remote CMS + delta sync deferred.
+- **Drift migration** — `SessionLog` and `ProgressState` written to Hive; Drift schema and migration deferred.
+- **Library / articles tab** — content rendering for the Library tab deferred.
+- **Analytics instrumentation** — Mixpanel event calls not wired to session completion or streak milestones.
+- **No log on mid-session abandon** — intentional design choice; partial-completion logging deferred.
+- **Platform `tel:`/biometric config** — still pending from Phase 3 (`AndroidManifest.xml` / `Info.plist` entries).
