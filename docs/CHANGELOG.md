@@ -221,3 +221,34 @@ Ships the two highest-value, data-driven pieces of roadmap Phase 5 using only ex
 - **Article / education text content** — Library "Learn" shows education-type sessions, not authored articles (none exist yet).
 - **Strength / IELT / hold-time sparklines** — no per-session quantitative scores captured yet; showing trends would be dishonest.
 - **Settings depth, discreet / Book mode, subscription card, About, search** — later phases.
+
+---
+
+## Privacy & Settings — discreet mode + data controls — 2026-06-06
+
+Builds the non-negotiable privacy layer (synthesis §9 ultra-discreet mode; §210 settings) as a Settings screen reachable from the Me tab. Logic is unit/widget-tested; genuinely device-only pieces are deferred.
+
+**Preferences** (`lib/data/preferences_store.dart`, `lib/features/settings/preferences_controller.dart`):
+- `PreferencesController` (Hive `preferences` box): `bookMode`, `disguiseName` (none/Calendar/Notes/Wellness), `notificationsEnabled`. Private-safe defaults (all off). `toJson`/`loadFrom`/`reset`, hydrated in `main.dart` via override.
+
+**Book Mode disguise** (`lib/features/settings/book_mode_cover.dart`, wraps `BiometricGate` in `app.dart`):
+- When on, the app opens into a plain "My Notes" reading screen; a discreet double-tap reveals the real app. In-app half of §9's book-mode disguise (native icon/name swap deferred).
+
+**Data export** (`lib/features/settings/logic/data_export.dart`):
+- `assembleExportJson(...)` — one pretty-printed JSON of onboarding + progress + session logs + preferences (pure, tested). Delivered via `share_plus` share sheet.
+
+**Delete everything** (`lib/features/settings/account.dart`):
+- `wipeAllData(...)` resets onboarding + progress + logs + preferences (clears every Hive box), two-tap confirm dialog, routes back to onboarding.
+
+**Settings screen** (`lib/features/settings/settings_page.dart`, entered from the Me tab's Privacy tile):
+- Sections: Lock (biometric), Disguise (Book Mode + app-name picker), Reminders (daily toggle), Your data (export / delete). Biometric reuses `OnboardingController.biometricLock`.
+
+**Platform config** (added alongside this work):
+- `AndroidManifest.xml`: `USE_BIOMETRIC` + `tel:` `DIAL` `<queries>`; `MainActivity` → `FlutterFragmentActivity`. Build-verified.
+
+### Deferred
+
+- **Native app-icon / name swap** (Android activity-alias) — disguise-name preference is captured; the OS-level swap is device work.
+- **OS notification scheduling** (`flutter_local_notifications`) — daily-reminder toggle persists intent only.
+- **Language switch** (Hindi) — Phase 2.
+- **Anonymous auth / encrypted cloud sync** — later.
