@@ -275,3 +275,26 @@ The "teach, don't shame" backbone: bundled psychoeducation articles in the Libra
 - **Search, tags, bookmarks, reading history** — later.
 - **Hindi** — Phase 2.
 - **CMS / content pipeline** — articles authored in-repo for now.
+
+---
+
+## Analytics — event instrumentation — 2026-06-06
+
+The roadmap funnel, instrumented from day one behind a testable seam.
+
+**Seam** (`lib/core/analytics/`):
+- `Analytics` interface + `NoopAnalytics` default (so tests/un-overridden reads never touch Firebase); `FirebaseAnalyticsService` forwards to `FirebaseAnalytics.instance` (wired only in `main.dart`); `analyticsProvider`.
+- `AppEvents` typed helpers (one method per event, snake_case names, list params comma-joined per Firebase rules) + `appEventsProvider`. Pure, TDD-covered against a `FakeAnalytics`.
+
+**Wired events** (from the UI layer only — pure logic stays Firebase-free):
+- `app_opened` at launch.
+- Onboarding finish: `persona_selected`, `goal_selected`, `plan_generated`, `health_screen_red_flag_fired` (per fired category), `onboarding_completed`.
+- Session loop (Today): `mood_checkin_completed`, `session_started` (type/week/day), `session_completed` (type/pct).
+- Settings: `data_exported`, `account_deleted`, `biometric_lock_enabled`.
+
+### Deferred
+
+- **Paywall / subscription events** — no paywall yet.
+- **Mixpanel cohort layer** — Firebase only for now.
+- **User properties** (`daysActive`, `hasPro`, `priceTier`) — need auth/subscription.
+- **A/B variant tagging**, `onboarding_abandoned` granularity — later.
