@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Baseline;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_spacing.dart';
 import '../../shared/widgets/widgets.dart';
 import 'baseline_questions.dart';
 import 'health_questions.dart';
+import 'logic/banding.dart';
+import 'logic/plan_generator.dart';
 import 'logic/triage.dart';
 import 'onboarding_controller.dart';
 import 'widgets/selectable_option.dart';
@@ -375,58 +377,72 @@ class MindBodyPage extends ConsumerWidget {
   }
 }
 
-// ── Screen 10: Plan reveal ───────────────────────────────────────────────
-class PlanRevealPage extends StatelessWidget {
+// ── Screen 10: Plan reveal ───────────────────────────────────────────
+class PlanRevealPage extends ConsumerWidget {
   const PlanRevealPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final c = ref.watch(onboardingControllerProvider);
+    final track = c.track ?? Track.solo;
+    final preview = generatePlan(
+      track: track,
+      goals: c.goals,
+      baseline: Baseline(
+        bands: {for (final e in c.baselineRaw.entries) e.key: bandFromIndex(e.value)},
+        raw: c.baselineRaw,
+      ),
+      mindBody: {for (final e in c.mindBodyRaw.entries) e.key: bandFromIndex(e.value)},
+    );
+    const phases = ['Foundation', 'Integration', 'Mastery'];
+    const blurb = {
+      'Foundation': 'Find the muscles, learn to relax them, build basic strength.',
+      'Integration': 'Connect breath, body, and arousal awareness.',
+      'Mastery': 'Apply the trained capacity to real situations.',
+    };
+
     return OnbBody(
       children: [
         const OnbHeader(
           title: 'Your 12-week plan',
-          body: 'Based on what you shared, here’s the shape of it.',
+          body: 'Based on what you shared, here\'s the shape of it.',
         ),
         const SizedBox(height: AppSpacing.xl),
-        _milestone(context, 'Weeks 1–4', 'Foundation',
-            'Find the muscles, learn to relax them, build basic strength.'),
-        _milestone(context, 'Weeks 5–8', 'Integration',
-            'Connect breath, body, and arousal awareness.'),
-        _milestone(context, 'Weeks 9–12', 'Mastery',
-            'Apply the trained capacity to real situations.'),
+        for (final phase in phases)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
+            child: AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Weeks ${_weekRange(preview, phase)}',
+                    style: theme.textTheme.labelMedium
+                        ?.copyWith(color: theme.colorScheme.primary),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(phase, style: theme.textTheme.titleLarge),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(blurb[phase]!, style: theme.textTheme.bodyMedium),
+                ],
+              ),
+            ),
+          ),
         const SizedBox(height: AppSpacing.lg),
         Text(
           'Roughly 65–80% of users see meaningful improvement by week 12 if '
           'they train 5+ days per week. 5–15 minutes a day.',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+          style: theme.textTheme.bodyMedium
+              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
       ],
     );
   }
 
-  Widget _milestone(
-      BuildContext context, String weeks, String title, String body) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: AppCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(weeks, style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.primary,
-            )),
-            const SizedBox(height: AppSpacing.xs),
-            Text(title, style: theme.textTheme.titleLarge),
-            const SizedBox(height: AppSpacing.xs),
-            Text(body, style: theme.textTheme.bodyMedium),
-          ],
-        ),
-      ),
-    );
+  String _weekRange(Plan p, String phase) {
+    final ws = p.weeks.where((w) => w.phase == phase).map((w) => w.number);
+    return '${ws.reduce((a, b) => a < b ? a : b)}–${ws.reduce((a, b) => a > b ? a : b)}';
   }
 }
 

@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../../onboarding/onboarding_controller.dart';
 
 /// Today tab — daily session + mood check-in (content lands in later phases).
-class TodayPage extends StatelessWidget {
+class TodayPage extends ConsumerWidget {
   const TodayPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final plan = ref.watch(onboardingControllerProvider).plan;
+    final subtitle = plan == null
+        ? 'Your plan is ready'
+        : 'Week 1 of ${plan.weeks.length} — ${plan.weeks.first.phase}';
 
     return AppScaffold(
       title: 'Today',
@@ -17,7 +23,7 @@ class TodayPage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Week 1 of 12 — finding the muscles',
+          Text(subtitle,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               )),
