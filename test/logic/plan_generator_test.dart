@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sahaj/features/onboarding/onboarding_controller.dart';
 import 'package:sahaj/features/onboarding/logic/plan_generator.dart';
-import 'package:sahaj/features/onboarding/logic/models/onboarding_models.dart';
 
 void main() {
   final emptyBaseline = const Baseline(bands: {}, raw: {});
