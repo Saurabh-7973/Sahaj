@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "699594600767",
+    "project_id": "sahaj-7973",
+    "storage_bucket": "sahaj-7973.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699594600767:android:cca495213d74149185638a",
+        "android_client_info": {
+          "package_name": "com.saurabh7973.sahaj"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5-xPOpKLOxmxJtIntDZTtvG7SgBCT75g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
