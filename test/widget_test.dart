@@ -45,7 +45,7 @@ void main() {
     // Switch to Library tab via its destination icon.
     await tester.tap(find.byIcon(Icons.menu_book_outlined));
     await tester.pumpAndSettle();
-    expect(find.text('Pelvic floor exercises'), findsOneWidget);
+    expect(find.text('Sessions will appear here.'), findsOneWidget);
 
     // Switch to Me tab.
     await tester.tap(find.byIcon(Icons.person_outline));
