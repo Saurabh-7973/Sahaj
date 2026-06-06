@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_spacing.dart';
 import '../../shared/widgets/widgets.dart';
+import 'baseline_questions.dart';
 import 'health_questions.dart';
 import 'logic/triage.dart';
 import 'onboarding_controller.dart';
@@ -310,40 +311,65 @@ class RedFlagPage extends ConsumerWidget {
   }
 }
 
-// ── Screen 8: Function baseline (placeholder shell) ──────────────────────
-class BaselinePage extends StatelessWidget {
+// ── Screen 8: Function baseline (track-driven battery) ───────────────────
+class BaselinePage extends ConsumerWidget {
   const BaselinePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const OnbBody(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = ref.watch(onboardingControllerProvider);
+    final questions =
+        c.track == Track.partnered ? partneredBaseline : soloBaseline;
+    return OnbBody(
       children: [
-        OnbHeader(
-          title: 'Where you’re starting from',
-          body:
-              'Next, a few calibrated questions about arousal control. This '
-              'gives us an honest baseline to measure your progress against. '
-              'The full battery arrives in the next build.',
+        const OnbHeader(
+          title: "Where you’re starting from",
+          body: 'An honest baseline so we can measure your progress.',
         ),
+        const SizedBox(height: AppSpacing.xl),
+        for (final q in questions) ...[
+          Text(q.prompt, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: AppSpacing.md),
+          for (var i = 0; i < q.options.length; i++)
+            SelectableOption(
+              label: q.options[i],
+              selected: c.baselineRaw[q.id] == i,
+              onTap: () =>
+                  ref.read(onboardingControllerProvider).setBaselineAnswer(q.id, i),
+            ),
+          const SizedBox(height: AppSpacing.lg),
+        ],
       ],
     );
   }
 }
 
-// ── Screen 9: Mind/body baseline (placeholder shell) ─────────────────────
-class MindBodyPage extends StatelessWidget {
+// ── Screen 9: Mind/body baseline (question-driven) ───────────────────────
+class MindBodyPage extends ConsumerWidget {
   const MindBodyPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const OnbBody(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = ref.watch(onboardingControllerProvider);
+    return OnbBody(
       children: [
-        OnbHeader(
+        const OnbHeader(
           title: 'Sleep, stress, and habits',
-          body:
-              'Five quick questions on sleep, stress, exercise, and habits '
-              'help us tune your plan. Coming in the next build.',
+          body: 'A few quick questions to tune your plan.',
         ),
+        const SizedBox(height: AppSpacing.xl),
+        for (final q in mindBodyQuestions) ...[
+          Text(q.prompt, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: AppSpacing.md),
+          for (var i = 0; i < q.options.length; i++)
+            SelectableOption(
+              label: q.options[i],
+              selected: c.mindBodyRaw[q.id] == i,
+              onTap: () =>
+                  ref.read(onboardingControllerProvider).setMindBodyAnswer(q.id, i),
+            ),
+          const SizedBox(height: AppSpacing.lg),
+        ],
       ],
     );
   }
