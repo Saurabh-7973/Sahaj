@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/analytics/events.dart';
 import '../../core/theme/app_motion.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../shared/widgets/widgets.dart';
@@ -67,7 +68,17 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
     }
 
     if (_index >= _steps.length - 1) {
-      ref.read(onboardingControllerProvider).finish();
+      final controller = ref.read(onboardingControllerProvider);
+      controller.finish();
+      final events = ref.read(appEventsProvider);
+      final persona = controller.persona?.name ?? 'unknown';
+      if (controller.persona != null) events.personaSelected(persona);
+      events.goalSelected(controller.goals.map((g) => g.name).toList());
+      events.planGenerated(persona, controller.goals.length);
+      for (final cat in controller.triage?.categories ?? const <TriageCategory>{}) {
+        events.redFlagFired(cat.name);
+      }
+      events.onboardingCompleted();
       return;
     }
     var target = _index + 1;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/analytics/events.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../onboarding/onboarding_controller.dart';
@@ -125,6 +126,15 @@ class TodayPage extends ConsumerWidget {
     final moods = await showMoodCheckin(context);
     if (moods == null || !context.mounted) return;
 
+    final events = ref.read(appEventsProvider);
+    final progressState = ref.read(progressControllerProvider).state;
+    events.moodCheckin(moods);
+    events.sessionStarted(
+      session.type.name,
+      progressState.currentWeek,
+      progressState.currentDay,
+    );
+
     final startedAt = DateTime.now();
     var completion = 0.0;
     await Navigator.of(context).push(
@@ -146,6 +156,8 @@ class TodayPage extends ConsumerWidget {
       ),
     );
     if (result == null || !context.mounted) return;
+
+    events.sessionCompleted(session.type.name, completion);
 
     ref.read(progressControllerProvider).completeToday(
           SessionLog(

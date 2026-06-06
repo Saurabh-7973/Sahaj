@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../core/analytics/events.dart';
 import '../../core/router/routes.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../shared/widgets/widgets.dart';
@@ -45,8 +46,10 @@ class SettingsPage extends ConsumerWidget {
               title: const Text('Biometric lock'),
               subtitle: const Text('Require fingerprint/face to open Sahaj'),
               value: onboarding.biometricLock,
-              onChanged: (v) =>
-                  ref.read(onboardingControllerProvider).setBiometricLock(v),
+                      onChanged: (v) {
+                ref.read(onboardingControllerProvider).setBiometricLock(v);
+                if (v) ref.read(appEventsProvider).biometricLockEnabled();
+              },
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
@@ -125,6 +128,7 @@ class SettingsPage extends ConsumerWidget {
       preferences: prefs.toJson(),
       exportedAt: DateTime.now(),
     );
+    ref.read(appEventsProvider).dataExported();
     await Share.share(json, subject: 'My Sahaj data');
   }
 
@@ -147,6 +151,7 @@ class SettingsPage extends ConsumerWidget {
       ),
     );
     if (ok != true || !context.mounted) return;
+    ref.read(appEventsProvider).accountDeleted();
     wipeAllData(
       onboarding: ref.read(onboardingControllerProvider),
       progress: ref.read(progressControllerProvider),
