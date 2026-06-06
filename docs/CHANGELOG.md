@@ -252,3 +252,26 @@ Builds the non-negotiable privacy layer (synthesis §9 ultra-discreet mode; §21
 - **OS notification scheduling** (`flutter_local_notifications`) — daily-reminder toggle persists intent only.
 - **Language switch** (Hindi) — Phase 2.
 - **Anonymous auth / encrypted cloud sync** — later.
+
+---
+
+## Education articles — Library Read section — 2026-06-06
+
+The "teach, don't shame" backbone: bundled psychoeducation articles in the Library.
+
+**Content** (`assets/content/articles.json`): 6 articles — How your pelvic floor works (Anatomy); Kegels and reverse Kegels, simply (Training); Breathing and arousal; The brain–erection connection; Porn, dopamine, and rebalancing; Performance anxiety, and why it eases (Mind & body). Calm, agency-over-shame voice; each ends with a "general education, not medical advice" note.
+
+**Model + parser** (`lib/features/library/logic/article.dart`, `article_parser.dart`): `Article` (slug/title/category/readMinutes/body markdown) + `parseArticles` (TDD).
+
+**Catalog** (`lib/features/library/article_catalog.dart`): `ArticleCatalog.load()` via rootBundle → `articleCatalogProvider`, loaded at startup in `main.dart`.
+
+**Reader** (`lib/features/library/pages/article_reader_page.dart`): `flutter_markdown` `MarkdownBody`, with a `category · ~N min read` header.
+
+**Library wiring**: a "Read" section at the top of the Library tab lists article cards (tap → reader). Catalog read guarded for widget tests.
+
+### Deferred
+
+- **Firestore article sync** — bundled asset for now.
+- **Search, tags, bookmarks, reading history** — later.
+- **Hindi** — Phase 2.
+- **CMS / content pipeline** — articles authored in-repo for now.
