@@ -1,5 +1,7 @@
 package com.saurabh7973.sahaj
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity : FlutterActivity()
+// FlutterFragmentActivity (not FlutterActivity) is required by local_auth so
+// biometric prompts can attach to a FragmentActivity host.
+class MainActivity : FlutterFragmentActivity()
