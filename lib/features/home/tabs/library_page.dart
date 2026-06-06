@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../../library/article_catalog.dart';
 import '../../library/library_catalog.dart';
+import '../../library/pages/article_reader_page.dart';
 import '../../sessions/pages/session_player_page.dart';
 import '../../sessions/progress_controller.dart';
 import '../../sessions/session_catalog.dart';
@@ -25,6 +27,14 @@ class LibraryPage extends ConsumerWidget {
     }
     final groups = catalog == null ? const <LibraryGroup>[] : groupLibrary(catalog);
 
+    ArticleCatalog? articleCatalog;
+    try {
+      articleCatalog = ref.watch(articleCatalogProvider);
+    } catch (_) {
+      articleCatalog = null;
+    }
+    final articles = articleCatalog?.articles ?? const [];
+
     return AppScaffold(
       title: 'Library',
       scrollable: true,
@@ -38,6 +48,42 @@ class LibraryPage extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
+          if (articles.isNotEmpty) ...[
+            Text('Read', style: theme.textTheme.titleMedium),
+            const SizedBox(height: AppSpacing.sm),
+            for (final article in articles)
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: AppCard(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => ArticleReaderPage(article: article),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(article.title,
+                                style: theme.textTheme.titleSmall),
+                            Text(
+                              '${article.category} - ~${article.readMinutes} min read',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.menu_book_outlined),
+                    ],
+                  ),
+                ),
+              ),
+            const SizedBox(height: AppSpacing.lg),
+          ],
           if (groups.isEmpty)
             AppCard(
               child: Text('Sessions will appear here.',

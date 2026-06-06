@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sahaj/features/home/tabs/library_page.dart';
+import 'package:sahaj/features/library/article_catalog.dart';
+import 'package:sahaj/features/library/logic/article.dart';
 import 'package:sahaj/features/sessions/logic/models/session_models.dart';
 import 'package:sahaj/features/sessions/session_catalog.dart';
 
@@ -23,6 +25,17 @@ void main() {
       ProviderScope(
         overrides: [
           sessionCatalogProvider.overrideWithValue(catalog),
+          articleCatalogProvider.overrideWithValue(
+            const ArticleCatalog([
+              Article(
+                slug: 'a',
+                title: 'How your pelvic floor works',
+                category: 'Anatomy',
+                readMinutes: 3,
+                body: 'body',
+              ),
+            ]),
+          ),
         ],
         child: const MaterialApp(home: LibraryPage()),
       ),
@@ -33,5 +46,7 @@ void main() {
     expect(find.text('Breathwork'), findsOneWidget);
     expect(find.text('Finding the muscles'), findsOneWidget);
     expect(find.text('Calm breathing'), findsOneWidget);
+    expect(find.text('Read'), findsOneWidget);
+    expect(find.text('How your pelvic floor works'), findsOneWidget);
   });
 }
