@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import 'app.dart';
+import 'core/analytics/analytics.dart';
+import 'core/analytics/events.dart';
+import 'core/analytics/firebase_analytics_service.dart';
 import 'data/onboarding_store.dart';
 import 'data/preferences_store.dart';
 import 'data/progress_store.dart';
@@ -46,6 +49,9 @@ Future<void> main() async {
   final savedPrefs = prefsStore.load();
   if (savedPrefs != null) preferences.loadFrom(savedPrefs);
 
+  final analytics = FirebaseAnalyticsService();
+  AppEvents(analytics).appOpened();
+
   runApp(
     ProviderScope(
       overrides: [
@@ -54,6 +60,7 @@ Future<void> main() async {
         sessionCatalogProvider.overrideWithValue(catalog),
         articleCatalogProvider.overrideWithValue(articleCatalog),
         preferencesControllerProvider.overrideWith((ref) => preferences),
+        analyticsProvider.overrideWithValue(analytics),
       ],
       child: const SahajApp(),
     ),
