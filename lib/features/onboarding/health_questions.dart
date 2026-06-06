@@ -64,4 +64,11 @@ const kHealthQuestions = <HealthQuestion>[
         'on edge?',
     options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'],
   ),
+  HealthQuestion(
+    id: 'self_harm',
+    prompt:
+        'Over the last 2 weeks, how often have you had thoughts that you '
+        'would be better off dead, or of hurting yourself?',
+    options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'],
+  ),
 ];

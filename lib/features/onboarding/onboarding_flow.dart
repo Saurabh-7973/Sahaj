@@ -7,6 +7,7 @@ import '../../shared/widgets/widgets.dart';
 import 'health_questions.dart';
 import 'onboarding_controller.dart';
 import 'onboarding_pages.dart';
+import 'pages/crisis_screen.dart';
 
 class _Step {
   const _Step(this.body, {this.cta = 'Continue'});
@@ -27,6 +28,7 @@ class OnboardingFlow extends ConsumerStatefulWidget {
 class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
   final _pageController = PageController();
   int _index = 0;
+  bool _showingCrisis = false;
 
   late final List<_Step> _steps = [
     const _Step(WelcomePage(), cta: 'Begin'),
@@ -50,6 +52,19 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
   }
 
   void _next() {
+    // Safety gate: intercept self-harm question with a positive answer.
+    final body = _steps[_index].body;
+    if (!_showingCrisis &&
+        body is HealthQuestionPage &&
+        body.question.id == 'self_harm') {
+      final a =
+          ref.read(onboardingControllerProvider).healthAnswers['self_harm'];
+      if (a != null && a > 0) {
+        setState(() => _showingCrisis = true);
+        return;
+      }
+    }
+
     if (_index >= _steps.length - 1) {
       ref.read(onboardingControllerProvider).finish();
       return;
@@ -72,6 +87,26 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
   Widget build(BuildContext context) {
     final progress = (_index + 1) / _steps.length;
 
+    return Stack(
+      children: [
+        _buildFlow(progress),
+        if (_showingCrisis)
+          Positioned.fill(
+            child: CrisisScreen(
+              onContinue: () {
+                setState(() => _showingCrisis = false);
+                _pageController.nextPage(
+                  duration: AppMotion.settle,
+                  curve: AppMotion.transition,
+                );
+              },
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildFlow(double progress) {
     return Scaffold(
       body: SafeArea(
         child: Column(
