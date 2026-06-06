@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../shared/widgets/widgets.dart';
 import 'health_questions.dart';
+import 'logic/triage.dart';
 import 'onboarding_controller.dart';
 import 'widgets/selectable_option.dart';
 
@@ -248,37 +249,61 @@ class HealthQuestionPage extends ConsumerWidget {
   }
 }
 
-// ── Screen 7: Red-flag triage (shown unconditionally in shell) ───────────
-class RedFlagPage extends StatelessWidget {
+// ── Screen 7: Red-flag triage (shown when triage has flags) ─────────────
+class RedFlagPage extends ConsumerWidget {
   const RedFlagPage({super.key});
 
+  static const _copy = {
+    TriageCategory.cardiac:
+        "Chest pain or breathlessness is worth a doctor’s check before any physical training.",
+    TriageCategory.metabolic:
+        'Unexplained weight loss or constant thirst can point to something treatable — a quick blood test is wise.',
+    TriageCategory.neuro:
+        'Pain, numbness, or tremors are worth ruling out with a doctor first.',
+    TriageCategory.organicErectile:
+        'A lack of morning erections can have a physical cause. A doctor can check before we train.',
+    TriageCategory.mentalHealth:
+        "How you’ve been feeling matters. Talking to a doctor or counsellor is a strong first step.",
+  };
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final c = ref.watch(onboardingControllerProvider);
+    final result = evaluate(c.healthAnswers);
+    final clearance = c.medicalClearance;
+
     return OnbBody(
       children: [
         const OnbHeader(
           title: 'A quick note on health',
           body:
-              'Some things are worth checking with a doctor before training. '
-              'We’re not a medical service, and we want you to be well first.',
+              "Some things are worth checking with a doctor before training. "
+              "We’re not a medical service, and we want you to be well first. "
+              'You can still use the free tier today.',
         ),
         const SizedBox(height: AppSpacing.xl),
-        AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('If anything you shared was new or unexplained',
-                  style: theme.textTheme.titleMedium),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                'A short visit to a doctor or a telehealth service (such as '
-                'Practo or a local clinic) is a good first step. We’ll be '
-                'here when you’re ready.',
-                style: theme.textTheme.bodyMedium,
-              ),
-            ],
+        for (final cat in result.categories)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
+            child: AppCard(
+              child: Text(_copy[cat]!, style: theme.textTheme.bodyMedium),
+            ),
           ),
+        const SizedBox(height: AppSpacing.sm),
+        SelectableOption(
+          label: "I’ll see a doctor first",
+          selected: clearance == MedicalClearance.notSeen,
+          onTap: () => ref
+              .read(onboardingControllerProvider)
+              .setMedicalClearance(MedicalClearance.notSeen),
+        ),
+        SelectableOption(
+          label: 'I understand — continue for now',
+          selected: clearance == MedicalClearance.proceedAnyway,
+          onTap: () => ref
+              .read(onboardingControllerProvider)
+              .setMedicalClearance(MedicalClearance.proceedAnyway),
         ),
       ],
     );

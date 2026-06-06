@@ -5,6 +5,7 @@ import '../../core/theme/app_motion.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../shared/widgets/widgets.dart';
 import 'health_questions.dart';
+import 'logic/triage.dart';
 import 'onboarding_controller.dart';
 import 'onboarding_pages.dart';
 import 'pages/crisis_screen.dart';
@@ -69,7 +70,14 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
       ref.read(onboardingControllerProvider).finish();
       return;
     }
-    _pageController.nextPage(
+    var target = _index + 1;
+    final controller = ref.read(onboardingControllerProvider);
+    if (_steps[target].body is RedFlagPage &&
+        !evaluate(controller.healthAnswers).hasFlags) {
+      target += 1; // skip red-flag page when triage has no flags
+    }
+    _pageController.animateToPage(
+      target,
       duration: AppMotion.settle,
       curve: AppMotion.transition,
     );
