@@ -46,7 +46,7 @@ class TodayPage extends ConsumerWidget {
           Text(
             plan == null
                 ? 'Finish onboarding to get your plan'
-                : 'Week $week of 12 — ${plan.weeks.first.phase}',
+                : 'Week $week of 12 — ${plan.weeks[(week - 1).clamp(0, plan.weeks.length - 1)].phase}',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
