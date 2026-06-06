@@ -182,4 +182,42 @@ Full end-to-end daily loop: content catalog → scheduler → mood check-in → 
 - **Library / articles tab** — content rendering for the Library tab deferred.
 - **Analytics instrumentation** — Mixpanel event calls not wired to session completion or streak milestones.
 - **No log on mid-session abandon** — intentional design choice; partial-completion logging deferred.
-- **Platform `tel:`/biometric config** — still pending from Phase 3 (`AndroidManifest.xml` / `Info.plist` entries).
+- **Platform `tel:`/biometric config** — still pending from Phase 3 (`AndroidManifest.xml` / `Info.plist` entries). *(Resolved post-Phase-4 — see below.)*
+
+---
+
+## Platform config — Android `tel:` + biometric — 2026-06-06
+
+- `AndroidManifest.xml`: added `USE_BIOMETRIC` permission and a `tel:` `DIAL` `<queries>` intent so the self-harm crisis screen can dial crisis lines and `local_auth` can prompt.
+- `MainActivity`: `FlutterActivity` → `FlutterFragmentActivity` (required by `local_auth`).
+- Verified with `flutter build apk --debug`.
+
+---
+
+## Phase 5 — Progress dashboard + Library — 2026-06-06
+
+Ships the two highest-value, data-driven pieces of roadmap Phase 5 using only existing data + content (no new authoring, no backend). The progress dashboard is the conversion lever (synthesis §12).
+
+**Controller read + practice API** (`lib/features/sessions/progress_controller.dart`):
+- `logs()` — decodes all stored `SessionLog`s from the log store.
+- `logPractice(SessionLog)` — records a free-practice session WITHOUT advancing the plan day (practice counts as activity but never consumes a scheduled day).
+
+**Progress metrics** (`lib/features/me/logic/progress_metrics.dart`):
+- `computeMetrics(logs:, progress:, phase:, now:)` → `ProgressMetrics`: total sessions, this-week count (last 7 days), streak/longest (passthrough from `ProgressState`), week/phase, easier/same/harder tallies. `hasData` gates the empty state. Clock injected for testability.
+
+**Me progress dashboard** (`lib/features/me/me_dashboard.dart`, mounted in `me_page.dart`):
+- Honest metrics from real logs — week status, this-week consistency dots (7), totals, collapsible streak card (synthesis §8: agency over shame — never the largest element). Graceful "appears after your first session" empty state.
+
+**Library grouping** (`lib/features/library/library_catalog.dart`):
+- `groupLibrary(SessionCatalog)` → ordered `LibraryGroup`s: Exercises (kegel/reverseKegel), Breathwork, Practice (mindset/sensate), Learn (education). Empty groups omitted, sessions sorted by title.
+
+**Library tab** (`lib/features/home/tabs/library_page.dart`):
+- Stub replaced with the grouped, playable catalog. Tap any session → existing `SessionPlayerPage` → `logPractice` on completion → "Nice work" snackbar. Free practice does not change the daily plan. Catalog read guarded for widget tests.
+
+**Tests:** `progress_metrics_test`, `library_catalog_test` (pure); `dashboard_widget_test`, `library_widget_test` (widget); `practice_logging_test` (controller read + practice-no-advance, real Hive). `widget_test.dart` smoke updated for the new Library empty-state text.
+
+### Deferred
+
+- **Article / education text content** — Library "Learn" shows education-type sessions, not authored articles (none exist yet).
+- **Strength / IELT / hold-time sparklines** — no per-session quantitative scores captured yet; showing trends would be dishonest.
+- **Settings depth, discreet / Book mode, subscription card, About, search** — later phases.
