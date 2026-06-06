@@ -82,3 +82,4 @@ flutter:
   generate: true
   assets:
     - assets/content/sessions.json
+    - assets/content/articles.json
