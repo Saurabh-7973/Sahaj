@@ -8,6 +8,7 @@ import '../../../shared/widgets/widgets.dart';
 import '../../me/me_dashboard.dart';
 import '../../onboarding/onboarding_controller.dart';
 import '../../sessions/progress_controller.dart';
+import '../../settings/settings_page.dart';
 
 /// Me tab — progress dashboard, settings, subscription (later phases).
 class MePage extends ConsumerWidget {
@@ -36,6 +37,12 @@ class MePage extends ConsumerWidget {
                 AppListTile(
                   leadingIcon: Icons.lock_outline,
                   title: 'Privacy & discreet mode',
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const SettingsPage(),
+                    ),
+                  ),
                 ),
                 const Divider(),
                 AppListTile(
