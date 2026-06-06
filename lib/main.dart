@@ -5,7 +5,11 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import 'app.dart';
 import 'data/onboarding_store.dart';
+import 'data/progress_store.dart';
+import 'data/session_log_store.dart';
 import 'features/onboarding/onboarding_controller.dart';
+import 'features/sessions/progress_controller.dart';
+import 'features/sessions/session_catalog.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -15,25 +19,29 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // TODO(phase0-sentry): wrap runApp in SentryFlutter.init when DSN provided.
-  //   await SentryFlutter.init((o) => o.dsn = '...', appRunner: () => runApp(...));
-  //
-  // TODO(phase0-mixpanel): init Mixpanel with token when account created.
-  //   await Mixpanel.init('TOKEN', trackAutomaticEvents: false);
-  //
-  // TODO(phase0-revenuecat): configure Purchases with API key when set up.
-  //   await Purchases.configure(PurchasesConfiguration('REVENUECAT_KEY'));
-
   await Hive.initFlutter();
+
+  // Onboarding (Phase 2/3)
   final store = await OnboardingStore.open();
   final controller = OnboardingController(store);
   final saved = store.load();
   if (saved != null) controller.loadFrom(saved);
 
+  // Sessions (Phase 4)
+  final progressStore = await ProgressStore.open();
+  final logStore = await SessionLogStore.open();
+  final progress = ProgressController(progressStore, logStore);
+  final savedProgress = progressStore.load();
+  if (savedProgress != null) progress.loadFrom(savedProgress);
+
+  final catalog = await SessionCatalog.load();
+
   runApp(
     ProviderScope(
       overrides: [
         onboardingControllerProvider.overrideWith((ref) => controller),
+        progressControllerProvider.overrideWith((ref) => progress),
+        sessionCatalogProvider.overrideWithValue(catalog),
       ],
       child: const SahajApp(),
     ),
