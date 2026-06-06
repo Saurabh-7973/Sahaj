@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/router/routes.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/widgets.dart';
-import 'package:go_router/go_router.dart';
+import '../../onboarding/onboarding_controller.dart';
 
 /// Me tab — progress dashboard, settings, subscription (later phases).
-class MePage extends StatelessWidget {
+class MePage extends ConsumerWidget {
   const MePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
     return AppScaffold(
@@ -45,6 +47,16 @@ class MePage extends StatelessWidget {
                   subtitle: 'Review Phase 1 widgets',
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => context.go(Routes.showcase),
+                ),
+                const Divider(),
+                AppListTile(
+                  leadingIcon: Icons.restart_alt,
+                  title: 'Reset onboarding (dev)',
+                  subtitle: 'Clear answers and replay the intake',
+                  onTap: () {
+                    ref.read(onboardingControllerProvider).reset();
+                    context.go(Routes.onboarding);
+                  },
                 ),
               ],
             ),

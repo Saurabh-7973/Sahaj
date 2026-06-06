@@ -79,3 +79,61 @@ Navigation shell only — no persona-routing, red-flag triage, or baseline scori
 ### Next
 
 Phase 3 (roadmap Weeks 3-4) — persona-routing logic, health red-flag triage (most important: be conservative), baseline assessment battery (PEDT / IIEF-5 / Persona Zero), rule-based plan generation, onboarding persistence (Hive). Then Drift data layer.
+
+---
+
+## Phase 3 — Onboarding logic + plan generation — 2026-06-06
+
+Full logic layer wired into the existing onboarding shell.
+
+**Hive persistence** (`lib/data/onboarding_store.dart`):
+- `OnboardingStore` wraps a Hive box; `save(json)` / `clear()` / `load()`.
+- `OnboardingController` accepts an optional `OnboardingStore`; `_persist()` called on every mutation. State survives relaunch.
+
+**Self-harm safety + crisis interrupt** (Task 3):
+- Health question `selfHarm` added to `health_questions.dart` (Q9, always shown).
+- `CrisisScreen` — full-screen interrupt shown immediately when the user reports self-harm thoughts. Lists India crisis resources: Tele-MANAS (14416), iCall (9152987821), AASRA (9820466627). Onboarding cannot advance past this screen; a "I am safe, continue" path is provided.
+
+**Conservative red-flag triage** (`lib/features/onboarding/logic/triage.dart`):
+- `evaluate(healthAnswers)` returns `TriageResult` listing zero or more `RedFlag` categories: `organicErectile`, `metabolic`, `cardiac`, `mentalHealth`.
+- Conservative thresholds: cardiac flags at "sometimes" (not just "often"); each category tested independently.
+- Fully TDD: 6 unit tests covering clean answers, individual flag triggers, and combined flags.
+
+**Conditional clearance page** (`lib/features/onboarding/pages/red_flag_page.dart`):
+- Shown only when `triage.hasFlags`. Category-specific copy per flag set. User must acknowledge before proceeding; `MedicalClearance` enum recorded.
+
+**Persona → content track routing** (`OnboardingController.track`):
+- `partneredActive` / `partneredInactive` → `Track.partnered`.
+- All solo/prefer-not-to-say options → `Track.solo`.
+
+**Baseline battery + banding** (`lib/features/onboarding/logic/`):
+- `banding.dart` — `bandFromIndex(i)`: 0 → low, 1 → medium, ≥2 → high. Used for baseline and mind/body scores.
+- `BaselinePage` — persona-calibrated questions wired through `setBaselineAnswer`.
+- `MindBodyPage` — coarse banding of physical/mental wellbeing answers.
+
+**Rule-based 12-week plan generation** (`lib/features/onboarding/logic/plan_generator.dart`):
+- `generatePlan(track, goals, baseline, mindBody)` → `Plan` with 12 `PlanWeek` entries across 3 phases (foundation / build / integrate, 4 weeks each).
+- Goal-specific emphasis: `finishTooQuick` adds stop-start focus; `hardness` adds arousal work; `partneredActive` adds couples exercises.
+- Difficulty seeded from baseline band (low → gentle, high → challenging).
+- TDD: 4 unit tests.
+
+**Live plan reveal + Today tab wiring**:
+- `PlanRevealPage` — animated week-by-week reveal of the generated plan. `OnboardingController.finish()` called here.
+- Today tab (`TodayPage`) reads `plan` from the controller and renders the current week's session summary.
+
+**Biometric app lock** (`lib/features/onboarding/pages/biometric_page.dart`):
+- Opt-in toggle using `local_auth`. `setBiometricLock(bool)` stored in controller + persisted.
+- Gate at app resume checks `biometricLock` before rendering shell (platform integration still required — see Deferred).
+
+**Dev reset action** (`lib/features/home/tabs/me_page.dart`):
+- `MePage` converted to `ConsumerWidget`.
+- New tile "Reset onboarding (dev)": calls `onboardingControllerProvider.reset()` then navigates to `/onboarding`, allowing full replay without reinstalling.
+
+### Deferred
+
+- **Full discreet / Book Mode** — visual camouflage layer; deferred to Phase 5.
+- **Pro-purchase enforcement of medical clearance** — RevenueCat integration; Phase 6.
+- **Clinical PEDT / IIEF-5 scoring** — validated instrument scoring and result interpretation; Phase 4+.
+- **Drift layer** — structured session/log persistence; next phase.
+- **Platform config — `tel:` URI launch**: Android needs `<queries><intent><action android:name="android.intent.action.DIAL"/>` in `AndroidManifest.xml`; iOS needs `LSApplicationQueriesSchemes: [tel]` in `Info.plist`.
+- **Platform config — `local_auth`**: iOS needs `NSFaceIDUsageDescription` in `Info.plist`; Android needs `USE_BIOMETRIC` permission and `FlutterFragmentActivity` (not `FlutterActivity`) in `AndroidManifest.xml`.
