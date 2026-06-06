@@ -10,6 +10,7 @@ import 'data/progress_store.dart';
 import 'data/session_log_store.dart';
 import 'features/onboarding/onboarding_controller.dart';
 import 'features/sessions/progress_controller.dart';
+import 'features/library/article_catalog.dart';
 import 'features/sessions/session_catalog.dart';
 import 'features/settings/preferences_controller.dart';
 import 'firebase_options.dart';
@@ -37,6 +38,7 @@ Future<void> main() async {
   if (savedProgress != null) progress.loadFrom(savedProgress);
 
   final catalog = await SessionCatalog.load();
+  final articleCatalog = await ArticleCatalog.load();
 
   // Privacy / Settings (Privacy Task 4)
   final prefsStore = await PreferencesStore.open();
@@ -50,6 +52,7 @@ Future<void> main() async {
         onboardingControllerProvider.overrideWith((ref) => controller),
         progressControllerProvider.overrideWith((ref) => progress),
         sessionCatalogProvider.overrideWithValue(catalog),
+        articleCatalogProvider.overrideWithValue(articleCatalog),
         preferencesControllerProvider.overrideWith((ref) => preferences),
       ],
       child: const SahajApp(),
