@@ -34,10 +34,32 @@ class _BiometricGateState extends ConsumerState<BiometricGate> {
       });
       return;
     }
+    // Fail open if the device cannot authenticate at all (no biometrics AND no
+    // device passcode). Otherwise the user would be permanently locked out of
+    // their own data with no way to satisfy the lock.
+    bool supported;
+    try {
+      supported = await _auth.isDeviceSupported();
+    } catch (_) {
+      supported = false;
+    }
+    if (!supported) {
+      setState(() {
+        _unlocked = true;
+        _checked = true;
+      });
+      return;
+    }
     try {
       final ok = await _auth.authenticate(
         localizedReason: 'Unlock Sahaj',
-        options: const AuthenticationOptions(stickyAuth: true),
+        // biometricOnly: false lets the OS fall back to the device PIN/passcode
+        // when biometrics are unavailable or fail — the escape hatch that keeps
+        // the user from being locked out.
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          biometricOnly: false,
+        ),
       );
       setState(() {
         _unlocked = ok;
