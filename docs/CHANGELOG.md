@@ -367,4 +367,6 @@ Real-device verification (A015, Android 16 / API 36) of this session's work.
 
 **Bug found + fixed on-device:** Hide streak gated only the Me dashboard — the Today header still showed "🔥 N-day streak". Now gated on both surfaces; the "Done for today" copy also drops the streak reference when hidden. Regression test added (`today_widget_test`).
 
-**Still device-pending:** actual notification *firing* at 20:00 (alarm armed; can't time-travel) + OEM battery-kill behaviour; Crashlytics crash upload to console.
+**Notification firing — VERIFIED on device:** set the reminder ~3 min out via the time picker; the alarm rescheduled in the OS table for the correct same-day time (`origWhen` today, `window=+2m`, inexact), and the notification actually posted at the scheduled time — `NotificationRecord pkg=com.saurabh7973.sahaj id=1001 channel=daily_reminder importance=DEFAULT flags=AUTO_CANCEL`, visible in the shade with the calm copy ("A few quiet minutes for yourself today.").
+
+**Still device-pending:** multi-day OEM battery-kill survival (Xiaomi/Oppo/Vivo) across reboots/idle; Crashlytics crash upload to console.
