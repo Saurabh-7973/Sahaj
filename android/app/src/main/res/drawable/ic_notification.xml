@@ -1,0 +1,32 @@
+<!-- Notification small icon: white lotus silhouette on transparent.
+     Android masks status-bar icons to a solid white shape, so this is
+     authored as a bold filled glyph (alpha = the silhouette). The expanded
+     notification tints it via AndroidNotificationDetails.color. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- centre petal -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,3 C13.7,6 13.7,9.6 12,13 C10.3,9.6 10.3,6 12,3 Z" />
+    <!-- inner side petals -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,13 C9.4,12.2 7.3,9.8 6.6,6.6 C9.6,7 11.4,9.4 12,13 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,13 C14.6,12.2 16.7,9.8 17.4,6.6 C14.4,7 12.6,9.4 12,13 Z" />
+    <!-- outer side petals -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,13.5 C8.6,13.4 5.4,11.9 3.2,9.2 C6.4,8.6 9.8,9.8 12,13.5 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,13.5 C15.4,13.4 18.6,11.9 20.8,9.2 C17.6,8.6 14.2,9.8 12,13.5 Z" />
+    <!-- water / base -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M4,16 C7,18.6 9.4,19.5 12,19.5 C14.6,19.5 17,18.6 20,16 C17,17 14.6,17.3 12,17.3 C9.4,17.3 7,17 4,16 Z" />
+</vector>

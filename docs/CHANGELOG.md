@@ -408,7 +408,14 @@ alarm rearmed **exact**: `dumpsys alarm` → `window=0 exactAllowReason=permissi
 (was `window=+1h` inexact before the grant). No crash on either path. 88 tests,
 analyze clean, debug APK builds.
 
-### Deferred
-- **Notification small icon** — still `@mipmap/ic_launcher` (white-square on some
-  Androids); sanatan uses a dedicated white-silhouette drawable + color tint.
-  Polish follow-up (needs an asset).
+### Notification icon — 2026-06-08
+
+Replaced the generic launcher icon (white square on the status bar) with a
+dedicated **white lotus vector** (`res/drawable/ic_notification.xml`) + muted-
+ochre tint (`AndroidNotificationDetails.color`, matching the in-app accent).
+Vector drawable so it scales at every density without PNG assets. On-brand and
+discreet for a wellness app.
+
+**VERIFIED on device:** notification posted at the exact set time (23:12:00,
+`window=0 exactAllowReason=permission`) showing the ochre lotus badge instead of
+the Flutter diamond. Closes notification parity with `sanatan_guide`.

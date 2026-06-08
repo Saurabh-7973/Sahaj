@@ -1,3 +1,5 @@
+import 'dart:ui' show Color;
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -19,6 +21,10 @@ import 'notification_service.dart';
 class LocalNotificationService implements NotificationService {
   static const int _reminderId = 1001;
   static const String _channelId = 'daily_reminder';
+  // White lotus silhouette (res/drawable/ic_notification.xml); muted-ochre tint
+  // for the expanded notification, matching the in-app accent.
+  static const String _icon = 'ic_notification';
+  static const Color _accent = Color(0xFFC9A961);
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
@@ -35,7 +41,7 @@ class LocalNotificationService implements NotificationService {
     final localName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(localName));
 
-    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const android = AndroidInitializationSettings(_icon);
     const settings = InitializationSettings(android: android);
     await _plugin.initialize(settings);
 
@@ -102,6 +108,8 @@ class LocalNotificationService implements NotificationService {
         channelDescription: 'A gentle daily nudge to train.',
         importance: Importance.defaultImportance,
         priority: Priority.defaultPriority,
+        icon: _icon,
+        color: _accent,
       ),
     );
 
