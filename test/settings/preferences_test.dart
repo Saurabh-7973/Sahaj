@@ -7,27 +7,32 @@ void main() {
     expect(c.bookMode, isFalse);
     expect(c.disguiseName, DisguiseName.none);
     expect(c.notificationsEnabled, isFalse);
+    expect(c.hideStreak, isFalse);
   });
 
   test('setters update and toJson/loadFrom round-trips', () {
     final a = PreferencesController()
       ..setBookMode(true)
       ..setDisguiseName(DisguiseName.calendar)
-      ..setNotificationsEnabled(true);
+      ..setNotificationsEnabled(true)
+      ..setHideStreak(true);
 
     final b = PreferencesController()..loadFrom(a.toJson());
     expect(b.bookMode, isTrue);
     expect(b.disguiseName, DisguiseName.calendar);
     expect(b.notificationsEnabled, isTrue);
+    expect(b.hideStreak, isTrue);
   });
 
   test('reset returns to defaults', () {
     final c = PreferencesController()
       ..setBookMode(true)
-      ..setDisguiseName(DisguiseName.notes);
+      ..setDisguiseName(DisguiseName.notes)
+      ..setHideStreak(true);
     c.reset();
     expect(c.bookMode, isFalse);
     expect(c.disguiseName, DisguiseName.none);
+    expect(c.hideStreak, isFalse);
   });
 
   test('loadFrom tolerates an unknown disguise name', () {

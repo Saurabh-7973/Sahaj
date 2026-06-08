@@ -99,6 +99,20 @@ class SettingsPage extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
+          Text('Progress', style: theme.textTheme.titleMedium),
+          const SizedBox(height: AppSpacing.sm),
+          AppCard(
+            child: SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Hide streak'),
+              subtitle: const Text(
+                  'Remove the streak counter. Progress is yours, not a scoreboard.'),
+              value: prefs.hideStreak,
+              onChanged: (v) =>
+                  ref.read(preferencesControllerProvider).setHideStreak(v),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xl),
           Text('Your data', style: theme.textTheme.titleMedium),
           const SizedBox(height: AppSpacing.sm),
           AppButton(

@@ -8,6 +8,7 @@ import 'package:sahaj/data/progress_store.dart';
 import 'package:sahaj/data/session_log_store.dart';
 import 'package:sahaj/features/me/me_dashboard.dart';
 import 'package:sahaj/features/sessions/progress_controller.dart';
+import 'package:sahaj/features/settings/preferences_controller.dart';
 
 void main() {
   testWidgets('shows empty state with no sessions', (tester) async {
@@ -65,6 +66,26 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.textContaining('sessions completed'), findsOneWidget);
+      expect(find.textContaining('Streak:'), findsOneWidget);
+    });
+
+    testWidgets('hides streak card when hideStreak pref is on', (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            progressControllerProvider.overrideWith((ref) => controller),
+            preferencesControllerProvider.overrideWith(
+                (ref) => PreferencesController()..setHideStreak(true)),
+          ],
+          child: const MaterialApp(
+            home: Scaffold(body: ProgressDashboard()),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      // Metrics still render; the streak counter is gone.
+      expect(find.textContaining('sessions completed'), findsOneWidget);
+      expect(find.textContaining('Streak:'), findsNothing);
     });
   });
 }

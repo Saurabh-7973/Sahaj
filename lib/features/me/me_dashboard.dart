@@ -5,6 +5,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../shared/widgets/widgets.dart';
 import '../onboarding/onboarding_controller.dart';
 import '../sessions/progress_controller.dart';
+import '../settings/preferences_controller.dart';
 import 'logic/progress_metrics.dart';
 
 /// Honest progress summary (synthesis section 12). Degrades to a calm empty
@@ -25,6 +26,7 @@ class _ProgressDashboardState extends ConsumerState<ProgressDashboard> {
     final theme = Theme.of(context);
     final c = ref.watch(progressControllerProvider);
     final plan = ref.watch(onboardingControllerProvider).plan;
+    final hideStreak = ref.watch(preferencesControllerProvider).hideStreak;
 
     final week = c.state.currentWeek;
     final phase = (plan == null || plan.weeks.isEmpty)
@@ -91,32 +93,34 @@ class _ProgressDashboardState extends ConsumerState<ProgressDashboard> {
             ],
           ),
         ),
-        const SizedBox(height: AppSpacing.md),
-        AppCard(
-          onTap: () => setState(() => _streakExpanded = !_streakExpanded),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Streak: ${m.currentStreak} days',
-                      style: theme.textTheme.bodyMedium),
-                  Icon(_streakExpanded
-                      ? Icons.expand_less
-                      : Icons.expand_more),
+        if (!hideStreak) ...[
+          const SizedBox(height: AppSpacing.md),
+          AppCard(
+            onTap: () => setState(() => _streakExpanded = !_streakExpanded),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Streak: ${m.currentStreak} days',
+                        style: theme.textTheme.bodyMedium),
+                    Icon(_streakExpanded
+                        ? Icons.expand_less
+                        : Icons.expand_more),
+                  ],
+                ),
+                if (_streakExpanded) ...[
+                  const SizedBox(height: AppSpacing.xs),
+                  Text('Longest: ${m.longestStreak} days',
+                      style: theme.textTheme.bodySmall),
+                  Text('Easier ${m.easierCount} - Same ${m.sameCount} - Harder ${m.harderCount}',
+                      style: theme.textTheme.bodySmall),
                 ],
-              ),
-              if (_streakExpanded) ...[
-                const SizedBox(height: AppSpacing.xs),
-                Text('Longest: ${m.longestStreak} days',
-                    style: theme.textTheme.bodySmall),
-                Text('Easier ${m.easierCount} - Same ${m.sameCount} - Harder ${m.harderCount}',
-                    style: theme.textTheme.bodySmall),
               ],
-            ],
+            ),
           ),
-        ),
+        ],
       ],
     );
   }

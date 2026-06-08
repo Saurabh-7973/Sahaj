@@ -23,6 +23,10 @@ class PreferencesController extends ChangeNotifier {
   DisguiseName disguiseName = DisguiseName.none;
   bool notificationsEnabled = false;
 
+  /// Hide the streak counter from the progress dashboard (agency over shame —
+  /// synthesis section 8: streak must never become a pressure lever).
+  bool hideStreak = false;
+
   void setBookMode(bool v) {
     bookMode = v;
     _persist();
@@ -38,10 +42,16 @@ class PreferencesController extends ChangeNotifier {
     _persist();
   }
 
+  void setHideStreak(bool v) {
+    hideStreak = v;
+    _persist();
+  }
+
   void reset() {
     bookMode = false;
     disguiseName = DisguiseName.none;
     notificationsEnabled = false;
+    hideStreak = false;
     _store?.clear();
     notifyListeners();
   }
@@ -55,12 +65,14 @@ class PreferencesController extends ChangeNotifier {
         'bookMode': bookMode,
         'disguiseName': disguiseName.name,
         'notificationsEnabled': notificationsEnabled,
+        'hideStreak': hideStreak,
       };
 
   void loadFrom(Map<String, dynamic> json) {
     bookMode = (json['bookMode'] as bool?) ?? false;
     disguiseName = _disguiseByName(json['disguiseName'] as String?);
     notificationsEnabled = (json['notificationsEnabled'] as bool?) ?? false;
+    hideStreak = (json['hideStreak'] as bool?) ?? false;
     notifyListeners();
   }
 }
