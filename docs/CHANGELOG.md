@@ -320,4 +320,36 @@ Two unblocked wins (advisor-sorted: ship-a-real-feature, no missing keys).
 
 - **Crashlytics end-to-end** — wiring compiles; actual crash upload to the Firebase console is device-only (force a test crash on a real build to confirm).
 - **Mixpanel sink** — still gated on a project token (not built; would be dead code until the key arrives).
-- **Notification scheduling** — needs `flutter_local_notifications` + AndroidManifest (POST_NOTIFICATIONS, boot receiver, exact-alarm) + timezone + OEM battery-whitelist pass; the "Daily reminder" switch persists intent only.
+- **Notification scheduling** — superseded below.
+
+---
+
+## Daily reminder — notification scheduling — 2026-06-08
+
+Makes the "Daily reminder" switch real (previously persisted intent only).
+Full vertical slice; daily-retention lever.
+
+**Design decision (was unspecified in synthesis):** one daily reminder at a
+**user-chosen time, default 20:00** (calm evening nudge), off by default.
+Calm copy ("A few quiet minutes for yourself today.") — no fear, no shame.
+
+**Seam** (`lib/features/notifications/`):
+- `NotificationService` interface + `NoopNotificationService` default (tests/un-overridden reads never touch the platform); `notificationServiceProvider`.
+- `LocalNotificationService` — `flutter_local_notifications` + `timezone`/`flutter_timezone`; `zonedSchedule` with `matchDateTimeComponents: time` for daily repeat, **inexact** (`inexactAllowWhileIdle`) so no `SCHEDULE_EXACT_ALARM` permission and friendlier to OEM battery managers. Wired only in `main.dart`.
+- `nextReminderTime(...)` — pure schedule math (today vs roll-to-tomorrow), TDD.
+- `applyReminderSetting(...)` — coordinator: schedule when enabled+permitted, cancel otherwise; returns active-state so the UI reverts its toggle if the OS denies permission. TDD with a fake service.
+
+**Prefs:** `reminderHour`/`reminderMinute` (default 20:00) added to `PreferencesController` (persisted/round-trip/reset).
+
+**UI:** Settings "Daily reminder" toggle now schedules/cancels; a "Reminder time" row (shown when on) opens a time picker and reschedules.
+
+**Native:** `POST_NOTIFICATIONS` + `RECEIVE_BOOT_COMPLETED` permissions; scheduled + boot receivers; core-library desugaring enabled in `app/build.gradle.kts` (required by the plugin).
+
+**Verified:** 86 tests pass, `flutter analyze` clean, **debug APK builds** (native config + plugin link confirmed).
+
+### Deferred / needs device verification
+
+- **Actual firing** — that a notification appears at the set time, repeats daily, survives reboot, and is not killed by Xiaomi/Oppo/Vivo battery managers — is device-only. Test on a real OEM device.
+- **Notification small icon** — uses `@mipmap/ic_launcher` (renders as a white square on some Androids); a dedicated monochrome `@drawable/ic_notification` is a polish follow-up.
+- **Crashlytics end-to-end** — wiring compiles + builds; crash upload to the console is device-only.
+- **Mixpanel sink** — still gated on a project token (not built).

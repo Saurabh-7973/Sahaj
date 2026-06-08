@@ -14,6 +14,8 @@ import 'data/onboarding_store.dart';
 import 'data/preferences_store.dart';
 import 'data/progress_store.dart';
 import 'data/session_log_store.dart';
+import 'features/notifications/local_notification_service.dart';
+import 'features/notifications/notification_service.dart';
 import 'features/onboarding/onboarding_controller.dart';
 import 'features/sessions/progress_controller.dart';
 import 'features/library/article_catalog.dart';
@@ -60,6 +62,16 @@ Future<void> main() async {
   final savedPrefs = prefsStore.load();
   if (savedPrefs != null) preferences.loadFrom(savedPrefs);
 
+  // Notifications: keep the daily reminder alive across relaunches/updates.
+  final notifications = LocalNotificationService();
+  await notifications.init();
+  if (preferences.notificationsEnabled) {
+    await notifications.scheduleDailyReminder(
+      hour: preferences.reminderHour,
+      minute: preferences.reminderMinute,
+    );
+  }
+
   final analytics = FirebaseAnalyticsService();
   AppEvents(analytics).appOpened();
 
@@ -71,6 +83,7 @@ Future<void> main() async {
         sessionCatalogProvider.overrideWithValue(catalog),
         articleCatalogProvider.overrideWithValue(articleCatalog),
         preferencesControllerProvider.overrideWith((ref) => preferences),
+        notificationServiceProvider.overrideWithValue(notifications),
         analyticsProvider.overrideWithValue(analytics),
       ],
       child: const SahajApp(),

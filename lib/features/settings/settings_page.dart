@@ -7,6 +7,8 @@ import '../../core/analytics/events.dart';
 import '../../core/router/routes.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../shared/widgets/widgets.dart';
+import '../notifications/notification_service.dart';
+import '../notifications/reminder_coordinator.dart';
 import '../onboarding/onboarding_controller.dart';
 import '../onboarding/widgets/selectable_option.dart';
 import '../sessions/progress_controller.dart';
@@ -91,13 +93,33 @@ class SettingsPage extends ConsumerWidget {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('Daily reminder'),
-              subtitle: const Text('A gentle nudge. Scheduling arrives soon.'),
+              subtitle: const Text('A gentle nudge at a time you choose.'),
               value: prefs.notificationsEnabled,
-              onChanged: (v) => ref
-                  .read(preferencesControllerProvider)
-                  .setNotificationsEnabled(v),
+              onChanged: (v) async {
+                ref
+                    .read(preferencesControllerProvider)
+                    .setNotificationsEnabled(v);
+                await _applyReminder(ref);
+              },
             ),
           ),
+          if (prefs.notificationsEnabled) ...[
+            const SizedBox(height: AppSpacing.sm),
+            AppCard(
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Reminder time'),
+                trailing: Text(
+                  TimeOfDay(
+                    hour: prefs.reminderHour,
+                    minute: prefs.reminderMinute,
+                  ).format(context),
+                  style: theme.textTheme.bodyLarge,
+                ),
+                onTap: () => _pickTime(context, ref),
+              ),
+            ),
+          ],
           const SizedBox(height: AppSpacing.xl),
           Text('Progress', style: theme.textTheme.titleMedium),
           const SizedBox(height: AppSpacing.sm),
@@ -129,6 +151,33 @@ class SettingsPage extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  /// Push the current reminder preference to the OS. If the user enabled it but
+  /// the OS denied permission, revert the toggle so the UI reflects reality.
+  Future<void> _applyReminder(WidgetRef ref) async {
+    final prefs = ref.read(preferencesControllerProvider);
+    final active = await applyReminderSetting(
+      service: ref.read(notificationServiceProvider),
+      enabled: prefs.notificationsEnabled,
+      hour: prefs.reminderHour,
+      minute: prefs.reminderMinute,
+    );
+    if (prefs.notificationsEnabled && !active) {
+      prefs.setNotificationsEnabled(false);
+    }
+  }
+
+  Future<void> _pickTime(BuildContext context, WidgetRef ref) async {
+    final prefs = ref.read(preferencesControllerProvider);
+    final picked = await showTimePicker(
+      context: context,
+      initialTime:
+          TimeOfDay(hour: prefs.reminderHour, minute: prefs.reminderMinute),
+    );
+    if (picked == null) return;
+    prefs.setReminderTime(picked.hour, picked.minute);
+    await _applyReminder(ref);
   }
 
   Future<void> _export(BuildContext context, WidgetRef ref) async {

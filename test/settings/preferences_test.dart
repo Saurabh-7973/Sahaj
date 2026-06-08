@@ -8,6 +8,8 @@ void main() {
     expect(c.disguiseName, DisguiseName.none);
     expect(c.notificationsEnabled, isFalse);
     expect(c.hideStreak, isFalse);
+    expect(c.reminderHour, 20);
+    expect(c.reminderMinute, 0);
   });
 
   test('setters update and toJson/loadFrom round-trips', () {
@@ -15,13 +17,16 @@ void main() {
       ..setBookMode(true)
       ..setDisguiseName(DisguiseName.calendar)
       ..setNotificationsEnabled(true)
-      ..setHideStreak(true);
+      ..setHideStreak(true)
+      ..setReminderTime(7, 15);
 
     final b = PreferencesController()..loadFrom(a.toJson());
     expect(b.bookMode, isTrue);
     expect(b.disguiseName, DisguiseName.calendar);
     expect(b.notificationsEnabled, isTrue);
     expect(b.hideStreak, isTrue);
+    expect(b.reminderHour, 7);
+    expect(b.reminderMinute, 15);
   });
 
   test('reset returns to defaults', () {
