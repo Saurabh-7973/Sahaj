@@ -5,6 +5,7 @@ import '../../../core/analytics/events.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../onboarding/onboarding_controller.dart';
+import '../../settings/preferences_controller.dart';
 import '../../sessions/logic/scheduler.dart';
 import '../../sessions/pages/mood_checkin_sheet.dart';
 import '../../sessions/pages/reflection_page.dart';
@@ -22,6 +23,7 @@ class TodayPage extends ConsumerWidget {
     final theme = Theme.of(context);
     final plan = ref.watch(onboardingControllerProvider).plan;
     final progress = ref.watch(progressControllerProvider);
+    final hideStreak = ref.watch(preferencesControllerProvider).hideStreak;
 
     // Catalog may be unoverridden in widget tests; guard it.
     SessionCatalog? catalog;
@@ -52,13 +54,13 @@ class TodayPage extends ConsumerWidget {
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
-          if (progress.state.streak > 0) ...[
+          if (!hideStreak && progress.state.streak > 0) ...[
             const SizedBox(height: AppSpacing.xs),
             Text('🔥 ${progress.state.streak}-day streak',
                 style: theme.textTheme.labelMedium),
           ],
           const SizedBox(height: AppSpacing.xl),
-          _body(context, ref, theme, plan, session, progress),
+          _body(context, ref, theme, plan, session, progress, hideStreak),
         ],
       ),
     );
@@ -71,6 +73,7 @@ class TodayPage extends ConsumerWidget {
     Plan? plan,
     SessionDef? session,
     ProgressController progress,
+    bool hideStreak,
   ) {
     if (plan == null) {
       return AppCard(
@@ -85,7 +88,10 @@ class TodayPage extends ConsumerWidget {
           children: [
             Text('Done for today', style: theme.textTheme.headlineSmall),
             const SizedBox(height: AppSpacing.xs),
-            Text('Come back tomorrow to keep the streak going.',
+            Text(
+                hideStreak
+                    ? 'Come back tomorrow for the next session.'
+                    : 'Come back tomorrow to keep the streak going.',
                 style: theme.textTheme.bodyMedium),
           ],
         ),

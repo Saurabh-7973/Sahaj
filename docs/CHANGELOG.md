@@ -353,3 +353,18 @@ Calm copy ("A few quiet minutes for yourself today.") — no fear, no shame.
 - **Notification small icon** — uses `@mipmap/ic_launcher` (renders as a white square on some Androids); a dedicated monochrome `@drawable/ic_notification` is a polish follow-up.
 - **Crashlytics end-to-end** — wiring compiles + builds; crash upload to the console is device-only.
 - **Mixpanel sink** — still gated on a project token (not built).
+
+---
+
+## Device pass — 2026-06-08
+
+Real-device verification (A015, Android 16 / API 36) of this session's work.
+
+**Verified on-device:**
+- App launches clean after the notification plugin + desugaring + manifest changes (no crash; Book Mode disguise → double-tap reveal → Today still works).
+- **Daily reminder**: toggle fires the OS `POST_NOTIFICATIONS` prompt; on Allow the alarm lands in the OS table (`dumpsys alarm` shows `RTC_WAKEUP … ScheduledNotificationReceiver`, `origWhen` = next 20:00, `window=+1h` confirming inexact). "Reminder time" picker row appears and shows the set time (8:00 PM).
+- **Hide streak**: toggling on removes the streak card from the Me dashboard.
+
+**Bug found + fixed on-device:** Hide streak gated only the Me dashboard — the Today header still showed "🔥 N-day streak". Now gated on both surfaces; the "Done for today" copy also drops the streak reference when hidden. Regression test added (`today_widget_test`).
+
+**Still device-pending:** actual notification *firing* at 20:00 (alarm armed; can't time-travel) + OEM battery-kill behaviour; Crashlytics crash upload to console.
