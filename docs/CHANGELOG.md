@@ -298,3 +298,26 @@ The roadmap funnel, instrumented from day one behind a testable seam.
 - **Mixpanel cohort layer** — Firebase only for now.
 - **User properties** (`daysActive`, `hasPro`, `priceTier`) — need auth/subscription.
 - **A/B variant tagging**, `onboarding_abandoned` granularity — later.
+
+---
+
+## Hide-streak toggle + Crashlytics — 2026-06-08
+
+Two unblocked wins (advisor-sorted: ship-a-real-feature, no missing keys).
+
+**Hide-streak toggle** (synthesis §8 — agency over shame; the streak must never become a pressure lever):
+- `PreferencesController.hideStreak` (default `false`) + `setHideStreak`, persisted in the existing `preferences` Hive map (`toJson`/`loadFrom`/`reset`).
+- Progress dashboard gates the entire streak card behind `!hideStreak` — totals/this-week still render, the streak counter disappears.
+- Settings: new "Progress" section with a "Hide streak" switch.
+- TDD: pref round-trip/default/reset; dashboard widget test asserts the streak card is gone when the pref is on.
+
+**Crashlytics** (rides the committed Firebase config — no separate key; gradle plugins `com.google.firebase.crashlytics` + `google-services` already applied):
+- `main.dart` routes `FlutterError.onError` → `recordFlutterFatalError` and `PlatformDispatcher.instance.onError` → `recordError(fatal: true)` after `Firebase.initializeApp`.
+
+79 tests pass, `flutter analyze` clean.
+
+### Deferred / needs device verification
+
+- **Crashlytics end-to-end** — wiring compiles; actual crash upload to the Firebase console is device-only (force a test crash on a real build to confirm).
+- **Mixpanel sink** — still gated on a project token (not built; would be dead code until the key arrives).
+- **Notification scheduling** — needs `flutter_local_notifications` + AndroidManifest (POST_NOTIFICATIONS, boot receiver, exact-alarm) + timezone + OEM battery-whitelist pass; the "Daily reminder" switch persists intent only.
