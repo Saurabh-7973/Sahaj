@@ -1,13 +1,26 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- Firebase + future cloud sync. Auto-added in debug; required for release. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Biometric app lock (local_auth). -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
-    <!-- Daily reminder notifications (flutter_local_notifications, inexact —
-         no SCHEDULE_EXACT_ALARM needed). RECEIVE_BOOT_COMPLETED re-arms the
-         alarm after a reboot. -->
+    <!-- Daily reminder notifications (flutter_local_notifications).
+         RECEIVE_BOOT_COMPLETED re-arms the alarm after a reboot. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- Exact alarms so the daily reminder fires AT the picked minute instead
+         of being deferred for hours by Doze (inexact was unreliable on real
+         OEM devices — Samsung/Xiaomi). SCHEDULE_EXACT_ALARM is auto-granted on
+         Android <=13; on 14+ requestExactAlarmsPermission() routes to Settings,
+         falling back to inexact if denied. USE_EXACT_ALARM is stripped — Play
+         restricts it to alarm-clock/calendar apps, which a wellness app is not,
+         so we must not let the plugin merge it in or the listing risks rejection. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"
+        tools:node="remove"/>
+    <!-- Ask OEM battery managers (MIUI/One UI/ColorOS) to exempt us so Doze
+         doesn't kill the scheduled fire. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     <application
         android:label="sahaj"
         android:name="${applicationName}"
@@ -40,7 +53,13 @@
             android:name="flutterEmbedding"
             android:value="2" />
         <!-- flutter_local_notifications: deliver scheduled reminders and
-             re-arm them after a device reboot / app update. -->
+             re-arm them after a device reboot / app update. Declared here so
+             AlarmManager can wake the receiver class after the app process is
+             killed; without them the alarm fires but resolves to no component
+             and nothing posts. -->
+        <receiver
+            android:exported="false"
+            android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
         <receiver
             android:exported="false"
             android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />

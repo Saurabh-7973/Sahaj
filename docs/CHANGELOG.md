@@ -370,3 +370,45 @@ Real-device verification (A015, Android 16 / API 36) of this session's work.
 **Notification firing — VERIFIED on device:** set the reminder ~3 min out via the time picker; the alarm rescheduled in the OS table for the correct same-day time (`origWhen` today, `window=+2m`, inexact), and the notification actually posted at the scheduled time — `NotificationRecord pkg=com.saurabh7973.sahaj id=1001 channel=daily_reminder importance=DEFAULT flags=AUTO_CANCEL`, visible in the shade with the calm copy ("A few quiet minutes for yourself today.").
 
 **Still device-pending:** multi-day OEM battery-kill survival (Xiaomi/Oppo/Vivo) across reboots/idle; Crashlytics crash upload to console.
+
+---
+
+## Notification reliability — exact alarms + battery-opt exemption — 2026-06-08
+
+Adopted the proven pattern from our `sanatan_guide` app to close the OEM-doze
+reliability gap (inexact alarms were the weak point).
+
+- **Exact alarms**: schedule mode → `exactAllowWhileIdle` so the reminder fires
+  AT the picked minute instead of being deferred for hours by Doze. Wrapped in
+  a try/catch that falls back to `inexactAllowWhileIdle` if the OS denies exact
+  (Android 14+ can revoke), so launch never crashes.
+- **Exact-alarm permission**: `requestExactAlarmsPermission()` on enable
+  (auto-granted ≤13; routes to Settings on 14+).
+- **Battery-optimisation exemption**: `permission_handler` →
+  `Permission.ignoreBatteryOptimizations.request()` on enable — the real fix for
+  MIUI/One UI/ColorOS Doze kills. The exact-alarm permission alone isn't enough.
+- **Manifest**: `SCHEDULE_EXACT_ALARM` + `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`;
+  `USE_EXACT_ALARM` stripped via `tools:node="remove"` (Play restricts it to
+  alarm-clock/calendar apps — a wellness app isn't one, so leaving it risks
+  store rejection). Added `ActionBroadcastReceiver`.
+- **Channel** created explicitly at init (default importance — keeps the nudge
+  calm, no heads-up interrupt). Permission-request concurrency guard.
+- **main.dart** launch-time reschedule wrapped in try/catch (belt-and-suspenders).
+
+Kept `matchDateTimeComponents` (daily repeat) deliberately: a reminder must keep
+firing even if the user never reopens the app, which one-shot exact (sanatan's
+verse-of-day approach, rescheduled on open) would not. Trade-off: repeating
+alarms are windowed until exact is granted.
+
+**VERIFIED on device** (A015 / Android 16): enabling the reminder launched the
+`RequestIgnoreBatteryOptimizations` system dialog ("Let app always run in the
+background?") → Allow → app added to `deviceidle whitelist` +
+`RUN_ANY_IN_BACKGROUND: allow`. With exact-alarm + battery-opt granted, the
+alarm rearmed **exact**: `dumpsys alarm` → `window=0 exactAllowReason=permission`
+(was `window=+1h` inexact before the grant). No crash on either path. 88 tests,
+analyze clean, debug APK builds.
+
+### Deferred
+- **Notification small icon** — still `@mipmap/ic_launcher` (white-square on some
+  Androids); sanatan uses a dedicated white-silhouette drawable + color tint.
+  Polish follow-up (needs an asset).

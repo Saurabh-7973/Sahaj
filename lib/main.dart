@@ -63,14 +63,17 @@ Future<void> main() async {
   if (savedPrefs != null) preferences.loadFrom(savedPrefs);
 
   // Notifications: keep the daily reminder alive across relaunches/updates.
+  // Guarded so a platform hiccup (e.g. exact-alarm denied) never blocks launch.
   final notifications = LocalNotificationService();
-  await notifications.init();
-  if (preferences.notificationsEnabled) {
-    await notifications.scheduleDailyReminder(
-      hour: preferences.reminderHour,
-      minute: preferences.reminderMinute,
-    );
-  }
+  try {
+    await notifications.init();
+    if (preferences.notificationsEnabled) {
+      await notifications.scheduleDailyReminder(
+        hour: preferences.reminderHour,
+        minute: preferences.reminderMinute,
+      );
+    }
+  } catch (_) {/* non-fatal — reminder simply won't be re-armed this launch */}
 
   final analytics = FirebaseAnalyticsService();
   AppEvents(analytics).appOpened();
