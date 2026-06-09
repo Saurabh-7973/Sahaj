@@ -93,7 +93,11 @@ Future<void> main() async {
   } catch (_) {/* non-fatal — keep cached entitlement */}
 
   final analytics = FirebaseAnalyticsService();
-  AppEvents(analytics).appOpened();
+  final events = AppEvents(analytics);
+  events.appOpened();
+  // If a tapped reminder cold-started the app, log it (retention signal). The
+  // router already lands on Today post-onboarding, so no explicit nav needed.
+  if (notifications.consumeLaunchPayload() != null) events.reminderOpened();
 
   runApp(
     ProviderScope(

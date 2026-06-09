@@ -16,6 +16,10 @@ abstract class NotificationService {
 
   /// Cancel the daily reminder.
   Future<void> cancelReminder();
+
+  /// If the app was cold-started by tapping a notification, returns its payload
+  /// once (then clears it). Null otherwise. Lets the app route / log the open.
+  String? consumeLaunchPayload();
 }
 
 /// Default no-op — used in tests and any un-overridden read, so nothing
@@ -37,6 +41,9 @@ class NoopNotificationService implements NotificationService {
 
   @override
   Future<void> cancelReminder() async {}
+
+  @override
+  String? consumeLaunchPayload() => null;
 }
 
 /// Overridden in main() with LocalNotificationService.

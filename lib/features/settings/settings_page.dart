@@ -12,6 +12,7 @@ import '../notifications/reminder_coordinator.dart';
 import '../onboarding/onboarding_controller.dart';
 import '../onboarding/widgets/selectable_option.dart';
 import '../sessions/progress_controller.dart';
+import '../subscription/subscription_controller.dart';
 import 'account.dart';
 import 'logic/data_export.dart';
 import 'preferences_controller.dart';
@@ -219,6 +220,7 @@ class SettingsPage extends ConsumerWidget {
       onboarding: ref.read(onboardingControllerProvider),
       progress: ref.read(progressControllerProvider),
       preferences: ref.read(preferencesControllerProvider),
+      subscription: ref.read(subscriptionControllerProvider),
     );
     if (context.mounted) context.go(Routes.onboarding);
   }

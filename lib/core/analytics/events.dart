@@ -54,6 +54,8 @@ class AppEvents {
       _a.logEvent('subscription_started', {'tier': tier});
 
   void subscriptionRestored() => _a.logEvent('subscription_restored');
+
+  void reminderOpened() => _a.logEvent('reminder_opened');
 }
 
 /// Reads the active Analytics (Noop by default, Firebase in main()).

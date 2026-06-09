@@ -25,10 +25,19 @@ class LocalNotificationService implements NotificationService {
   // for the expanded notification, matching the in-app accent.
   static const String _icon = 'ic_notification';
   static const Color _accent = Color(0xFFC9A961);
+  static const String _payload = 'today'; // where a tap should land
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
   bool _ready = false;
+  String? _launchPayload;
+
+  @override
+  String? consumeLaunchPayload() {
+    final p = _launchPayload;
+    _launchPayload = null;
+    return p;
+  }
 
   AndroidFlutterLocalNotificationsPlugin? get _android =>
       _plugin.resolvePlatformSpecificImplementation<
@@ -43,7 +52,17 @@ class LocalNotificationService implements NotificationService {
 
     const android = AndroidInitializationSettings(_icon);
     const settings = InitializationSettings(android: android);
-    await _plugin.initialize(settings);
+    await _plugin.initialize(
+      settings,
+      onDidReceiveNotificationResponse: (r) => _launchPayload = r.payload,
+    );
+
+    // Cold start: if the app was launched by tapping the notification, the
+    // response callback above doesn't fire — capture the payload here instead.
+    final launch = await _plugin.getNotificationAppLaunchDetails();
+    if (launch?.didNotificationLaunchApp ?? false) {
+      _launchPayload = launch?.notificationResponse?.payload ?? _payload;
+    }
 
     // Create the channel up front so it appears in OS notification settings.
     // Default importance keeps the nudge calm (no heads-up interrupt).
@@ -134,6 +153,7 @@ class LocalNotificationService implements NotificationService {
       'A few quiet minutes for yourself today.',
       when,
       details,
+      payload: _payload,
       androidScheduleMode: mode,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,

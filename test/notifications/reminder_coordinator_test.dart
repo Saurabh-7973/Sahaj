@@ -30,6 +30,9 @@ class FakeNotificationService implements NotificationService {
 
   @override
   Future<void> cancelReminder() async => calls.add('cancel');
+
+  @override
+  String? consumeLaunchPayload() => null;
 }
 
 void main() {
