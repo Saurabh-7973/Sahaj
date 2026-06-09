@@ -8,16 +8,18 @@ enum ProFeature {
   partnerMode,
 }
 
-/// Free-tier content allowances (synthesis §8): the first N items are free,
-/// the rest are Pro. Kept as pure thresholds so gating is testable and the
-/// UI/catalog can decide per-item.
+/// Free-tier allowances (synthesis §8). The free tier is genuinely useful
+/// forever: the first 3 articles, all Library practice, and the 4-week
+/// Foundation of the plan. Pro unlocks the full 12-week protocol and the rest
+/// of the library reading. Pure thresholds so gating stays testable.
 const int kFreeArticleCount = 3;
-const int kFreeSessionCount = 8;
+const int kFreePlanWeeks = 4; // Weeks 1-4 (Foundation) are free.
 
 bool isFeatureLocked(ProFeature feature, {required bool isPro}) => !isPro;
 
 bool isArticleLocked(int index, {required bool isPro}) =>
     !isPro && index >= kFreeArticleCount;
 
-bool isSessionLocked(int index, {required bool isPro}) =>
-    !isPro && index >= kFreeSessionCount;
+/// A plan week is Pro once it's past the free Foundation. [week] is 1-based.
+bool isPlanWeekLocked(int week, {required bool isPro}) =>
+    !isPro && week > kFreePlanWeeks;

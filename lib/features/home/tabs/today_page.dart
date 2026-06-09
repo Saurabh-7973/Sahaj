@@ -6,6 +6,9 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../onboarding/onboarding_controller.dart';
 import '../../settings/preferences_controller.dart';
+import '../../subscription/logic/feature_gate.dart';
+import '../../subscription/soft_paywall.dart';
+import '../../subscription/subscription_controller.dart';
 import '../../sessions/logic/scheduler.dart';
 import '../../sessions/pages/mood_checkin_sheet.dart';
 import '../../sessions/pages/reflection_page.dart';
@@ -24,6 +27,7 @@ class TodayPage extends ConsumerWidget {
     final plan = ref.watch(onboardingControllerProvider).plan;
     final progress = ref.watch(progressControllerProvider);
     final hideStreak = ref.watch(preferencesControllerProvider).hideStreak;
+    final isPro = ref.watch(subscriptionControllerProvider).isPro;
 
     // Catalog may be unoverridden in widget tests; guard it.
     SessionCatalog? catalog;
@@ -60,7 +64,10 @@ class TodayPage extends ConsumerWidget {
                 style: theme.textTheme.labelMedium),
           ],
           const SizedBox(height: AppSpacing.xl),
-          _body(context, ref, theme, plan, session, progress, hideStreak),
+          if (isPlanWeekLocked(week, isPro: isPro))
+            _ProWeekLock(theme: theme, week: week)
+          else
+            _body(context, ref, theme, plan, session, progress, hideStreak),
         ],
       ),
     );
@@ -177,5 +184,43 @@ class TodayPage extends ConsumerWidget {
             journalNote: result.note,
           ),
         );
+  }
+}
+
+/// Shown on Today when a free user has finished the 4-week Foundation and the
+/// plan moves into Pro weeks. Soft — invites, never traps.
+class _ProWeekLock extends StatelessWidget {
+  const _ProWeekLock({required this.theme, required this.week});
+
+  final ThemeData theme;
+  final int week;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.lock_outline, color: theme.colorScheme.primary),
+              const SizedBox(width: AppSpacing.sm),
+              Text('Foundation complete', style: theme.textTheme.titleMedium),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'You finished the 4-week Foundation — real progress. Weeks 5–12, '
+            'the rest of the 12-week protocol, are part of Pro.',
+            style: theme.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          AppButton(
+            label: 'See Pro options',
+            onPressed: () => showSoftPaywall(context, source: 'today_week_lock'),
+          ),
+        ],
+      ),
+    );
   }
 }

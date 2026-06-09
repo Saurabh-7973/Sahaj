@@ -8,7 +8,7 @@ void main() {
         expect(isFeatureLocked(f, isPro: true), isFalse);
       }
       expect(isArticleLocked(99, isPro: true), isFalse);
-      expect(isSessionLocked(99, isPro: true), isFalse);
+      expect(isPlanWeekLocked(12, isPro: true), isFalse);
     });
   });
 
@@ -26,10 +26,11 @@ void main() {
       expect(isArticleLocked(10, isPro: false), isTrue);
     });
 
-    test('first 8 sessions are free, the rest locked', () {
-      expect(isSessionLocked(0, isPro: false), isFalse);
-      expect(isSessionLocked(7, isPro: false), isFalse);
-      expect(isSessionLocked(8, isPro: false), isTrue);
+    test('plan Weeks 1-4 (Foundation) are free; Weeks 5-12 are Pro', () {
+      expect(isPlanWeekLocked(1, isPro: false), isFalse);
+      expect(isPlanWeekLocked(4, isPro: false), isFalse);
+      expect(isPlanWeekLocked(5, isPro: false), isTrue);
+      expect(isPlanWeekLocked(12, isPro: false), isTrue);
     });
   });
 }

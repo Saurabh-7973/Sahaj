@@ -9,6 +9,9 @@ import '../../library/pages/article_reader_page.dart';
 import '../../sessions/pages/session_player_page.dart';
 import '../../sessions/progress_controller.dart';
 import '../../sessions/session_catalog.dart';
+import '../../subscription/logic/feature_gate.dart';
+import '../../subscription/soft_paywall.dart';
+import '../../subscription/subscription_controller.dart';
 
 /// Library tab - browse every catalog session by category and practise any of
 /// them freely. Free practice logs activity but does not advance the plan day.
@@ -34,6 +37,7 @@ class LibraryPage extends ConsumerWidget {
       articleCatalog = null;
     }
     final articles = articleCatalog?.articles ?? const [];
+    final isPro = ref.watch(subscriptionControllerProvider).isPro;
 
     return AppScaffold(
       title: 'Library',
@@ -51,37 +55,46 @@ class LibraryPage extends ConsumerWidget {
           if (articles.isNotEmpty) ...[
             Text('Read', style: theme.textTheme.titleMedium),
             const SizedBox(height: AppSpacing.sm),
-            for (final article in articles)
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                child: AppCard(
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => ArticleReaderPage(article: article),
+            for (final (index, article) in articles.indexed)
+              Builder(builder: (context) {
+                final locked = isArticleLocked(index, isPro: isPro);
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: AppCard(
+                    onTap: () => locked
+                        ? showSoftPaywall(context, source: 'library_article')
+                        : Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => ArticleReaderPage(article: article),
+                            ),
+                          ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(article.title,
+                                  style: theme.textTheme.titleSmall),
+                              Text(
+                                locked
+                                    ? '${article.category} · Pro'
+                                    : '${article.category} - ~${article.readMinutes} min read',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(locked
+                            ? Icons.lock_outline
+                            : Icons.menu_book_outlined),
+                      ],
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(article.title,
-                                style: theme.textTheme.titleSmall),
-                            Text(
-                              '${article.category} - ~${article.readMinutes} min read',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Icon(Icons.menu_book_outlined),
-                    ],
-                  ),
-                ),
-              ),
+                );
+              }),
             const SizedBox(height: AppSpacing.lg),
           ],
           if (groups.isEmpty)
