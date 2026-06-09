@@ -90,8 +90,8 @@ class PromisePage extends StatelessWidget {
           title: 'A few promises',
           body:
               'This will take three minutes. There is no payment until you '
-              'have used the app and decided it’s worth it. Your data never '
-              'leaves your phone unless you turn on cloud sync.',
+              'have used the app and decided it’s worth it. Your answers stay '
+              'on this device.',
         ),
       ],
     );
@@ -459,9 +459,9 @@ class PrivacyPage extends ConsumerWidget {
         const OnbHeader(
           title: 'Yours, and private',
           body:
-              'Your data lives on this device. Cloud sync is optional and '
-              'encrypted. You can disguise the app — rename the icon and '
-              'choose Book Mode — anytime.',
+              'Your answers, plan, and progress stay on this device. You can '
+              'disguise the app — rename the icon and choose Book Mode — '
+              'anytime.',
         ),
         const SizedBox(height: AppSpacing.xl),
         AppCard(
