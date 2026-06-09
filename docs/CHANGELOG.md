@@ -419,3 +419,21 @@ discreet for a wellness app.
 **VERIFIED on device:** notification posted at the exact set time (23:12:00,
 `window=0 exactAllowReason=permission`) showing the ochre lotus badge instead of
 the Flutter diamond. Closes notification parity with `sanatan_guide`.
+
+---
+
+## Crisis-line dialing — verified on device — 2026-06-09
+
+The safety-critical path, end-to-end on a real device (A015 / Android 16),
+previously only widget-tested + composition-inferred.
+
+- Reset onboarding → drove the full intake → answered the self-harm question
+  **"Several days"** (above "Not at all") → Continue → **crisis screen shown**
+  ("You deserve support" + Tele-MANAS 14416 / iCall / AASRA + "I'm safe, continue").
+- Tapped the **Tele-MANAS** card → `launchUrl(tel:14416, externalApplication)`
+  fired → Android app chooser → Phone → **dialer opened pre-filled with 14416**.
+- Critically, it **stops at the dialer with a Call button** — no auto-dial; the
+  call is user-initiated. Returning from the dialer restores the crisis screen
+  intact (external launch, state preserved).
+
+Confirms the manifest `tel:` DIAL query + url_launcher path work on-device.
