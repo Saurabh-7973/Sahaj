@@ -46,3 +46,9 @@ app.*.map.json
 
 # Claude Code transient locks
 .claude/scheduled_tasks.lock
+
+# Android release signing — NEVER commit these
+android/key.properties
+*.jks
+*.keystore
+!android/app/debug.keystore
