@@ -42,6 +42,18 @@ class AppEvents {
   void dataExported() => _a.logEvent('data_exported');
 
   void accountDeleted() => _a.logEvent('account_deleted');
+
+  // Subscription (Phase 6)
+  void paywallViewed(String source) =>
+      _a.logEvent('paywall_viewed', {'source': source});
+
+  void paywallTierSelected(String tier) =>
+      _a.logEvent('paywall_tier_selected', {'tier': tier});
+
+  void subscriptionStarted(String tier) =>
+      _a.logEvent('subscription_started', {'tier': tier});
+
+  void subscriptionRestored() => _a.logEvent('subscription_restored');
 }
 
 /// Reads the active Analytics (Noop by default, Firebase in main()).

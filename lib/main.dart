@@ -14,6 +14,7 @@ import 'data/onboarding_store.dart';
 import 'data/preferences_store.dart';
 import 'data/progress_store.dart';
 import 'data/session_log_store.dart';
+import 'data/subscription_store.dart';
 import 'features/notifications/local_notification_service.dart';
 import 'features/notifications/notification_service.dart';
 import 'features/onboarding/onboarding_controller.dart';
@@ -21,6 +22,8 @@ import 'features/sessions/progress_controller.dart';
 import 'features/library/article_catalog.dart';
 import 'features/sessions/session_catalog.dart';
 import 'features/settings/preferences_controller.dart';
+import 'features/subscription/subscription_controller.dart';
+import 'features/subscription/subscription_repository.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -75,6 +78,20 @@ Future<void> main() async {
     }
   } catch (_) {/* non-fatal — reminder simply won't be re-armed this launch */}
 
+  // Subscription (Phase 6). Repo defaults to Noop until the RevenueCat key is
+  // wired; the cached entitlement (incl. local ₹0 grant) persists and survives
+  // offline. refresh() is guarded so a billing hiccup never blocks launch.
+  final subscriptionStore = await SubscriptionStore.open();
+  final subscription = SubscriptionController(
+    const NoopSubscriptionRepository(),
+    subscriptionStore,
+  );
+  final savedSub = subscriptionStore.load();
+  if (savedSub != null) subscription.loadFrom(savedSub);
+  try {
+    await subscription.refresh();
+  } catch (_) {/* non-fatal — keep cached entitlement */}
+
   final analytics = FirebaseAnalyticsService();
   AppEvents(analytics).appOpened();
 
@@ -87,6 +104,7 @@ Future<void> main() async {
         articleCatalogProvider.overrideWithValue(articleCatalog),
         preferencesControllerProvider.overrideWith((ref) => preferences),
         notificationServiceProvider.overrideWithValue(notifications),
+        subscriptionControllerProvider.overrideWith((ref) => subscription),
         analyticsProvider.overrideWithValue(analytics),
       ],
       child: const SahajApp(),

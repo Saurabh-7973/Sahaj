@@ -437,3 +437,49 @@ previously only widget-tested + composition-inferred.
   intact (external launch, state preserved).
 
 Confirms the manifest `tel:` DIAL query + url_launcher path work on-device.
+
+---
+
+## Phase 6 (partial) — Subscription code behind a seam — 2026-06-09
+
+The paywall + pricing + gating + repo, built with NO RevenueCat key and NO
+Play upload (those are the last plumbing step). All demoable with a fake.
+
+**Pure logic (TDD):**
+- `PricingTier` — free/low/standard/supporter = ₹0/499/999/1499; only paid tiers
+  have Play product ids (`sahaj_pro_499/999/1499`); ₹0 has none (Play won't list
+  a free sub — it's a local grant). `standard` is recommended.
+- `feature_gate` — `isFeatureLocked` + free allowances (`isArticleLocked` ≥3,
+  `isSessionLocked` ≥8 per synthesis §8).
+
+**Seam:**
+- `SubscriptionRepository` interface + `NoopSubscriptionRepository` default +
+  provider. Real `RevenueCatSubscriptionRepository` deferred to key-wiring.
+- `SubscriptionController` (ChangeNotifier) + `SubscriptionStore` (Hive):
+  `choose(tier)` grants ₹0 locally with no purchase / runs purchase for paid;
+  `refresh()` reconciles with backend but never expires a free grant;
+  `restore()`; persisted, survives offline relaunch. TDD with a fake repo.
+
+**UI (soft-paywall guardrails — synthesis §8 / principle 7):**
+- `PaywallScreen` — 4 tier cards, ₹999 "Recommended", single CTA
+  "Continue with ₹X / year", **X always present**, **"Maybe later" always**,
+  no countdowns, no red, honest tiny-print.
+- `SubscriptionPage` — current tier, "Manage in Google Play", restore, calm
+  why-pay copy (value not fear).
+- Me tab → "Upgrade to Pro" / "Sahaj Pro" tile.
+
+**Analytics:** `paywall_viewed` (source), `paywall_tier_selected`,
+`subscription_started`, `subscription_restored`.
+
+Wired in main() with the Noop repo (guarded refresh). 105 tests, analyze clean.
+
+### Deferred (the key-wiring step, when app is ready to test billing)
+- `RevenueCatSubscriptionRepository` impl + `Purchases.configure(key)` in main
+  (guarded), real offering/product fetch.
+- Play Console: upload AAB to internal testing → create the 3 products.
+- RevenueCat: link Play service account, entitlement `pro` + offering, SDK key.
+- Per-content free/Pro tagging in the catalog (currently gate logic exists but
+  sessions/articles aren't individually flagged yet) + soft-paywall on locked
+  taps.
+- `subscription_started`/`cancelled` real receipt events; wipe-all to clear the
+  subscription store.

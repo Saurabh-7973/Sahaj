@@ -9,6 +9,8 @@ import '../../me/me_dashboard.dart';
 import '../../onboarding/onboarding_controller.dart';
 import '../../sessions/progress_controller.dart';
 import '../../settings/settings_page.dart';
+import '../../subscription/pages/subscription_page.dart';
+import '../../subscription/subscription_controller.dart';
 
 /// Me tab — progress dashboard, settings, subscription (later phases).
 class MePage extends ConsumerWidget {
@@ -32,6 +34,22 @@ class MePage extends ConsumerWidget {
                   leadingIcon: Icons.insights_outlined,
                   title: 'Progress',
                   subtitle: 'Strength, control, consistency',
+                ),
+                const Divider(),
+                AppListTile(
+                  leadingIcon: Icons.workspace_premium_outlined,
+                  title: ref.watch(subscriptionControllerProvider).isPro
+                      ? 'Sahaj Pro'
+                      : 'Upgrade to Pro',
+                  subtitle: ref.watch(subscriptionControllerProvider).isPro
+                      ? 'Manage your subscription'
+                      : 'Unlock the full 12-week protocol',
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const SubscriptionPage(),
+                    ),
+                  ),
                 ),
                 const Divider(),
                 AppListTile(
