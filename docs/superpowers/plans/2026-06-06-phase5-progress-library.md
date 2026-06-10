@@ -1,5 +1,7 @@
 # Phase 5 — Progress Dashboard + Library Implementation Plan
 
+> **Status: EXECUTED** — shipped to `main`; checkboxes below were not ticked during execution. See docs/CHANGELOG.md for what was built and what was deferred.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Ship the Me progress dashboard (the conversion lever, synthesis §12) and a browseable, playable Library — both from data and content that already exist (SessionLogs, ProgressState, the 13-module catalog). No new content, no backend.

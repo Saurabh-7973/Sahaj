@@ -52,3 +52,6 @@ android/key.properties
 *.jks
 *.keystore
 !android/app/debug.keystore
+
+# TTS audition output (throwaway listening samples)
+tool/auditions/

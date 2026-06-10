@@ -483,3 +483,64 @@ Wired in main() with the Noop repo (guarded refresh). 105 tests, analyze clean.
   taps.
 - `subscription_started`/`cancelled` real receipt events; wipe-all to clear the
   subscription store.
+
+## Release signing + code-complete pass — 2026-06-09
+
+- Release signing wired: upload key read from gitignored `key.properties`
+  (`android/app/build.gradle.kts`); falls back to debug signing when absent so
+  CI/dev builds keep working. User runs `keytool` + fills passwords when ready.
+- Wipe-all now also clears the subscription store (a deleted account no longer
+  resurrects a Pro grant).
+- Notification tap deep-link: cold-start payload consumed in `main()` →
+  `reminder_opened` analytics (retention signal).
+- Privacy copy fixed: stopped promising cloud sync (not built; local-first is
+  the truth).
+
+With this, v1 feature code is complete — remaining work is content, keys
+(RevenueCat), and the device/UX passes.
+
+## Content — verified article + goal personalisation + session variety — 2026-06-10
+
+- **Pelvic-floor article verified + seeded**: research-merged, in-voice draft
+  replaces placeholder #1 in `assets/content/articles.json` (source kept in
+  `content/articles/`). Still needs doctor sign-off before Play. Other 5
+  articles remain placeholders pending the 7-topic batch.
+- **Goals now personalise the plan**: the computed `emphasis` set was never
+  consumed — wired it into Integration + Mastery weeks (5–12), Foundation
+  stays a shared base. Authored the 5 missing emphasis modules (reverse_kegel,
+  arousal_confidence, readiness, dopamine_rewire, advanced_control).
+- **Week-rotating session variety**: a tag may now have variant modules
+  (`tag_v2`, `tag_v3`); the scheduler rotates them by week so a phase no
+  longer replays the identical session weekly. Authored variants for every
+  repeated tag — catalog 13 → 54 modules, all in-voice, no health claims.
+- **Asset integrity test**: validates the real `sessions.json` — well-formed
+  modules, contiguous variant chains, and every plan tag from every
+  track/goal combination resolves to a session.
+
+## Audio playback engine — behind a seam — 2026-06-10
+
+Roadmap format decisions were already on record (just_audio + audio_session,
+M4A 96kbps, Firebase Storage stream-first + cache), so the engine is no
+longer held on content:
+
+- `SessionDef.audioRef` — optional per-locale map
+  (`{"en": "audio/<tag>_en.m4a"}`); absent = text+timer (whole catalog today).
+- `resolveAudio` pure logic (TDD): exact locale → `en` fallback → null;
+  classifies http(s) refs as network (streamed via `LockCachingAudioSource`,
+  cached for offline) vs bundled asset paths.
+- `SessionAudio` seam + Noop default + `JustAudioSessionAudio` impl
+  (audio-session speech config: ducks others, pauses on interruption).
+- Player integration (TDD with a fake): load+play on start, pause/play
+  toggles audio with the step timer, dispose releases the platform player,
+  text+timer sessions never touch the seam, bad ref degrades silently.
+- Wired via `sessionAudioFactoryProvider` in `main()`; Today + Library pass a
+  fresh instance per played session.
+
+Activating audio later is content-only: add `audioRef` to a module in
+`sessions.json` — zero code. 122 tests, analyze clean, debug APK builds.
+
+### Deferred
+- Lock-screen controls / background play (audio_service) — revisit once real
+  audio content exists and the in-session experience is validated.
+- TTS voice pick (Kokoro vs Edge `en-IN-PrabhatNeural` vs own voice) — listen,
+  don't theorize; then record the catalog.

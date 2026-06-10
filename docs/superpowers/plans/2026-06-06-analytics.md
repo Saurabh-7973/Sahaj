@@ -1,5 +1,7 @@
 # Analytics Instrumentation — Implementation Plan
 
+> **Status: EXECUTED** — shipped to `main`; checkboxes below were not ticked during execution. See docs/CHANGELOG.md for what was built and what was deferred.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** A thin analytics seam over Firebase Analytics + typed event helpers, with the synthesis funnel wired from the UI layer. Pure logic never imports Firebase.

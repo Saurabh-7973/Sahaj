@@ -1,5 +1,7 @@
 # Privacy & Settings (lean slice) — Implementation Plan
 
+> **Status: EXECUTED** — shipped to `main`; checkboxes below were not ticked during execution. See docs/CHANGELOG.md for what was built and what was deferred.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** A Settings screen reachable from the Me tab with the non-negotiable privacy controls (synthesis §9/§210): biometric lock, Book Mode disguise, disguise-name preference, notifications toggle, data export, delete-everything — built as testable logic, with native icon swap / OS notification scheduling deferred to the device pass.
