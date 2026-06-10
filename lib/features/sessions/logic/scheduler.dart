@@ -26,5 +26,19 @@ SessionDef? todaysSession({
   if (playable.isEmpty) return null;
 
   final tag = playable[(day - 1) % playable.length];
-  return catalog[tag];
+
+  // Week-over-week variety: a tag may have variant modules named `${tag}_v2`,
+  // `${tag}_v3`, … Rotate through them by week so the same slot doesn't replay
+  // the identical session every week. Tags with no variants stay stable.
+  final variants = <String>[tag];
+  for (var i = 2;; i++) {
+    final v = '${tag}_v$i';
+    if (catalog.containsKey(v)) {
+      variants.add(v);
+    } else {
+      break;
+    }
+  }
+  final chosen = variants[(week - 1) % variants.length];
+  return catalog[chosen];
 }

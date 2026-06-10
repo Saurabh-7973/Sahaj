@@ -381,5 +381,383 @@
         "guidance": "Carry the same awareness into real moments: pause, breathe, continue."
       }
     ]
+  },
+  "breathwork_basics_v2": {
+    "title": "The longer exhale",
+    "type": "breathwork",
+    "steps": [
+      {
+        "title": "Settle",
+        "seconds": 30,
+        "guidance": "Sit tall but easy. Let the shoulders drop."
+      },
+      {
+        "title": "Lengthen the out-breath",
+        "seconds": 150,
+        "guidance": "Breathe in for a count of four, out for a count of six. The long exhale tells your body it is safe to relax."
+      },
+      {
+        "title": "Rest",
+        "seconds": 60,
+        "guidance": "Let breathing return to normal. Notice the calm you made."
+      }
+    ]
+  },
+  "breathwork_basics_v3": {
+    "title": "Breath meets the floor",
+    "type": "breathwork",
+    "steps": [
+      {
+        "title": "Connect",
+        "seconds": 45,
+        "guidance": "Rest a hand low on your belly. Breathe slow and low, not high in the chest."
+      },
+      {
+        "title": "Soften on the exhale",
+        "seconds": 150,
+        "guidance": "As you breathe out, let the pelvic floor gently release downward. Breath and muscle, working together."
+      },
+      {
+        "title": "Close",
+        "seconds": 45,
+        "guidance": "No effort to hold anything. Just easy breath."
+      }
+    ]
+  },
+  "pfmt_identify_v2": {
+    "title": "Cleaner contractions",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Check in",
+        "seconds": 30,
+        "guidance": "Hand on your belly and thigh — these should stay still and soft."
+      },
+      {
+        "title": "Isolate",
+        "seconds": 150,
+        "guidance": "Lift only the pelvic floor, without clenching your stomach, thighs, or buttocks. Smaller and cleaner beats bigger and tense."
+      },
+      {
+        "title": "Release fully",
+        "seconds": 60,
+        "guidance": "Let go completely between each lift. The release is half the work."
+      }
+    ]
+  },
+  "pfmt_identify_v3": {
+    "title": "Steady holds",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Warm up",
+        "seconds": 45,
+        "guidance": "A few short lifts and full releases to wake the muscles."
+      },
+      {
+        "title": "Hold a little longer",
+        "seconds": 150,
+        "guidance": "Lift gently and hold for a slow count of five, then release for five. Keep breathing the whole time."
+      },
+      {
+        "title": "Ease off",
+        "seconds": 45,
+        "guidance": "Shake out, relax. Consistency beats strain."
+      }
+    ]
+  },
+  "anatomy_v2": {
+    "title": "The two key muscles",
+    "type": "education",
+    "steps": [
+      {
+        "title": "Meet them",
+        "seconds": 75,
+        "guidance": "Two muscles at the base — the ischiocavernosus and bulbocavernosus — do much of the control work. No need to memorise the names."
+      },
+      {
+        "title": "What they do",
+        "seconds": 90,
+        "guidance": "They squeeze at the base to support firmness and influence the timing of release. Training them is what these sessions build."
+      },
+      {
+        "title": "Why it helps",
+        "seconds": 45,
+        "guidance": "Responsive muscles mean steadier control. Gentle, regular practice is the path."
+      }
+    ]
+  },
+  "anatomy_v3": {
+    "title": "Squeeze and release, in balance",
+    "type": "education",
+    "steps": [
+      {
+        "title": "Two directions",
+        "seconds": 75,
+        "guidance": "A healthy pelvic floor does two things well: it lifts (squeeze) and it lets go (release)."
+      },
+      {
+        "title": "Balance matters",
+        "seconds": 90,
+        "guidance": "All squeezing and no releasing leaves muscles tight and tired. We train both, on purpose."
+      },
+      {
+        "title": "Takeaway",
+        "seconds": 45,
+        "guidance": "Strength and relaxation together — that is control."
+      }
+    ]
+  },
+  "reverse_kegel_intro_v2": {
+    "title": "Breath-led release",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Set up",
+        "seconds": 30,
+        "guidance": "Lie back, knees bent, body soft."
+      },
+      {
+        "title": "Release on the exhale",
+        "seconds": 150,
+        "guidance": "Breathe in slowly; on the long exhale, let the pelvic floor open and drop, like an easing of tension. No pushing."
+      },
+      {
+        "title": "Notice",
+        "seconds": 60,
+        "guidance": "That downward softening is the reverse kegel. This is the skill that builds control."
+      }
+    ]
+  },
+  "reverse_kegel_intro_v3": {
+    "title": "The tension scan",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Scan",
+        "seconds": 60,
+        "guidance": "Move attention from jaw to shoulders to belly to pelvic floor. Notice where you hold."
+      },
+      {
+        "title": "Let each go",
+        "seconds": 120,
+        "guidance": "At each spot, soften on an out-breath. Tension stored in the body works against you here."
+      },
+      {
+        "title": "Settle",
+        "seconds": 60,
+        "guidance": "End loose and easy."
+      }
+    ]
+  },
+  "kegel_reverse_combined_v2": {
+    "title": "Flowing reps",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Warm up",
+        "seconds": 45,
+        "guidance": "A few easy lifts and releases."
+      },
+      {
+        "title": "Alternate with rhythm",
+        "seconds": 150,
+        "guidance": "Squeeze for two, release for two, in a smooth rhythm. Never hold tension at the bottom."
+      },
+      {
+        "title": "Cool down",
+        "seconds": 45,
+        "guidance": "Slow it right down, then stop. Relaxed and done."
+      }
+    ]
+  },
+  "kegel_reverse_combined_v3": {
+    "title": "Squeeze, release, breathe",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Coordinate",
+        "seconds": 45,
+        "guidance": "Pair each lift with an out-breath, each release with an in-breath."
+      },
+      {
+        "title": "Practise",
+        "seconds": 150,
+        "guidance": "Move slowly so breath and muscle stay together. Control comes from coordination, not force."
+      },
+      {
+        "title": "Finish",
+        "seconds": 45,
+        "guidance": "Let everything settle."
+      }
+    ]
+  },
+  "stop_start_v2": {
+    "title": "The awareness ladder",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Frame",
+        "seconds": 60,
+        "guidance": "Picture arousal as a ladder from one to ten. The skill is noticing the rungs."
+      },
+      {
+        "title": "Ease at the edge",
+        "seconds": 150,
+        "guidance": "As you sense the higher rungs, slow down, breathe, soften — let it settle a step before continuing."
+      },
+      {
+        "title": "Learn",
+        "seconds": 60,
+        "guidance": "Each time you ease back, you teach your body that you are in charge."
+      }
+    ]
+  },
+  "stop_start_v3": {
+    "title": "Pause and breathe",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Set up",
+        "seconds": 45,
+        "guidance": "Get calm and unhurried."
+      },
+      {
+        "title": "Insert the pause",
+        "seconds": 150,
+        "guidance": "At the point of rising urgency, fully pause — three slow breaths — before going on. The pause is the practice."
+      },
+      {
+        "title": "Carry it",
+        "seconds": 45,
+        "guidance": "This same pause works in real moments."
+      }
+    ]
+  },
+  "mindset_dopamine_v2": {
+    "title": "Real over screen",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Notice the cue",
+        "seconds": 75,
+        "guidance": "Spot what pulls you to a screen — boredom, stress, habit. Naming it loosens its grip."
+      },
+      {
+        "title": "Swap the cue",
+        "seconds": 120,
+        "guidance": "Decide one real alternative in advance: a walk, a call, a few breaths. Plan beats willpower."
+      },
+      {
+        "title": "Commit",
+        "seconds": 45,
+        "guidance": "Pick today's swap. One is enough."
+      }
+    ]
+  },
+  "mindset_dopamine_v3": {
+    "title": "Urge surfing",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Watch it rise",
+        "seconds": 75,
+        "guidance": "An urge is a wave — it builds, peaks, and falls if you let it."
+      },
+      {
+        "title": "Ride, don't fight",
+        "seconds": 120,
+        "guidance": "Breathe and observe the urge without acting. Notice it soften on its own."
+      },
+      {
+        "title": "Note the win",
+        "seconds": 45,
+        "guidance": "You did not have to obey it. That is the muscle you are building."
+      }
+    ]
+  },
+  "pfmt_functional_v2": {
+    "title": "Control in motion",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Stand",
+        "seconds": 45,
+        "guidance": "On your feet, relaxed."
+      },
+      {
+        "title": "Engage while moving",
+        "seconds": 150,
+        "guidance": "Do gentle lifts while standing, walking, or shifting weight — control you can use in real life, not just lying down."
+      },
+      {
+        "title": "Release",
+        "seconds": 45,
+        "guidance": "Soften fully at the end."
+      }
+    ]
+  },
+  "pfmt_functional_v3": {
+    "title": "The pre-emptive lift",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Idea",
+        "seconds": 60,
+        "guidance": "A light, well-timed squeeze before a moment of rising arousal can steady you."
+      },
+      {
+        "title": "Practise the timing",
+        "seconds": 150,
+        "guidance": "Rehearse a gentle lift, hold briefly, release — getting the timing smooth and unforced."
+      },
+      {
+        "title": "Integrate",
+        "seconds": 30,
+        "guidance": "Smooth, not forced. That is mastery."
+      }
+    ]
+  },
+  "mental_rehearsal_v2": {
+    "title": "Rehearsing calm",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Picture it",
+        "seconds": 90,
+        "guidance": "Imagine an intimate moment unfolding slowly and easily, with room to breathe."
+      },
+      {
+        "title": "Stay with ease",
+        "seconds": 120,
+        "guidance": "If tension creeps in, pause the scene, breathe, and restart calm. You are training the nervous system."
+      },
+      {
+        "title": "Anchor",
+        "seconds": 30,
+        "guidance": "Calm rehearsed is calm available."
+      }
+    ]
+  },
+  "mental_rehearsal_v3": {
+    "title": "Recovering from a stumble",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Normalise",
+        "seconds": 75,
+        "guidance": "Moments do not always go to plan. That is human, not failure."
+      },
+      {
+        "title": "Rehearse the recovery",
+        "seconds": 135,
+        "guidance": "Picture a stumble, then yourself staying warm and unbothered — a breath, a smile, carrying on. Recovery is a skill too."
+      },
+      {
+        "title": "Close",
+        "seconds": 30,
+        "guidance": "Kindness to yourself is part of the training."
+      }
+    ]
   }
 }

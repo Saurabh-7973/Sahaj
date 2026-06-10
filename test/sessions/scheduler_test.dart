@@ -52,4 +52,38 @@ void main() {
     final b = todaysSession(plan: plan, week: 1, day: 2, catalog: catalog);
     expect(a!.tag, b!.tag);
   });
+
+  Plan planWeeks(List<int> numbers, List<String> tags) => Plan(
+        weeks: [
+          for (final n in numbers)
+            PlanWeek(number: n, phase: 'P', moduleTags: tags),
+        ],
+        track: Track.solo,
+        emphasis: const {},
+        startDifficulty: Difficulty.standard,
+      );
+
+  test('rotates tag variants week over week for freshness', () {
+    final varied = {
+      'breathwork_basics': _def('breathwork_basics'),
+      'breathwork_basics_v2': _def('breathwork_basics_v2'),
+      'breathwork_basics_v3': _def('breathwork_basics_v3'),
+    };
+    final plan = planWeeks([1, 2, 3, 4], ['breathwork_basics']);
+    String tagFor(int week) =>
+        todaysSession(plan: plan, week: week, day: 1, catalog: varied)!.tag;
+    // Same plan, same day — different session each week, wrapping at 3.
+    expect(tagFor(1), 'breathwork_basics');
+    expect(tagFor(2), 'breathwork_basics_v2');
+    expect(tagFor(3), 'breathwork_basics_v3');
+    expect(tagFor(4), 'breathwork_basics'); // wraps
+  });
+
+  test('a tag with no variants stays stable across weeks', () {
+    final plan = planWeeks([1, 9], ['anatomy']);
+    expect(todaysSession(plan: plan, week: 1, day: 1, catalog: catalog)!.tag,
+        'anatomy');
+    expect(todaysSession(plan: plan, week: 9, day: 1, catalog: catalog)!.tag,
+        'anatomy');
+  });
 }
