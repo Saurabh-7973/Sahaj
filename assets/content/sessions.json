@@ -81,7 +81,10 @@
         "seconds": 30,
         "guidance": "Let your breath return to normal. Notice the calm."
       }
-    ]
+    ],
+    "audioRef": {
+      "en": "assets/audio/breathwork_basics_en.m4a"
+    }
   },
   "kegel_reverse_combined": {
     "title": "Squeeze and release",

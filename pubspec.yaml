@@ -89,3 +89,4 @@ flutter:
   assets:
     - assets/content/sessions.json
     - assets/content/articles.json
+    - assets/audio/
