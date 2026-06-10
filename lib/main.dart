@@ -18,8 +18,10 @@ import 'data/subscription_store.dart';
 import 'features/notifications/local_notification_service.dart';
 import 'features/notifications/notification_service.dart';
 import 'features/onboarding/onboarding_controller.dart';
+import 'features/sessions/just_audio_session_audio.dart';
 import 'features/sessions/progress_controller.dart';
 import 'features/library/article_catalog.dart';
+import 'features/sessions/session_audio.dart';
 import 'features/sessions/session_catalog.dart';
 import 'features/settings/preferences_controller.dart';
 import 'features/subscription/subscription_controller.dart';
@@ -110,6 +112,9 @@ Future<void> main() async {
         notificationServiceProvider.overrideWithValue(notifications),
         subscriptionControllerProvider.overrideWith((ref) => subscription),
         analyticsProvider.overrideWithValue(analytics),
+        // Real audio playback; sessions without an audioRef never touch it.
+        sessionAudioFactoryProvider
+            .overrideWithValue(JustAudioSessionAudio.new),
       ],
       child: const SahajApp(),
     ),

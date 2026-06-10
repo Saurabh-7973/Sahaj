@@ -14,6 +14,7 @@ import '../../sessions/pages/mood_checkin_sheet.dart';
 import '../../sessions/pages/reflection_page.dart';
 import '../../sessions/pages/session_player_page.dart';
 import '../../sessions/progress_controller.dart';
+import '../../sessions/session_audio.dart';
 import '../../sessions/session_catalog.dart';
 
 /// Today tab — derives today's session from the plan + progress and runs the
@@ -154,6 +155,7 @@ class TodayPage extends ConsumerWidget {
       MaterialPageRoute<void>(
         builder: (_) => SessionPlayerPage(
           session: session,
+          audio: ref.read(sessionAudioFactoryProvider)(),
           onComplete: (pct) {
             completion = pct;
             Navigator.of(context).pop();

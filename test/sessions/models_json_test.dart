@@ -18,6 +18,33 @@ void main() {
     expect(def.totalSeconds, 90);
   });
 
+  test('SessionDef.fromJson parses optional audioRef per locale', () {
+    final def = SessionDef.fromJson('breathwork_basics', {
+      'title': 'Calm breathing',
+      'type': 'breathwork',
+      'steps': [
+        {'title': 'Inhale', 'seconds': 120, 'guidance': 'Slow breaths.'},
+      ],
+      'audioRef': {
+        'en': 'audio/breathwork_basics_en.m4a',
+        'hi': 'audio/breathwork_basics_hi.m4a',
+      },
+    });
+    expect(def.audioRef, {
+      'en': 'audio/breathwork_basics_en.m4a',
+      'hi': 'audio/breathwork_basics_hi.m4a',
+    });
+  });
+
+  test('SessionDef.fromJson leaves audioRef null when absent', () {
+    final def = SessionDef.fromJson('x', {
+      'title': 'X',
+      'type': 'kegel',
+      'steps': <dynamic>[],
+    });
+    expect(def.audioRef, isNull);
+  });
+
   test('SessionDef.fromJson falls back to education for unknown type', () {
     final def = SessionDef.fromJson('x', {
       'title': 'X',

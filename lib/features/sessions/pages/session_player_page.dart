@@ -4,20 +4,28 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../logic/audio_resolver.dart';
 import '../logic/models/session_models.dart';
 import '../logic/step_clock.dart';
+import '../session_audio.dart';
 
-/// Guided stepper player for a text/timer session. Calls [onComplete] with the
-/// completion fraction (1.0) when the last step finishes.
+/// Guided stepper player for a session. Text+timer always; when the session
+/// has an [SessionDef.audioRef], guided audio plays underneath and pause/play
+/// controls both. Calls [onComplete] with the completion fraction (1.0) when
+/// the last step finishes.
 class SessionPlayerPage extends StatefulWidget {
   const SessionPlayerPage({
     super.key,
     required this.session,
     required this.onComplete,
+    this.audio = const NoopSessionAudio(),
+    this.locale = 'en',
   });
 
   final SessionDef session;
   final ValueChanged<double> onComplete;
+  final SessionAudio audio;
+  final String locale;
 
   @override
   State<SessionPlayerPage> createState() => _SessionPlayerPageState();
@@ -29,13 +37,27 @@ class _SessionPlayerPageState extends State<SessionPlayerPage> {
   int _secondsLeft = 0;
   bool _playing = true;
   Timer? _timer;
+  ResolvedAudio? _audioSource;
 
   @override
   void initState() {
     super.initState();
     _durations = widget.session.steps.map((s) => s.seconds).toList();
     _secondsLeft = _durations.isEmpty ? 0 : _durations.first;
+    _audioSource = resolveAudio(widget.session, widget.locale);
+    if (_audioSource != null) unawaited(_startAudio());
     _startTimer();
+  }
+
+  Future<void> _startAudio() async {
+    // Guarded so a bad ref/network hiccup degrades to text+timer, never a
+    // crashed session.
+    try {
+      await widget.audio.load(_audioSource!);
+      if (mounted && _playing) await widget.audio.play();
+    } catch (_) {
+      _audioSource = null;
+    }
   }
 
   void _startTimer() {
@@ -57,7 +79,12 @@ class _SessionPlayerPageState extends State<SessionPlayerPage> {
     });
   }
 
-  void _togglePlay() => setState(() => _playing = !_playing);
+  void _togglePlay() {
+    setState(() => _playing = !_playing);
+    if (_audioSource != null) {
+      unawaited(_playing ? widget.audio.play() : widget.audio.pause());
+    }
+  }
 
   void _prevStep() {
     if (_step == 0) return;
@@ -82,6 +109,7 @@ class _SessionPlayerPageState extends State<SessionPlayerPage> {
   @override
   void dispose() {
     _timer?.cancel();
+    if (_audioSource != null) unawaited(widget.audio.dispose());
     super.dispose();
   }
 

@@ -8,6 +8,7 @@ import '../../library/library_catalog.dart';
 import '../../library/pages/article_reader_page.dart';
 import '../../sessions/pages/session_player_page.dart';
 import '../../sessions/progress_controller.dart';
+import '../../sessions/session_audio.dart';
 import '../../sessions/session_catalog.dart';
 import '../../subscription/logic/feature_gate.dart';
 import '../../subscription/soft_paywall.dart';
@@ -150,6 +151,7 @@ class LibraryPage extends ConsumerWidget {
       MaterialPageRoute<void>(
         builder: (_) => SessionPlayerPage(
           session: session,
+          audio: ref.read(sessionAudioFactoryProvider)(),
           onComplete: (pct) {
             completion = pct;
             Navigator.of(context).pop();

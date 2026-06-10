@@ -38,12 +38,18 @@ class SessionDef {
     required this.title,
     required this.type,
     required this.steps,
+    this.audioRef,
   });
 
   final String tag;
   final String title;
   final SessionType type;
   final List<SessionStep> steps;
+
+  /// Optional per-locale audio (`{'en': 'audio/<tag>_en.m4a', …}`). Null means
+  /// the session is text+timer only — true for the whole catalog until audio
+  /// content is recorded.
+  final Map<String, String>? audioRef;
 
   int get totalSeconds =>
       steps.fold(0, (sum, s) => sum + s.seconds);
@@ -55,6 +61,9 @@ class SessionDef {
         steps: ((json['steps'] as List?) ?? const [])
             .map((s) => SessionStep.fromJson(s as Map))
             .toList(),
+        audioRef: (json['audioRef'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as String),
+        ),
       );
 }
 
