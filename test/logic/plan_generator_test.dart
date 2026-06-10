@@ -27,6 +27,21 @@ void main() {
     expect(p.emphasis, contains('stop_start'));
   });
 
+  test('emphasis personalises the plan: goal tags appear in Weeks 5-12', () {
+    final p = generatePlan(
+      track: Track.solo,
+      goals: {Goal.pornRelationship}, // -> dopamine_rewire
+      baseline: emptyBaseline,
+      mindBody: {},
+    );
+    final foundation =
+        p.weeks.where((w) => w.number <= 4).expand((w) => w.moduleTags);
+    final later =
+        p.weeks.where((w) => w.number >= 5).expand((w) => w.moduleTags);
+    expect(later, contains('dopamine_rewire'));
+    expect(foundation, isNot(contains('dopamine_rewire')));
+  });
+
   test('low baseline band → gentle difficulty', () {
     final p = generatePlan(
       track: Track.solo,

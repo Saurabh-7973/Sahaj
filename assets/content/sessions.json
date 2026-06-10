@@ -3,117 +3,383 @@
     "title": "Know the ground",
     "type": "education",
     "steps": [
-      {"title": "Orient", "seconds": 60, "guidance": "We’ll map the pelvic floor — the hammock of muscles that supports control. No action yet, just understanding."},
-      {"title": "Picture it", "seconds": 60, "guidance": "Imagine a sling running front to back between your sit bones. That sling is what we train."},
-      {"title": "Why it matters", "seconds": 60, "guidance": "A responsive pelvic floor means steadier control and stronger erections. Consistency beats intensity."}
+      {
+        "title": "Orient",
+        "seconds": 60,
+        "guidance": "We’ll map the pelvic floor — the hammock of muscles that supports control. No action yet, just understanding."
+      },
+      {
+        "title": "Picture it",
+        "seconds": 60,
+        "guidance": "Imagine a sling running front to back between your sit bones. That sling is what we train."
+      },
+      {
+        "title": "Why it matters",
+        "seconds": 60,
+        "guidance": "A responsive pelvic floor means steadier control and stronger erections. Consistency beats intensity."
+      }
     ]
   },
   "pfmt_identify": {
     "title": "Finding the muscles",
     "type": "kegel",
     "steps": [
-      {"title": "Settle", "seconds": 30, "guidance": "Sit or lie comfortably. Breathe slowly and let your body soften."},
-      {"title": "Locate", "seconds": 90, "guidance": "Imagine stopping the flow of urine. The muscles that tighten are your target. Keep stomach and thighs relaxed."},
-      {"title": "Gentle holds", "seconds": 120, "guidance": "Squeeze for 3 seconds, release for 3. Breathe normally throughout."}
+      {
+        "title": "Settle",
+        "seconds": 30,
+        "guidance": "Sit or lie comfortably. Breathe slowly and let your body soften."
+      },
+      {
+        "title": "Locate",
+        "seconds": 90,
+        "guidance": "Imagine stopping the flow of urine. The muscles that tighten are your target. Keep stomach and thighs relaxed."
+      },
+      {
+        "title": "Gentle holds",
+        "seconds": 120,
+        "guidance": "Squeeze for 3 seconds, release for 3. Breathe normally throughout."
+      }
     ]
   },
   "reverse_kegel_intro": {
     "title": "Learning to let go",
     "type": "reverseKegel",
     "steps": [
-      {"title": "Settle", "seconds": 30, "guidance": "Comfortable position, slow breath."},
-      {"title": "Lengthen", "seconds": 120, "guidance": "On each exhale, gently push down and out — the opposite of a squeeze. This releases tension."},
-      {"title": "Rest", "seconds": 60, "guidance": "Let everything soften. Notice the difference between holding and releasing."}
+      {
+        "title": "Settle",
+        "seconds": 30,
+        "guidance": "Comfortable position, slow breath."
+      },
+      {
+        "title": "Lengthen",
+        "seconds": 120,
+        "guidance": "On each exhale, gently push down and out — the opposite of a squeeze. This releases tension."
+      },
+      {
+        "title": "Rest",
+        "seconds": 60,
+        "guidance": "Let everything soften. Notice the difference between holding and releasing."
+      }
     ]
   },
   "breathwork_basics": {
     "title": "Calm breathing",
     "type": "breathwork",
     "steps": [
-      {"title": "Settle", "seconds": 30, "guidance": "Close your eyes if that feels right."},
-      {"title": "Box breath", "seconds": 180, "guidance": "Inhale 4, hold 4, exhale 4, hold 4. Let the rhythm steady your nervous system."},
-      {"title": "Return", "seconds": 30, "guidance": "Let your breath return to normal. Notice the calm."}
+      {
+        "title": "Settle",
+        "seconds": 30,
+        "guidance": "Close your eyes if that feels right."
+      },
+      {
+        "title": "Box breath",
+        "seconds": 180,
+        "guidance": "Inhale 4, hold 4, exhale 4, hold 4. Let the rhythm steady your nervous system."
+      },
+      {
+        "title": "Return",
+        "seconds": 30,
+        "guidance": "Let your breath return to normal. Notice the calm."
+      }
     ]
   },
   "kegel_reverse_combined": {
     "title": "Squeeze and release",
     "type": "kegel",
     "steps": [
-      {"title": "Warm up", "seconds": 60, "guidance": "A few slow breaths to begin."},
-      {"title": "Combined sets", "seconds": 180, "guidance": "Squeeze for 5, release fully for 5, then a gentle reverse push for 5. Repeat."},
-      {"title": "Cool down", "seconds": 60, "guidance": "Soften completely. Rest."}
+      {
+        "title": "Warm up",
+        "seconds": 60,
+        "guidance": "A few slow breaths to begin."
+      },
+      {
+        "title": "Combined sets",
+        "seconds": 180,
+        "guidance": "Squeeze for 5, release fully for 5, then a gentle reverse push for 5. Repeat."
+      },
+      {
+        "title": "Cool down",
+        "seconds": 60,
+        "guidance": "Soften completely. Rest."
+      }
     ]
   },
   "stop_start": {
     "title": "Stop-start control",
     "type": "mindset",
     "steps": [
-      {"title": "Frame it", "seconds": 60, "guidance": "Stop-start trains you to recognise and ride the point of no return. This is a mental rehearsal of that skill."},
-      {"title": "Rise and pause", "seconds": 180, "guidance": "Imagine arousal climbing. At a high point, pause and breathe until it settles. Repeat the rise and pause."},
-      {"title": "Integrate", "seconds": 60, "guidance": "Notice you can influence the wave. Control is a skill you’re building."}
+      {
+        "title": "Frame it",
+        "seconds": 60,
+        "guidance": "Stop-start trains you to recognise and ride the point of no return. This is a mental rehearsal of that skill."
+      },
+      {
+        "title": "Rise and pause",
+        "seconds": 180,
+        "guidance": "Imagine arousal climbing. At a high point, pause and breathe until it settles. Repeat the rise and pause."
+      },
+      {
+        "title": "Integrate",
+        "seconds": 60,
+        "guidance": "Notice you can influence the wave. Control is a skill you’re building."
+      }
     ]
   },
   "sensate_solo": {
     "title": "Sensate focus (solo)",
     "type": "sensate",
     "steps": [
-      {"title": "Settle", "seconds": 60, "guidance": "Somewhere private and unhurried."},
-      {"title": "Attend", "seconds": 180, "guidance": "Touch your own skin slowly, with curiosity not goal. Notice sensation for its own sake."},
-      {"title": "Close", "seconds": 60, "guidance": "Rest. There was nothing to achieve — only to notice."}
+      {
+        "title": "Settle",
+        "seconds": 60,
+        "guidance": "Somewhere private and unhurried."
+      },
+      {
+        "title": "Attend",
+        "seconds": 180,
+        "guidance": "Touch your own skin slowly, with curiosity not goal. Notice sensation for its own sake."
+      },
+      {
+        "title": "Close",
+        "seconds": 60,
+        "guidance": "Rest. There was nothing to achieve — only to notice."
+      }
     ]
   },
   "sensate_partnered": {
     "title": "Sensate focus (partnered)",
     "type": "sensate",
     "steps": [
-      {"title": "Settle", "seconds": 60, "guidance": "If your partner is present, agree this is pressure-free. If not, rehearse it in your mind."},
-      {"title": "Attend", "seconds": 180, "guidance": "Slow, curious touch with no goal of performance. Focus on giving and receiving sensation."},
-      {"title": "Close", "seconds": 60, "guidance": "Rest together or reflect. Connection over outcome."}
+      {
+        "title": "Settle",
+        "seconds": 60,
+        "guidance": "If your partner is present, agree this is pressure-free. If not, rehearse it in your mind."
+      },
+      {
+        "title": "Attend",
+        "seconds": 180,
+        "guidance": "Slow, curious touch with no goal of performance. Focus on giving and receiving sensation."
+      },
+      {
+        "title": "Close",
+        "seconds": 60,
+        "guidance": "Rest together or reflect. Connection over outcome."
+      }
     ]
   },
   "mindset_dopamine": {
     "title": "Resetting the reward",
     "type": "mindset",
     "steps": [
-      {"title": "Understand", "seconds": 90, "guidance": "Overstimulation can dull arousal. This is about rebalancing, not shame."},
-      {"title": "Reflect", "seconds": 120, "guidance": "Bring to mind real intimacy — warmth, touch, presence. Let that be the cue, not a screen."},
-      {"title": "Commit", "seconds": 60, "guidance": "Choose one small change for today. Small and repeated wins."}
+      {
+        "title": "Understand",
+        "seconds": 90,
+        "guidance": "Overstimulation can dull arousal. This is about rebalancing, not shame."
+      },
+      {
+        "title": "Reflect",
+        "seconds": 120,
+        "guidance": "Bring to mind real intimacy — warmth, touch, presence. Let that be the cue, not a screen."
+      },
+      {
+        "title": "Commit",
+        "seconds": 60,
+        "guidance": "Choose one small change for today. Small and repeated wins."
+      }
     ]
   },
   "pfmt_functional": {
     "title": "Strength in motion",
     "type": "kegel",
     "steps": [
-      {"title": "Warm up", "seconds": 60, "guidance": "Slow breaths, gentle holds to begin."},
-      {"title": "Functional holds", "seconds": 180, "guidance": "Longer holds — 8 to 10 seconds — with full release between. Quality over count."},
-      {"title": "Cool down", "seconds": 60, "guidance": "Release and rest."}
+      {
+        "title": "Warm up",
+        "seconds": 60,
+        "guidance": "Slow breaths, gentle holds to begin."
+      },
+      {
+        "title": "Functional holds",
+        "seconds": 180,
+        "guidance": "Longer holds — 8 to 10 seconds — with full release between. Quality over count."
+      },
+      {
+        "title": "Cool down",
+        "seconds": 60,
+        "guidance": "Release and rest."
+      }
     ]
   },
   "mental_rehearsal": {
     "title": "Mental rehearsal",
     "type": "mindset",
     "steps": [
-      {"title": "Relax", "seconds": 60, "guidance": "Settle into calm. Slow breath."},
-      {"title": "Rehearse", "seconds": 180, "guidance": "Picture a calm, confident encounter from start to finish. Feel steadiness, not pressure."},
-      {"title": "Anchor", "seconds": 60, "guidance": "Carry that steady feeling with you. You’ve practised it."}
+      {
+        "title": "Relax",
+        "seconds": 60,
+        "guidance": "Settle into calm. Slow breath."
+      },
+      {
+        "title": "Rehearse",
+        "seconds": 180,
+        "guidance": "Picture a calm, confident encounter from start to finish. Feel steadiness, not pressure."
+      },
+      {
+        "title": "Anchor",
+        "seconds": 60,
+        "guidance": "Carry that steady feeling with you. You’ve practised it."
+      }
     ]
   },
   "partner_communication": {
     "title": "Talking together",
     "type": "education",
     "steps": [
-      {"title": "Why it helps", "seconds": 60, "guidance": "Open talk lowers performance pressure more than any technique."},
-      {"title": "Rehearse a line", "seconds": 150, "guidance": "Plan one honest, kind sentence you could say to your partner about going slow. Practise it in your mind."},
-      {"title": "Commit", "seconds": 60, "guidance": "Decide when you might share it. No rush."}
+      {
+        "title": "Why it helps",
+        "seconds": 60,
+        "guidance": "Open talk lowers performance pressure more than any technique."
+      },
+      {
+        "title": "Rehearse a line",
+        "seconds": 150,
+        "guidance": "Plan one honest, kind sentence you could say to your partner about going slow. Practise it in your mind."
+      },
+      {
+        "title": "Commit",
+        "seconds": 60,
+        "guidance": "Decide when you might share it. No rush."
+      }
     ]
   },
   "first_encounter_readiness": {
     "title": "Readiness",
     "type": "mindset",
     "steps": [
-      {"title": "Reframe", "seconds": 60, "guidance": "A first or next encounter is an experience to share, not a test to pass."},
-      {"title": "Rehearse calm", "seconds": 150, "guidance": "Picture yourself relaxed, present, and unhurried. Breathe into that image."},
-      {"title": "Anchor", "seconds": 60, "guidance": "Confidence is built in small reps like this one."}
+      {
+        "title": "Reframe",
+        "seconds": 60,
+        "guidance": "A first or next encounter is an experience to share, not a test to pass."
+      },
+      {
+        "title": "Rehearse calm",
+        "seconds": 150,
+        "guidance": "Picture yourself relaxed, present, and unhurried. Breathe into that image."
+      },
+      {
+        "title": "Anchor",
+        "seconds": 60,
+        "guidance": "Confidence is built in small reps like this one."
+      }
+    ]
+  },
+  "reverse_kegel": {
+    "title": "The art of letting go",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Settle",
+        "seconds": 30,
+        "guidance": "Sit or lie down. Soften your jaw, shoulders, and belly. Nothing to achieve here."
+      },
+      {
+        "title": "Find the release",
+        "seconds": 90,
+        "guidance": "Instead of squeezing, gently let go — the feeling of releasing downward, like the start of a slow exhale. No force, just softening."
+      },
+      {
+        "title": "Practice",
+        "seconds": 120,
+        "guidance": "Breathe in slowly; on each exhale, let the pelvic floor drop and relax a little more. Squeezing builds strength — releasing builds control."
+      },
+      {
+        "title": "Close",
+        "seconds": 30,
+        "guidance": "A floor that can relax is as trained as one that can squeeze. Well done."
+      }
+    ]
+  },
+  "arousal_confidence": {
+    "title": "Steady, not pressured",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Frame",
+        "seconds": 90,
+        "guidance": "Arousal follows calm, not pressure. We're building ease in the body, not chasing a performance."
+      },
+      {
+        "title": "Breathe into it",
+        "seconds": 120,
+        "guidance": "Slow, low breaths. As the body settles, things have room to respond naturally. Nothing to push."
+      },
+      {
+        "title": "Anchor",
+        "seconds": 60,
+        "guidance": "Recall a moment you felt easy and at home in your body. Let that steadiness be your baseline."
+      }
+    ]
+  },
+  "readiness": {
+    "title": "Ready, in your own time",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Normalise",
+        "seconds": 90,
+        "guidance": "A first time, or a return after a long gap, deserves patience. Nerves are normal — they are not a verdict on you."
+      },
+      {
+        "title": "Rehearse calm",
+        "seconds": 120,
+        "guidance": "Picture the moment unfolding slowly. Pauses are allowed. Breathing is allowed. Ease over urgency."
+      },
+      {
+        "title": "One intention",
+        "seconds": 60,
+        "guidance": "Set a single gentle intention: presence over performance."
+      }
+    ]
+  },
+  "dopamine_rewire": {
+    "title": "Rewiring the pull",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Notice",
+        "seconds": 90,
+        "guidance": "Notice the pull toward a screen without judging it. Awareness is the first lever, not willpower."
+      },
+      {
+        "title": "Redirect",
+        "seconds": 120,
+        "guidance": "When the urge rises, breathe and bring to mind real connection — warmth, touch, presence. Let that be the cue."
+      },
+      {
+        "title": "Small win",
+        "seconds": 60,
+        "guidance": "Choose one screen-free choice today. Small, repeated wins rewire the pattern over time."
+      }
+    ]
+  },
+  "advanced_control": {
+    "title": "Control as a skill",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Warm up",
+        "seconds": 60,
+        "guidance": "A few gentle squeezes with full releases to wake the muscles. Relaxed stomach and thighs."
+      },
+      {
+        "title": "Edge awareness",
+        "seconds": 150,
+        "guidance": "Notice arousal building, and practise easing back before the peak — squeeze, breathe, soften. Control is a skill you build, not a switch you flip."
+      },
+      {
+        "title": "Integrate",
+        "seconds": 90,
+        "guidance": "Carry the same awareness into real moments: pause, breathe, continue."
+      }
     ]
   }
 }
