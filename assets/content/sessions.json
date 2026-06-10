@@ -759,5 +759,383 @@
         "guidance": "Kindness to yourself is part of the training."
       }
     ]
+  },
+  "sensate_solo_v2": {
+    "title": "Breath and skin",
+    "type": "sensate",
+    "steps": [
+      {
+        "title": "Settle",
+        "seconds": 45,
+        "guidance": "Somewhere private and unhurried. Slow your breathing first."
+      },
+      {
+        "title": "Touch with the breath",
+        "seconds": 150,
+        "guidance": "Move slow, curious touch in time with your breath. No goal but to notice what each spot feels like."
+      },
+      {
+        "title": "Rest",
+        "seconds": 45,
+        "guidance": "Nothing to achieve. Just what you noticed."
+      }
+    ]
+  },
+  "sensate_solo_v3": {
+    "title": "A wider map",
+    "type": "sensate",
+    "steps": [
+      {
+        "title": "Begin",
+        "seconds": 45,
+        "guidance": "Sit or lie comfortably, unhurried."
+      },
+      {
+        "title": "Explore beyond the obvious",
+        "seconds": 150,
+        "guidance": "Bring attention to hands, forearms, chest, neck — neutral curiosity, no destination. Sensation for its own sake."
+      },
+      {
+        "title": "Close",
+        "seconds": 45,
+        "guidance": "Let the attention soften and rest."
+      }
+    ]
+  },
+  "sensate_partnered_v2": {
+    "title": "Taking turns",
+    "type": "sensate",
+    "steps": [
+      {
+        "title": "Agree",
+        "seconds": 45,
+        "guidance": "Agree it is pressure-free. If your partner is not here, rehearse it in your mind."
+      },
+      {
+        "title": "Give, then receive",
+        "seconds": 150,
+        "guidance": "One gives slow, curious touch; the other simply receives. Then swap. No goal of performance."
+      },
+      {
+        "title": "Reflect",
+        "seconds": 45,
+        "guidance": "Connection over outcome. Notice how that felt."
+      }
+    ]
+  },
+  "sensate_partnered_v3": {
+    "title": "Naming what's pleasant",
+    "type": "sensate",
+    "steps": [
+      {
+        "title": "Set the tone",
+        "seconds": 45,
+        "guidance": "Pressure-free, unhurried, together or rehearsed."
+      },
+      {
+        "title": "Say it out loud",
+        "seconds": 150,
+        "guidance": "As you give or receive touch, name simply what feels pleasant. Words build presence and lower pressure."
+      },
+      {
+        "title": "Close",
+        "seconds": 45,
+        "guidance": "Rest together. Closeness, not a test."
+      }
+    ]
+  },
+  "first_encounter_readiness_v2": {
+    "title": "Permission to pause",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Reframe",
+        "seconds": 75,
+        "guidance": "Slowing down or pausing is always allowed — in rehearsal and in real life."
+      },
+      {
+        "title": "Rehearse the pause",
+        "seconds": 120,
+        "guidance": "Picture a moment, then yourself calmly slowing, breathing, continuing when ready. The pause is yours to take."
+      },
+      {
+        "title": "Anchor",
+        "seconds": 45,
+        "guidance": "Knowing you can pause is what lets you relax."
+      }
+    ]
+  },
+  "first_encounter_readiness_v3": {
+    "title": "Presence over outcome",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Reframe",
+        "seconds": 75,
+        "guidance": "An encounter is shared experience, not a result to deliver."
+      },
+      {
+        "title": "Rest attention on connection",
+        "seconds": 120,
+        "guidance": "Picture focusing on warmth, touch, and the other person — not on monitoring yourself."
+      },
+      {
+        "title": "Anchor",
+        "seconds": 45,
+        "guidance": "Presence is the whole skill. Build it in small reps like this."
+      }
+    ]
+  },
+  "partner_communication_v2": {
+    "title": "Listening, too",
+    "type": "education",
+    "steps": [
+      {
+        "title": "Why it helps",
+        "seconds": 75,
+        "guidance": "Communication is as much hearing them as speaking. Curiosity lowers pressure for both."
+      },
+      {
+        "title": "Rehearse a question",
+        "seconds": 120,
+        "guidance": "Plan one kind, open question you could ask your partner about what they enjoy or want to slow down."
+      },
+      {
+        "title": "Commit",
+        "seconds": 45,
+        "guidance": "Decide a calm moment to ask. No rush."
+      }
+    ]
+  },
+  "partner_communication_v3": {
+    "title": "The check-in after",
+    "type": "education",
+    "steps": [
+      {
+        "title": "Idea",
+        "seconds": 75,
+        "guidance": "A gentle word afterward builds trust as much as anything beforehand."
+      },
+      {
+        "title": "Rehearse a line",
+        "seconds": 120,
+        "guidance": "Plan one warm, honest sentence for after — appreciation or a small reflection, not analysis."
+      },
+      {
+        "title": "Commit",
+        "seconds": 45,
+        "guidance": "Kindness, on both sides of the moment."
+      }
+    ]
+  },
+  "reverse_kegel_v2": {
+    "title": "Drop and breathe",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Set up",
+        "seconds": 30,
+        "guidance": "Lie back, knees bent, fully soft."
+      },
+      {
+        "title": "Exhale-led release",
+        "seconds": 150,
+        "guidance": "On each long out-breath, let the pelvic floor drop and open a little more. Releasing, never pushing."
+      },
+      {
+        "title": "Notice",
+        "seconds": 30,
+        "guidance": "This softening is the skill that gives you control."
+      }
+    ]
+  },
+  "reverse_kegel_v3": {
+    "title": "Release under calm",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Settle",
+        "seconds": 45,
+        "guidance": "Slow the breath; soften jaw and shoulders."
+      },
+      {
+        "title": "Let go, calmly",
+        "seconds": 135,
+        "guidance": "Picture an easy, unhurried moment as you release the pelvic floor on each exhale. Calm body, open muscles."
+      },
+      {
+        "title": "Close",
+        "seconds": 30,
+        "guidance": "Loose and easy. Well done."
+      }
+    ]
+  },
+  "arousal_confidence_v2": {
+    "title": "Body at ease",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Relax in order",
+        "seconds": 120,
+        "guidance": "Soften feet, legs, belly, chest, shoulders, jaw — one by one. A calm body is the foundation."
+      },
+      {
+        "title": "Let it follow",
+        "seconds": 90,
+        "guidance": "With the body at ease, things respond in their own time. Nothing to force or chase."
+      },
+      {
+        "title": "Anchor",
+        "seconds": 30,
+        "guidance": "Ease first. The rest follows."
+      }
+    ]
+  },
+  "arousal_confidence_v3": {
+    "title": "Trust the build",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Frame",
+        "seconds": 75,
+        "guidance": "Pressure works against you here. Patience works with you."
+      },
+      {
+        "title": "Breathe and wait",
+        "seconds": 120,
+        "guidance": "Slow breaths, no monitoring, no rushing. Let things build at their own pace."
+      },
+      {
+        "title": "Anchor",
+        "seconds": 30,
+        "guidance": "Trust, not effort."
+      }
+    ]
+  },
+  "readiness_v2": {
+    "title": "Small steps",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Reframe",
+        "seconds": 75,
+        "guidance": "Readiness is built in small, low-pressure reps — not one big leap."
+      },
+      {
+        "title": "Picture one step",
+        "seconds": 120,
+        "guidance": "Imagine a single, easy, low-stakes step forward and yourself calm through it."
+      },
+      {
+        "title": "Anchor",
+        "seconds": 45,
+        "guidance": "One small step counts. You've taken one now."
+      }
+    ]
+  },
+  "readiness_v3": {
+    "title": "Kinder self-talk",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Notice the voice",
+        "seconds": 75,
+        "guidance": "Spot the harsh inner line — 'what if I fail'. Naming it loosens it."
+      },
+      {
+        "title": "Replace it",
+        "seconds": 120,
+        "guidance": "Swap in something steady and true: 'I can go slow, I can pause, I am okay.'"
+      },
+      {
+        "title": "Anchor",
+        "seconds": 45,
+        "guidance": "How you speak to yourself shapes how you show up."
+      }
+    ]
+  },
+  "dopamine_rewire_v2": {
+    "title": "Boredom without a screen",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Sit with it",
+        "seconds": 90,
+        "guidance": "Let a dull, restless moment exist without reaching for a screen. It passes."
+      },
+      {
+        "title": "Breathe through",
+        "seconds": 120,
+        "guidance": "Three slow breaths. Notice the restlessness rise and fade on its own."
+      },
+      {
+        "title": "Note the win",
+        "seconds": 30,
+        "guidance": "You did not need the screen. That is the rewire."
+      }
+    ]
+  },
+  "dopamine_rewire_v3": {
+    "title": "The reward swap",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Spot the reward",
+        "seconds": 75,
+        "guidance": "Screens offer a fast, hollow reward. Real life offers slower, fuller ones."
+      },
+      {
+        "title": "Choose one",
+        "seconds": 120,
+        "guidance": "Pick one real reward for today — movement, a call, sunlight, rest — and plan when."
+      },
+      {
+        "title": "Commit",
+        "seconds": 45,
+        "guidance": "One real choice, repeated, retrains the pull."
+      }
+    ]
+  },
+  "advanced_control_v2": {
+    "title": "Breath as the brake",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Warm up",
+        "seconds": 45,
+        "guidance": "A few gentle squeezes with full releases."
+      },
+      {
+        "title": "Ease with the exhale",
+        "seconds": 150,
+        "guidance": "As arousal rises, use a long, slow out-breath to ease it back a step. Breath is your steadiest brake."
+      },
+      {
+        "title": "Integrate",
+        "seconds": 45,
+        "guidance": "Slow exhale, then continue. Usable anywhere."
+      }
+    ]
+  },
+  "advanced_control_v3": {
+    "title": "Know your ladder",
+    "type": "kegel",
+    "steps": [
+      {
+        "title": "Map it",
+        "seconds": 75,
+        "guidance": "Learn your own cues for rising arousal — the early rungs, not just the top."
+      },
+      {
+        "title": "Ease earlier",
+        "seconds": 135,
+        "guidance": "Practise easing back at an early rung — squeeze, breathe, soften — before urgency peaks. Earlier is easier."
+      },
+      {
+        "title": "Integrate",
+        "seconds": 30,
+        "guidance": "The sooner you notice, the more control you have."
+      }
+    ]
   }
 }
