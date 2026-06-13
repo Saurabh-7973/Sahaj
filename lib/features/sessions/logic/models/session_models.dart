@@ -192,6 +192,7 @@ class SessionLog {
     required this.completedAt,
     required this.completionPct,
     required this.moodBefore,
+    this.holdSeconds = 0,
     this.perceivedDifficulty,
     this.journalNote,
   });
@@ -202,6 +203,10 @@ class SessionLog {
   final DateTime completedAt;
   final double completionPct;
   final List<String> moodBefore;
+
+  /// Seconds spent in squeeze phases (volume metric only — never judgment).
+  final int holdSeconds;
+
   final PerceivedDifficulty? perceivedDifficulty;
   final String? journalNote;
 
@@ -212,6 +217,7 @@ class SessionLog {
         'completedAt': completedAt.toIso8601String(),
         'completionPct': completionPct,
         'moodBefore': moodBefore,
+        'holdSeconds': holdSeconds,
         'perceivedDifficulty': perceivedDifficulty?.name,
         'journalNote': journalNote,
       };
@@ -223,6 +229,7 @@ class SessionLog {
         completedAt: DateTime.parse(json['completedAt'] as String),
         completionPct: (json['completionPct'] as num).toDouble(),
         moodBefore: List<String>.from(json['moodBefore'] as List? ?? const []),
+        holdSeconds: (json['holdSeconds'] as num?)?.toInt() ?? 0,
         perceivedDifficulty:
             _difficultyFromName(json['perceivedDifficulty'] as String?),
         journalNote: json['journalNote'] as String?,

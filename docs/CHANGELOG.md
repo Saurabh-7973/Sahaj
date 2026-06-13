@@ -581,3 +581,22 @@ Build-order step 3 (`m2_today_spec.md`, mocks m2_01–04).
 - #2: gap threshold default 3 — constant in `today_logic.dart`, change there.
 - #3: date format hardcoded English pending l10n call.
 - #4: free-practice link done-state-only, as recommended.
+
+## Lamplight M3 — Me / Progress & Check-ins — 2026-06-13
+
+Build-order step 4 (`m3_progress_spec.md`, mocks m3_01–04).
+
+- **Honesty doctrine enforced in code:** every chart carries a source tag (`from your session logs` / `from your sessions` / `from your check-ins`); nothing is projected; the honesty footer ("We never estimate…") ships on every state; down/flat never alarms — flat = faint em-dash, dip = faint "one measurement, not a verdict", no red, no coloured ▼. Dashboard is 100% free (no chart gated).
+- **Data layer:** `CheckinStore` + `CheckinController` (records {week, raw scores, completedAt}; pendingWeek marker for deferred check-ins; week-0 read from onboarding `baselineRaw`). `SessionLog.holdSeconds` added — the player now counts squeeze-phase seconds for the honest MIN+HOLD-SECONDS volume label. Wired into wipe + JSON export.
+- **dashboard_logic.dart** (pure, tested): domain id→label map per track (Control/Confidence/Staying-power · Control/Confidence/Calm — DECISION #2 flagged), check-in series (points at wk 0/4/8/12, deltas vs week-0 computed at render never stored, decision #1 relative-only), delta caption (ups only, honest "small movements" framing), consistency grid (1 row → 4 then slides), weekly volume, input recap (sessions · minutes · D of N days).
+- **Widgets:** JourneySpine (horizontal, moss/ochre/faint, phase ✓), StatTile, ConsistencyGrid (3 moss intensities), VolumeBars (sand/current-ochre, 400ms draw), CheckinChart painter (baseline, lit gradient dots + halo, dashed futures, gradient line, week labels, TalkBack sentence).
+- **Me tab rebuilt to the growth rule:** cards earn existence (no stat tiles pre-first-session; check-ins card always present with the wk-0 promise); the one reorder the tab does — check-ins moves above volume once a comparison exists, card border warms + `first comparison` chip; reflection-trend strip cut (effort feeds Today's why-line).
+- **Check-in flow (m3_04):** intro (diamond medallion, "Same questions as week 0.", Begin/Tomorrow) → questions (reuse onboarding SelectableOption, persona battery, identical wording) → result on the deep room (enlarged chart, domain delta rows ▲/—, moss input-recap card pairing outcomes with inputs, honesty line). Wired: the M1 milestone "Take the check-in" now launches it; "Tomorrow" defers and re-surfaces at the next completion only (never Today, never notification).
+- **Verification:** 193 tests green (check-in series/grid/volume/recap unit tests, dashboard widget states, check-in flow, 1.3× string-room). Screenshots m3_01–04 → `docs/ui_review/`.
+
+### Open decisions surfaced
+
+- #1: deltas relative-only ("on your own week-0 scale"), as recommended.
+- #2: domain labels derived 1:1 from the built baseline batteries — confirm against the plan engine before adding domains.
+- #3: flat/dip copy uses the generic doctrine line (no evidence-backed week-4 line found in synthesis.md).
+- #4: Me subscription tile shows a plain label — revisit in M7.

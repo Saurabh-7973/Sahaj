@@ -8,12 +8,14 @@ String assembleExportJson({
   required List<Map<String, dynamic>> logs,
   required Map<String, dynamic> preferences,
   required DateTime exportedAt,
+  List<Map<String, dynamic>> checkins = const [],
 }) {
   final payload = <String, dynamic>{
     'exportedAt': exportedAt.toIso8601String(),
     'onboarding': onboarding,
     'progress': progress,
     'sessionLogs': logs,
+    'checkins': checkins,
     'preferences': preferences,
   };
   return const JsonEncoder.withIndent('  ').convert(payload);

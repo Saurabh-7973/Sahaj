@@ -10,11 +10,13 @@ import 'app.dart';
 import 'core/analytics/analytics.dart';
 import 'core/analytics/events.dart';
 import 'core/analytics/firebase_analytics_service.dart';
+import 'data/checkin_store.dart';
 import 'data/onboarding_store.dart';
 import 'data/preferences_store.dart';
 import 'data/progress_store.dart';
 import 'data/session_log_store.dart';
 import 'data/subscription_store.dart';
+import 'features/me/checkin_controller.dart';
 import 'features/notifications/local_notification_service.dart';
 import 'features/notifications/notification_service.dart';
 import 'features/onboarding/onboarding_controller.dart';
@@ -60,6 +62,10 @@ Future<void> main() async {
 
   final catalog = await SessionCatalog.load();
   final articleCatalog = await ArticleCatalog.load();
+
+  // Check-ins (M3) — week 4/8/12 instrument records.
+  final checkinStore = await CheckinStore.open();
+  final checkins = CheckinController(checkinStore);
 
   // Privacy / Settings (Privacy Task 4)
   final prefsStore = await PreferencesStore.open();
@@ -109,6 +115,7 @@ Future<void> main() async {
         sessionCatalogProvider.overrideWithValue(catalog),
         articleCatalogProvider.overrideWithValue(articleCatalog),
         preferencesControllerProvider.overrideWith((ref) => preferences),
+        checkinControllerProvider.overrideWith((ref) => checkins),
         notificationServiceProvider.overrideWithValue(notifications),
         subscriptionControllerProvider.overrideWith((ref) => subscription),
         analyticsProvider.overrideWithValue(analytics),

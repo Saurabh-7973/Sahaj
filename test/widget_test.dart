@@ -50,6 +50,6 @@ void main() {
     // Switch to Me tab.
     await tester.tap(find.byIcon(Icons.person_outline));
     await tester.pumpAndSettle();
-    expect(find.text('Privacy & discreet mode'), findsOneWidget);
+    expect(find.text('Your progress'), findsOneWidget);
   });
 }

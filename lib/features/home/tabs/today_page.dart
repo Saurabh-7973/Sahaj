@@ -10,6 +10,8 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../../me/checkin_controller.dart';
+import '../../me/pages/checkin_flow.dart';
 import '../../onboarding/onboarding_controller.dart';
 import '../../settings/preferences_controller.dart';
 import '../../subscription/logic/feature_gate.dart';
@@ -228,10 +230,12 @@ class TodayPage extends ConsumerWidget {
 
     final startedAt = DateTime.now();
     var completion = 0.0;
+    var holdSeconds = 0;
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => SessionPlayerPage(
           session: playSession,
+          onHoldSeconds: (s) => holdSeconds = s,
           audio: ref.read(sessionAudioFactoryProvider)(),
           haptics: prefs.hapticsEnabled
               ? ref.read(hapticCuesProvider)
@@ -263,13 +267,16 @@ class TodayPage extends ConsumerWidget {
 
     events.sessionCompleted(playSession.type.name, completion);
 
-    // Completing day 7 of week 4/8/12 is the milestone moment.
-    final milestone =
-        !progress.isDoneToday &&
-            stateBefore.currentDay == 7 &&
-            const {4, 8, 12}.contains(stateBefore.currentWeek)
+    // Completing day 7 of week 4/8/12 is the milestone moment. A deferred
+    // ("Tomorrow") check-in re-surfaces here too — next completion only,
+    // never on Today, never via notification (M3 spec §3).
+    final checkins = ref.read(checkinControllerProvider);
+    final hitMilestone = stateBefore.currentDay == 7 &&
+            const {4, 8, 12}.contains(stateBefore.currentWeek) &&
+            !checkins.hasCompleted(stateBefore.currentWeek)
         ? stateBefore.currentWeek
         : null;
+    final milestone = hitMilestone ?? checkins.pendingWeek;
     final nthThisWeek = stateBefore.currentDay;
 
     progress.completeToday(
@@ -280,6 +287,7 @@ class TodayPage extends ConsumerWidget {
         completedAt: DateTime.now(),
         completionPct: completion,
         moodBefore: moodKeys,
+        holdSeconds: holdSeconds,
         perceivedDifficulty: reflection?.difficulty,
         journalNote: reflection?.note,
       ),
@@ -304,7 +312,7 @@ class TodayPage extends ConsumerWidget {
     }
 
     if (!context.mounted) return;
-    await Navigator.of(context).push<CompletionAction>(
+    final action = await Navigator.of(context).push<CompletionAction>(
       MaterialPageRoute<CompletionAction>(
         builder: (_) => CompletionPage(
           sessionNumber: sessionNumber,
@@ -318,8 +326,23 @@ class TodayPage extends ConsumerWidget {
         ),
       ),
     );
-    // M3 wires `takeCheckin` to the check-in instrument; until then every
-    // path lands on Today's done state (the check-in waits indefinitely).
+
+    if (milestone == null || !context.mounted) return;
+    switch (action) {
+      case CompletionAction.takeCheckin:
+        await Navigator.of(context).push<bool>(
+          MaterialPageRoute<bool>(
+            builder: (_) => CheckinFlow(week: milestone),
+          ),
+        );
+      case CompletionAction.tomorrow:
+        // The check-in waits indefinitely; it re-surfaces at the next
+        // completion only (handled by checkins.pendingWeek above).
+        checkins.defer(milestone);
+      case CompletionAction.finish:
+      case null:
+        break;
+    }
   }
 
   /// "Voice guidance — best with earphones. You can also mute and follow the

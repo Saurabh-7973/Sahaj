@@ -29,6 +29,7 @@ class SessionPlayerPage extends StatefulWidget {
     super.key,
     required this.session,
     required this.onComplete,
+    this.onHoldSeconds,
     this.audio = const NoopSessionAudio(),
     this.locale = 'en',
     this.haptics = const NoopHapticCues(),
@@ -41,6 +42,11 @@ class SessionPlayerPage extends StatefulWidget {
 
   final SessionDef session;
   final ValueChanged<double> onComplete;
+
+  /// Total squeeze-phase seconds, reported alongside completion (volume
+  /// metric per M1 spec §3 — never surfaced as judgment).
+  final ValueChanged<int>? onHoldSeconds;
+
   final SessionAudio audio;
   final String locale;
   final HapticCueEngine haptics;
@@ -65,6 +71,7 @@ class _SessionPlayerPageState extends State<SessionPlayerPage>
   late List<int> _durations;
   int _step = 0;
   int _secondsLeft = 0;
+  int _holdSeconds = 0;
   bool _playing = true;
   bool _ember = false;
   late bool _voiceOn;
@@ -119,11 +126,16 @@ class _SessionPlayerPageState extends State<SessionPlayerPage>
 
   void _tick() {
     if (!_playing) return;
+    // The second that just elapsed: was it a squeeze?
+    if (phaseAt(_current, _secondsLeft).phase == PlayerPhase.squeeze) {
+      _holdSeconds++;
+    }
     final prevStep = _step;
     final t = StepClock.tick(_durations, _step, _secondsLeft);
     if (t.finished) {
       _timer?.cancel();
       if (widget.hapticsEnabled) unawaited(widget.haptics.sessionDone());
+      widget.onHoldSeconds?.call(_holdSeconds);
       widget.onComplete(1.0);
       return;
     }
@@ -194,6 +206,7 @@ class _SessionPlayerPageState extends State<SessionPlayerPage>
     if (_step >= _durations.length - 1) {
       _timer?.cancel();
       if (widget.hapticsEnabled) unawaited(widget.haptics.sessionDone());
+      widget.onHoldSeconds?.call(_holdSeconds);
       widget.onComplete(1.0);
       return;
     }

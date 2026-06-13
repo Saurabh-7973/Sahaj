@@ -11,6 +11,7 @@ import '../notifications/notification_service.dart';
 import '../notifications/reminder_coordinator.dart';
 import '../onboarding/onboarding_controller.dart';
 import '../onboarding/widgets/selectable_option.dart';
+import '../me/checkin_controller.dart';
 import '../sessions/pages/face_down_coach.dart';
 import '../sessions/progress_controller.dart';
 import '../subscription/subscription_controller.dart';
@@ -216,6 +217,11 @@ class SettingsPage extends ConsumerWidget {
       progress: progress.state.toJson(),
       logs: progress.logs().map((l) => l.toJson()).toList(),
       preferences: prefs.toJson(),
+      checkins: ref
+          .read(checkinControllerProvider)
+          .records
+          .map((r) => r.toJson())
+          .toList(),
       exportedAt: DateTime.now(),
     );
     ref.read(appEventsProvider).dataExported();
@@ -247,6 +253,7 @@ class SettingsPage extends ConsumerWidget {
       progress: ref.read(progressControllerProvider),
       preferences: ref.read(preferencesControllerProvider),
       subscription: ref.read(subscriptionControllerProvider),
+      checkins: ref.read(checkinControllerProvider),
     );
     if (context.mounted) context.go(Routes.onboarding);
   }
