@@ -600,3 +600,24 @@ Build-order step 4 (`m3_progress_spec.md`, mocks m3_01–04).
 - #2: domain labels derived 1:1 from the built baseline batteries — confirm against the plan engine before adding domains.
 - #3: flat/dip copy uses the generic doctrine line (no evidence-backed week-4 line found in synthesis.md).
 - #4: Me subscription tile shows a plain label — revisit in M7.
+
+## Lamplight M4 — Onboarding (the shame-removal machine) — 2026-06-13
+
+Build-order step 5 (`m4_onboarding_spec.md`, mocks m4_01–03 + adopted v2 01–12).
+
+- **Full Lamplight reskin of the 12-screen arc** with canonical copy from the spec: Welcome (lotus line-mark, सहज eyebrow, free-forever chips), Promise (three trust-contract cards), Education (3-slide pager with calm-contour illustrations — hammock → pelvis cross-section → support/control/blood-flow vignettes), Persona (Persona Zero placed 4th, never last), Goals, Health check (why-strip → question → option cards → "tap an answer to continue"), Triage (turmeric reason chips, doctor-article + continue), Baselines (C8/C9), Privacy (biometric + double-tap coach strip), First session (ring preview at 7-min, Start now / This evening).
+- **m4_01 validated-instrument template:** PHQ-2/GAD-2 items get the "two standard questions every doctor uses — same words, answer honestly not bravely" strip + "PHQ-2 · standard wording, unchanged" footer; the item itself is rendered untouched (wrap-don't-reword).
+- **m4_02 plan reveal:** the only "wow" — an 8-beat staggered choreography (fade+rise ~80ms apart, ~700ms total, instant under reduced motion), journey rail with phase cards + milestone captions, and up to two personalized lines tied to real goals (`planRevealLines` — 6 goal→line mappings, never padded, decision #2). Commitment chips + CTA arrive last.
+- **m4_03 resume:** onboarding now persists `lastStep` after every advance; returning mid-flow lands on the resume screen (bookmark medallion, "You were on the health check.", "Question N of 10" — the one allowed numeral) → Continue resumes at the exact pending screen, Start over wipes onboarding answers only (decision #3).
+- **C7b crisis** reskinned to spec: deep room, largest type, no decoration, three `DialCard`s (real `tel:` intents, numbers as implemented), quiet text Continue. Self-harm item > "Not at all" triggers it immediately (decision #1 — confirmed against the built `self_harm` question + threshold).
+- **New shared widgets:** `StepDots` (no numerals), `DialCard`; `SelectableOption` reskinned to the Lamplight `.opt` style (shared with the M3 check-in).
+- **Flow rewritten** to self-contained Lamplight screens with explicit nav callbacks (replacing the old PageView); health/baseline/mind-body questions auto-advance on tap; triage conditional-skip preserved.
+- **Verification:** 214 tests green (rewritten crisis-trigger tests for the new mechanics, personalized-lines + resume-step tests, 1.3× string-room). Screenshots m4_01–03 + welcome/education/persona/health/first-session/crisis → `docs/ui_review/`.
+
+### Open decisions surfaced
+
+- #1: crisis trigger = `self_harm` item, any answer above "Not at all" (matches built logic).
+- #2: six goal→line mappings written to the plan engine's adaptations; two match the spec examples, four are new — review the tone.
+- #3: Start over is onboarding-only wipe, as recommended.
+- #4: screening-incomplete-on-Today is **not reachable** — onboarding is gated all-or-nothing (router redirect), the flow only completes at C12, so there is no partial-screening Today state to write. Revisit only if the gate changes.
+- Validated-item wording: shown with calm framing but the existing prompts are kept as-is; making them byte-identical to the published PHQ-2/GAD-2 source is a content/clinical task, not this visual pass.

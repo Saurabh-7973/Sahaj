@@ -13,6 +13,40 @@ class HealthQuestion {
   final List<String> options;
 }
 
+/// The validated-instrument items (PHQ-2 / GAD-2). Their stem + wording is
+/// shown verbatim with the "standard wording, unchanged" framing (M4·01).
+const kInstrumentItems = {'mood_down', 'mood_anxious', 'self_harm'};
+
+/// Self-harm-indicating item: any answer above index 0 routes to the crisis
+/// screen (M4 decision #1 — confirmed against this built question + threshold).
+const kCrisisItemId = 'self_harm';
+
+/// "Over the last 2 weeks, how often have you been bothered by:" — the shared
+/// PHQ/GAD stem, shown above the verbatim item.
+const kInstrumentStem =
+    'Over the last 2 weeks, how often have you been bothered by:';
+
+/// Why-strip per item (the warmth lives around the question, never in it).
+const kHealthWhyLines = <String, String>{
+  'morning_erections':
+      'Morning erections are a sign blood flow and nerves are working. '
+          'Good news if yes.',
+  'pelvic_pain':
+      'Pain or numbness is worth ruling out before any physical training.',
+  'weight_loss':
+      'Unexplained weight loss can point to something a doctor should check '
+          'first — that\'s the only reason we ask.',
+  'thirst_urination':
+      'Constant thirst or frequent urination can flag something treatable.',
+  'chest_breath':
+      'Anything heart-related is worth a check before exercise of any kind.',
+  'tremors_heart':
+      'These can have simple causes, but a doctor should rule out the rest.',
+  'prescriptions':
+      'Some medications affect function directly — knowing helps us be honest '
+          'about what training can and can\'t do.',
+};
+
 const kHealthQuestions = <HealthQuestion>[
   HealthQuestion(
     id: 'morning_erections',

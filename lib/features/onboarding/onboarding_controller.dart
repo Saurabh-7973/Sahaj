@@ -41,6 +41,11 @@ class OnboardingController extends ChangeNotifier {
   bool complete = false;
   bool biometricLock = false;
 
+  /// The onboarding step the user last reached, persisted after every
+  /// advance so an interruption (lock / kill) resumes at the exact screen
+  /// (M4·3). 0 until the flow moves past Welcome.
+  int lastStep = 0;
+
   // Derived/result state (computed on finish()).
   TriageResult? triage;
   MedicalClearance? medicalClearance;
@@ -91,6 +96,12 @@ class OnboardingController extends ChangeNotifier {
     _persist();
   }
 
+  void setLastStep(int step) {
+    if (step == lastStep) return;
+    lastStep = step;
+    _persist();
+  }
+
   void setMedicalClearance(MedicalClearance c) {
     medicalClearance = c;
     _persist();
@@ -130,6 +141,7 @@ class OnboardingController extends ChangeNotifier {
     plan = null;
     complete = false;
     biometricLock = false;
+    lastStep = 0;
     _store?.clear();
     notifyListeners();
   }
@@ -148,6 +160,7 @@ class OnboardingController extends ChangeNotifier {
         'medicalClearance': medicalClearance?.name,
         'complete': complete,
         'biometricLock': biometricLock,
+        'lastStep': lastStep,
       };
 
   void loadFrom(Map<String, dynamic> json) {
@@ -170,6 +183,7 @@ class OnboardingController extends ChangeNotifier {
         _enumByName(MedicalClearance.values, json['medicalClearance'] as String?);
     complete = (json['complete'] as bool?) ?? false;
     biometricLock = (json['biometricLock'] as bool?) ?? false;
+    lastStep = (json['lastStep'] as num?)?.toInt() ?? 0;
     if (complete) finish(); // recompute triage + plan from stored answers
   }
 

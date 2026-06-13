@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/theme/app_background.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../widgets/onb_chrome.dart';
 
-/// Shown immediately when the self-harm question is answered above
-/// "Not at all". Calm, non-clinical, India crisis resources. Not a gate —
-/// the user can return to onboarding via "I'm safe, continue".
+/// C7b — the highest-care screen. Shown immediately when the self-harm item
+/// is answered above "Not at all". Largest type and padding in the app; no
+/// dots, no watermark, no decoration beyond warmth. Tap-to-dial is the whole
+/// job. Not a gate — a quiet Continue returns to the questionnaire.
 class CrisisScreen extends StatelessWidget {
   const CrisisScreen({super.key, required this.onContinue});
 
   final VoidCallback onContinue;
 
+  // Numbers as implemented (wired to real tel: intents).
   static const _lines = [
-    ('Tele-MANAS', '14416'),
-    ('iCall', '9152987821'),
-    ('AASRA', '9820466726'),
+    ('Tele-MANAS · 14416', 'Free · 24/7 · Hindi & English', '14416'),
+    ('iCall', 'Mon–Sat · trained counsellors', '9152987821'),
+    ('AASRA', '24/7 · confidential', '9820466726'),
   ];
 
-  /// Opens the dialer for [number]. Best-effort and never throws — a crisis
-  /// screen must not crash if no dialer is available (e.g. a tablet).
+  /// Opens the dialer; best-effort, never throws (a crisis screen must not
+  /// crash if no dialer exists). The number is also on screen to dial by hand.
   Future<void> _dial(String number) async {
     try {
       await launchUrl(
@@ -27,57 +32,74 @@ class CrisisScreen extends StatelessWidget {
         mode: LaunchMode.externalApplication,
       );
     } catch (_) {
-      // Swallow: the number is also shown on screen to dial manually.
+      // Swallow.
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return AppScaffold(
-      scrollable: true,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: AppSpacing.xl),
-          Text('You deserve support', style: theme.textTheme.displaySmall),
-          const SizedBox(height: AppSpacing.lg),
-          Text(
-            'Thank you for being honest. What you’re feeling matters, and you '
-            'don’t have to carry it alone. Talking to someone trained can help '
-            'right now — these lines are free and confidential.',
-            style: theme.textTheme.bodyLarge,
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          for (final line in _lines)
-            Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.md),
-              child: AppCard(
-                onTap: () => _dial(line.$2),
-                child: Row(
-                  children: [
-                    Icon(Icons.call_outlined, color: theme.colorScheme.primary),
-                    const SizedBox(width: AppSpacing.lg),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(line.$1, style: theme.textTheme.titleMedium),
-                          Text(line.$2, style: theme.textTheme.bodyMedium),
-                        ],
-                      ),
-                    ),
-                  ],
+    final lamp = context.lamp;
+
+    return Scaffold(
+      body: LampBackground(
+        room: LampRoom.deep,
+        grain: false,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(26, 16, 26, 22),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: AppSpacing.md),
+                OnbEyebrow('Right now', moss: true),
+                const SizedBox(height: 10),
+                Text(
+                  'Pause the questionnaire — this matters more.',
+                  style: theme.textTheme.displaySmall
+                      ?.copyWith(fontSize: 31, height: 39 / 31),
                 ),
-              ),
+                const SizedBox(height: 14),
+                Text(
+                  'You mentioned thoughts of harming yourself. You deserve '
+                  'real support from a person, today.',
+                  style: theme.textTheme.bodyLarge
+                      ?.copyWith(fontSize: 16.5, height: 25 / 16.5, color: lamp.inkMuted),
+                ),
+                const SizedBox(height: AppSpacing.xl),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        for (final line in _lines)
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(bottom: AppSpacing.md),
+                            child: DialCard(
+                              name: line.$1,
+                              availability: line.$2,
+                              onCall: () => _dial(line.$3),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    'Sahaj will be here whenever you come back.',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ),
+                AppButton(
+                  label: 'Continue',
+                  variant: AppButtonVariant.text,
+                  onPressed: onContinue,
+                ),
+              ],
             ),
-          const SizedBox(height: AppSpacing.xl),
-          AppButton(
-            label: 'I’m safe, continue',
-            variant: AppButtonVariant.outlined,
-            onPressed: onContinue,
           ),
-        ],
+        ),
       ),
     );
   }

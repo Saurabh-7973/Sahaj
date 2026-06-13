@@ -1,112 +1,95 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sahaj/app.dart';
+import 'package:sahaj/core/theme/app_theme.dart';
+import 'package:sahaj/features/onboarding/health_questions.dart';
 import 'package:sahaj/features/onboarding/onboarding_controller.dart';
+import 'package:sahaj/features/onboarding/onboarding_flow.dart';
+import 'package:sahaj/features/onboarding/widgets/selectable_option.dart';
+
+const _selfHarmPrompt =
+    'Over the last 2 weeks, how often have you had thoughts that you '
+    'would be better off dead, or of hurting yourself?';
 
 void main() {
-  testWidgets('persona routing sets solo track for single user', (tester) async {
-    await tester.pumpWidget(const ProviderScope(child: SahajApp()));
-    await tester.pumpAndSettle();
-
-    final container = ProviderScope.containerOf(
-      tester.element(find.byType(SahajApp)),
-    );
-    final c = container.read(onboardingControllerProvider)
-      ..setPersona(Persona.singleInexperienced);
+  testWidgets('persona routing sets solo track for single user',
+      (tester) async {
+    final c = OnboardingController()..setPersona(Persona.singleInexperienced);
     expect(c.track, Track.solo);
   });
 
-  // ── Crisis-interrupt tests ───────────────────────────────────────────────
-
-  /// Drives the onboarding flow from the Welcome screen to the self_harm
-  /// health question (14th page, index 14).
-  ///
-  /// Taps 'Begin' (Welcome → Promise) then 'Continue' 13 more times to reach
-  /// the self_harm question page. Returns the [ProviderContainer] so the
-  /// caller can set health answers via the controller.
-  Future<ProviderContainer> driveToSelfHarm(WidgetTester tester) async {
-    await tester.pumpWidget(const ProviderScope(child: SahajApp()));
+  /// Drives the new auto-advancing flow from Welcome to the self_harm
+  /// question, tapping the first (benign) option on every health item before
+  /// it. Returns nothing — the self_harm prompt is on screen when done.
+  Future<void> driveToSelfHarm(WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          onboardingControllerProvider
+              .overrideWith((ref) => OnboardingController()),
+        ],
+        child: MaterialApp(theme: AppTheme.dark(), home: const OnboardingFlow()),
+      ),
+    );
     await tester.pumpAndSettle();
 
-    // Welcome → Promise
     await tester.tap(find.text('Begin'));
     await tester.pumpAndSettle();
-
-    // Promise + 12 more steps → self_harm (index 14 = 1 Begin + 13 Continue)
-    for (var i = 0; i < 13; i++) {
-      await tester.tap(find.text('Continue'));
+    await tester.tap(find.text('Sounds fair'));
+    await tester.pumpAndSettle();
+    // Education: Next, Next, Got it.
+    await tester.tap(find.text('Next'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Next'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Got it'));
+    await tester.pumpAndSettle();
+    // Persona: pick + Continue.
+    await tester.tap(find.byType(SelectableOption).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    // Goals: pick + Continue.
+    await tester.tap(find.byType(SelectableOption).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    // Health intro.
+    await tester.tap(find.text('Start the check'));
+    await tester.pumpAndSettle();
+    // 9 health questions before self_harm — tap the first (benign) option.
+    final before = kHealthQuestions.length - 1; // self_harm is last
+    for (var i = 0; i < before; i++) {
+      await tester.tap(find.byType(SelectableOption).first);
       await tester.pumpAndSettle();
     }
-
-    return ProviderScope.containerOf(
-      tester.element(find.byType(SahajApp)),
-    );
   }
 
-  testWidgets(
-    'self_harm answer above "Not at all" shows crisis screen',
-    (tester) async {
-      final container = await driveToSelfHarm(tester);
+  testWidgets('self_harm answer above "Not at all" shows the crisis screen',
+      (tester) async {
+    await driveToSelfHarm(tester);
+    expect(find.text(_selfHarmPrompt), findsOneWidget);
 
-      // Confirm we are on the self_harm question page.
-      expect(
-        find.text(
-          'Over the last 2 weeks, how often have you had thoughts that you '
-          'would be better off dead, or of hurting yourself?',
-        ),
-        findsOneWidget,
-      );
+    // "Several days" (index 1) → crisis.
+    await tester.tap(find.byType(SelectableOption).at(1));
+    await tester.pumpAndSettle();
 
-      // Set a positive answer (index 1 = "Several days") via the controller —
-      // the same path the UI SelectableOption tap takes — then tap Continue.
-      // _next() reads healthAnswers['self_harm'] and sets _showingCrisis.
-      container
-          .read(onboardingControllerProvider)
-          .setHealthAnswer('self_harm', 1);
-      await tester.pump(); // let Riverpod rebuild (notifyListeners)
+    expect(find.text('Pause the questionnaire — this matters more.'),
+        findsOneWidget);
+    expect(find.textContaining('Tele-MANAS'), findsOneWidget);
+  });
 
-      await tester.tap(find.text('Continue'));
-      await tester.pumpAndSettle();
+  testWidgets('"Not at all" on self_harm does NOT show the crisis screen',
+      (tester) async {
+    await driveToSelfHarm(tester);
+    expect(find.text(_selfHarmPrompt), findsOneWidget);
 
-      // Crisis screen must be visible.
-      expect(find.text('You deserve support'), findsOneWidget);
-      expect(find.text('Tele-MANAS'), findsOneWidget);
-      expect(find.text('14416'), findsOneWidget);
-    },
-  );
+    // "Not at all" (index 0) → advances, no crisis.
+    await tester.tap(find.byType(SelectableOption).first);
+    await tester.pumpAndSettle();
 
-  testWidgets(
-    '"Not at all" on self_harm does NOT show the crisis screen',
-    (tester) async {
-      final container = await driveToSelfHarm(tester);
-
-      // Confirm we are on the self_harm question page.
-      expect(
-        find.text(
-          'Over the last 2 weeks, how often have you had thoughts that you '
-          'would be better off dead, or of hurting yourself?',
-        ),
-        findsOneWidget,
-      );
-
-      // Set answer to index 0 = "Not at all" — must NOT trigger crisis screen.
-      container
-          .read(onboardingControllerProvider)
-          .setHealthAnswer('self_harm', 0);
-      await tester.pump();
-
-      await tester.tap(find.text('Continue'));
-      await tester.pumpAndSettle();
-
-      // Crisis screen must be absent; self_harm prompt also gone (page advanced).
-      expect(find.text('You deserve support'), findsNothing);
-      expect(
-        find.text(
-          'Over the last 2 weeks, how often have you had thoughts that you '
-          'would be better off dead, or of hurting yourself?',
-        ),
-        findsNothing,
-      );
-    },
-  );
+    expect(find.text('Pause the questionnaire — this matters more.'),
+        findsNothing);
+    expect(find.text(_selfHarmPrompt), findsNothing);
+  });
 }

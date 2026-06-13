@@ -13,7 +13,6 @@ void main() {
     await tester.pumpAndSettle();
 
     // Screen 1 — welcome.
-    expect(find.text('Sahaj'), findsOneWidget);
     expect(find.text('Train steady.'), findsOneWidget);
     expect(find.text('Begin'), findsOneWidget);
 
@@ -21,8 +20,8 @@ void main() {
     await tester.tap(find.text('Begin'));
     await tester.pumpAndSettle();
 
-    expect(find.text('A few promises'), findsOneWidget);
-    expect(find.text('Continue'), findsOneWidget);
+    expect(find.text('Three things, up front'), findsOneWidget);
+    expect(find.text('Sounds fair'), findsOneWidget);
   });
 
   testWidgets('Completing onboarding lands on the tab shell; tabs switch', (
