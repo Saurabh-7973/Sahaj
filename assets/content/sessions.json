@@ -37,7 +37,12 @@
       {
         "title": "Gentle holds",
         "seconds": 120,
-        "guidance": "Squeeze for 3 seconds, release for 3. Breathe normally throughout."
+        "guidance": "Squeeze for 3 seconds, release for 3. Breathe normally throughout.",
+        "pattern": {
+          "kind": "holdRelease",
+          "hold": 3,
+          "release": 3
+        }
       }
     ]
   },
@@ -74,7 +79,14 @@
       {
         "title": "Box breath",
         "seconds": 180,
-        "guidance": "Inhale 4, hold 4, exhale 4, hold 4. Let the rhythm steady your nervous system."
+        "guidance": "Inhale 4, hold 4, exhale 4, hold 4. Let the rhythm steady your nervous system.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "holdIn": 4,
+          "exhale": 4,
+          "holdOut": 4
+        }
       },
       {
         "title": "Return",
@@ -397,7 +409,12 @@
       {
         "title": "Lengthen the out-breath",
         "seconds": 150,
-        "guidance": "Breathe in for a count of four, out for a count of six. The long exhale tells your body it is safe to relax."
+        "guidance": "Breathe in for a count of four, out for a count of six. The long exhale tells your body it is safe to relax.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
       },
       {
         "title": "Rest",
@@ -460,7 +477,12 @@
       {
         "title": "Hold a little longer",
         "seconds": 150,
-        "guidance": "Lift gently and hold for a slow count of five, then release for five. Keep breathing the whole time."
+        "guidance": "Lift gently and hold for a slow count of five, then release for five. Keep breathing the whole time.",
+        "pattern": {
+          "kind": "holdRelease",
+          "hold": 5,
+          "release": 5
+        }
       },
       {
         "title": "Ease off",
@@ -565,7 +587,12 @@
       {
         "title": "Alternate with rhythm",
         "seconds": 150,
-        "guidance": "Squeeze for two, release for two, in a smooth rhythm. Never hold tension at the bottom."
+        "guidance": "Squeeze for two, release for two, in a smooth rhythm. Never hold tension at the bottom.",
+        "pattern": {
+          "kind": "holdRelease",
+          "hold": 2,
+          "release": 2
+        }
       },
       {
         "title": "Cool down",

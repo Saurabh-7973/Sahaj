@@ -10,6 +10,88 @@ SessionType _typeFromName(String? name) {
   return SessionType.education;
 }
 
+/// Optional rep/breath structure inside a step. Drives the ring mode, the
+/// "Hold 3 of 5" set line and the haptic cues; steps without a pattern play
+/// as a plain countdown. Rep/round count is derived from the step's seconds
+/// (`seconds ~/ cycleSeconds`) — the pattern only describes one cycle.
+sealed class StepPattern {
+  const StepPattern();
+
+  int get cycleSeconds;
+
+  static StepPattern? fromJson(Map? json) {
+    if (json == null) return null;
+    switch (json['kind'] as String?) {
+      case 'holdRelease':
+        return HoldReleasePattern(
+          holdSeconds: (json['hold'] as num).toInt(),
+          releaseSeconds: (json['release'] as num).toInt(),
+        );
+      case 'breath':
+        return BreathPattern(
+          inhaleSeconds: (json['inhale'] as num).toInt(),
+          holdInSeconds: (json['holdIn'] as num?)?.toInt() ?? 0,
+          exhaleSeconds: (json['exhale'] as num).toInt(),
+          holdOutSeconds: (json['holdOut'] as num?)?.toInt() ?? 0,
+        );
+    }
+    return null;
+  }
+
+  Map<String, dynamic> toJson();
+}
+
+/// Kegel / reverse-kegel rep: squeeze [holdSeconds], let go [releaseSeconds].
+@immutable
+class HoldReleasePattern extends StepPattern {
+  const HoldReleasePattern({
+    required this.holdSeconds,
+    required this.releaseSeconds,
+  });
+
+  final int holdSeconds;
+  final int releaseSeconds;
+
+  @override
+  int get cycleSeconds => holdSeconds + releaseSeconds;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'kind': 'holdRelease',
+        'hold': holdSeconds,
+        'release': releaseSeconds,
+      };
+}
+
+/// Paced breathing round; zero holds collapse to plain in/out.
+@immutable
+class BreathPattern extends StepPattern {
+  const BreathPattern({
+    required this.inhaleSeconds,
+    this.holdInSeconds = 0,
+    required this.exhaleSeconds,
+    this.holdOutSeconds = 0,
+  });
+
+  final int inhaleSeconds;
+  final int holdInSeconds;
+  final int exhaleSeconds;
+  final int holdOutSeconds;
+
+  @override
+  int get cycleSeconds =>
+      inhaleSeconds + holdInSeconds + exhaleSeconds + holdOutSeconds;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'kind': 'breath',
+        'inhale': inhaleSeconds,
+        if (holdInSeconds > 0) 'holdIn': holdInSeconds,
+        'exhale': exhaleSeconds,
+        if (holdOutSeconds > 0) 'holdOut': holdOutSeconds,
+      };
+}
+
 /// One timed step within a session.
 @immutable
 class SessionStep {
@@ -17,16 +99,30 @@ class SessionStep {
     required this.title,
     required this.seconds,
     required this.guidance,
+    this.pattern,
   });
 
   final String title;
   final int seconds;
   final String guidance;
+  final StepPattern? pattern;
+
+  /// Whole cycles that fit in this step (0 when un-patterned).
+  int get reps =>
+      pattern == null ? 0 : seconds ~/ pattern!.cycleSeconds;
+
+  SessionStep copyWith({int? seconds, StepPattern? pattern}) => SessionStep(
+        title: title,
+        seconds: seconds ?? this.seconds,
+        guidance: guidance,
+        pattern: pattern ?? this.pattern,
+      );
 
   factory SessionStep.fromJson(Map json) => SessionStep(
         title: json['title'] as String,
         seconds: (json['seconds'] as num).toInt(),
         guidance: json['guidance'] as String,
+        pattern: StepPattern.fromJson(json['pattern'] as Map?),
       );
 }
 
@@ -53,6 +149,14 @@ class SessionDef {
 
   int get totalSeconds =>
       steps.fold(0, (sum, s) => sum + s.seconds);
+
+  SessionDef copyWith({List<SessionStep>? steps}) => SessionDef(
+        tag: tag,
+        title: title,
+        type: type,
+        steps: steps ?? this.steps,
+        audioRef: audioRef,
+      );
 
   factory SessionDef.fromJson(String tag, Map json) => SessionDef(
         tag: tag,

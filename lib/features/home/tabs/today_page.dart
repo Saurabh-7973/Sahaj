@@ -9,7 +9,11 @@ import '../../settings/preferences_controller.dart';
 import '../../subscription/logic/feature_gate.dart';
 import '../../subscription/soft_paywall.dart';
 import '../../subscription/subscription_controller.dart';
+import '../../sessions/logic/face_down_sensor.dart';
+import '../../sessions/logic/haptic_cues.dart';
 import '../../sessions/logic/scheduler.dart';
+import '../../sessions/pages/completion_page.dart';
+import '../../sessions/pages/face_down_coach.dart';
 import '../../sessions/pages/mood_checkin_sheet.dart';
 import '../../sessions/pages/reflection_page.dart';
 import '../../sessions/pages/session_player_page.dart';
@@ -132,30 +136,68 @@ class TodayPage extends ConsumerWidget {
     );
   }
 
+  /// The M1 session loop: mood check-in + echo → (one-time face-down coach)
+  /// → player → reflection → completion moment → Today's done state.
   Future<void> _startFlow(
     BuildContext context,
     WidgetRef ref,
     SessionDef session,
   ) async {
-    final moods = await showMoodCheckin(context);
-    if (moods == null || !context.mounted) return;
+    final checkin = await showMoodCheckin(context, session: session);
+    if (checkin == null || !context.mounted) return;
 
+    final playSession = checkin.calibrated.session;
     final events = ref.read(appEventsProvider);
-    final progressState = ref.read(progressControllerProvider).state;
-    events.moodCheckin(moods);
+    final prefs = ref.read(preferencesControllerProvider);
+    final progress = ref.read(progressControllerProvider);
+    final stateBefore = progress.state;
+    final moodKeys = [for (final m in checkin.moods) m.name];
+
+    if (moodKeys.isNotEmpty) events.moodCheckin(moodKeys);
     events.sessionStarted(
-      session.type.name,
-      progressState.currentWeek,
-      progressState.currentDay,
+      playSession.type.name,
+      stateBefore.currentWeek,
+      stateBefore.currentDay,
     );
+
+    // One-time coach: the cue language, taught once (M1·4a).
+    var startInEmber = false;
+    if (!prefs.faceDownCoachSeen) {
+      final tryIt = await Navigator.of(context).push<bool>(
+        MaterialPageRoute<bool>(
+          builder: (_) => const FaceDownCoachPage(),
+        ),
+      );
+      prefs.markFaceDownCoachSeen();
+      startInEmber = tryIt ?? false;
+      if (!context.mounted) return;
+    }
+
+    // First audio session: earphones prompt, asked once and remembered.
+    if (playSession.audioRef != null &&
+        !prefs.earphonePromptSeen &&
+        prefs.voiceEnabled) {
+      final keepVoice = await _earphonePrompt(context);
+      prefs.markEarphonePromptSeen();
+      if (keepVoice == false) prefs.setVoiceEnabled(false);
+      if (!context.mounted) return;
+    }
 
     final startedAt = DateTime.now();
     var completion = 0.0;
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => SessionPlayerPage(
-          session: session,
+          session: playSession,
           audio: ref.read(sessionAudioFactoryProvider)(),
+          haptics: prefs.hapticsEnabled
+              ? ref.read(hapticCuesProvider)
+              : const NoopHapticCues(),
+          hapticsEnabled: prefs.hapticsEnabled,
+          voiceEnabled: prefs.voiceEnabled,
+          onVoiceChanged: prefs.setVoiceEnabled,
+          faceDownSensor: ref.read(faceDownSensorProvider),
+          startInEmber: startInEmber,
           onComplete: (pct) {
             completion = pct;
             Navigator.of(context).pop();
@@ -165,27 +207,115 @@ class TodayPage extends ConsumerWidget {
     );
     if (completion == 0.0 || !context.mounted) return; // abandoned
 
-    final result = await Navigator.of(context).push<ReflectionResult>(
+    final sessionNumber = progress.logs().length + 1;
+    final reflection = await Navigator.of(context).push<ReflectionResult>(
       MaterialPageRoute<ReflectionResult>(
-        builder: (_) => ReflectionPage(sessionTitle: session.title),
+        builder: (_) => ReflectionPage(
+          sessionTitle: playSession.title,
+          sessionNumber: sessionNumber,
+        ),
       ),
     );
-    if (result == null || !context.mounted) return;
+    if (!context.mounted) return;
 
-    events.sessionCompleted(session.type.name, completion);
+    events.sessionCompleted(playSession.type.name, completion);
 
-    ref.read(progressControllerProvider).completeToday(
-          SessionLog(
-            id: startedAt.microsecondsSinceEpoch.toString(),
-            sessionTag: session.tag,
-            startedAt: startedAt,
-            completedAt: DateTime.now(),
-            completionPct: completion,
-            moodBefore: moods,
-            perceivedDifficulty: result.difficulty,
-            journalNote: result.note,
+    // Completing day 7 of week 4/8/12 is the milestone moment.
+    final milestone = !progress.isDoneToday &&
+        stateBefore.currentDay == 7 &&
+        const {4, 8, 12}.contains(stateBefore.currentWeek)
+        ? stateBefore.currentWeek
+        : null;
+    final nthThisWeek = stateBefore.currentDay;
+
+    progress.completeToday(
+      SessionLog(
+        id: startedAt.microsecondsSinceEpoch.toString(),
+        sessionTag: playSession.tag,
+        startedAt: startedAt,
+        completedAt: DateTime.now(),
+        completionPct: completion,
+        moodBefore: moodKeys,
+        perceivedDifficulty: reflection?.difficulty,
+        journalNote: reflection?.note,
+      ),
+    );
+
+    // Tomorrow's preview from the advanced plan position.
+    SessionDef? tomorrow;
+    final plan = ref.read(onboardingControllerProvider).plan;
+    SessionCatalog? catalog;
+    try {
+      catalog = ref.read(sessionCatalogProvider);
+    } catch (_) {
+      catalog = null;
+    }
+    if (plan != null && catalog != null) {
+      tomorrow = todaysSession(
+        plan: plan,
+        week: progress.state.currentWeek,
+        day: progress.state.currentDay,
+        catalog: catalog.byTag,
+      );
+    }
+
+    if (!context.mounted) return;
+    await Navigator.of(context).push<CompletionAction>(
+      MaterialPageRoute<CompletionAction>(
+        builder: (_) => CompletionPage(
+          sessionNumber: sessionNumber,
+          nthThisWeek: nthThisWeek,
+          tomorrowTitle: tomorrow?.title,
+          tomorrowMinutes:
+              tomorrow == null ? null : (tomorrow.totalSeconds / 60).ceil(),
+          milestoneWeek: milestone,
+          currentWeek: stateBefore.currentWeek,
+        ),
+      ),
+    );
+    // M3 wires `takeCheckin` to the check-in instrument; until then every
+    // path lands on Today's done state (the check-in waits indefinitely).
+  }
+
+  /// "Voice guidance — best with earphones. You can also mute and follow the
+  /// haptics." Ask once, remember (Part K flag 5 — shared-wall reality).
+  Future<bool?> _earphonePrompt(BuildContext context) {
+    return showModalBottomSheet<bool>(
+      context: context,
+      builder: (sheetContext) {
+        final theme = Theme.of(sheetContext);
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.xl,
+            AppSpacing.lg,
+            AppSpacing.xl,
+            AppSpacing.xxl,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Voice guidance', style: theme.textTheme.headlineMedium),
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                'Best with earphones. You can also mute and follow the haptics.',
+                style: theme.textTheme.bodyLarge,
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              AppButton(
+                label: 'Keep voice on',
+                onPressed: () => Navigator.of(sheetContext).pop(true),
+              ),
+              AppButton(
+                label: 'Mute for now',
+                variant: AppButtonVariant.text,
+                onPressed: () => Navigator.of(sheetContext).pop(false),
+              ),
+            ],
           ),
         );
+      },
+    );
   }
 }
 

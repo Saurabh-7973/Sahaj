@@ -31,6 +31,18 @@ class PreferencesController extends ChangeNotifier {
   int reminderHour = 20;
   int reminderMinute = 0;
 
+  /// Haptic cue language in the player — on by default (the discretion
+  /// feature: sessions followable face-down, silent, lights off).
+  bool hapticsEnabled = true;
+
+  /// Voice guidance toggle state — asked once on the first audio session,
+  /// then remembered (shared-wall reality; spec Part K flag 5).
+  bool voiceEnabled = true;
+
+  /// One-time coach marks.
+  bool faceDownCoachSeen = false;
+  bool earphonePromptSeen = false;
+
   void setBookMode(bool v) {
     bookMode = v;
     _persist();
@@ -57,6 +69,26 @@ class PreferencesController extends ChangeNotifier {
     _persist();
   }
 
+  void setHapticsEnabled(bool v) {
+    hapticsEnabled = v;
+    _persist();
+  }
+
+  void setVoiceEnabled(bool v) {
+    voiceEnabled = v;
+    _persist();
+  }
+
+  void markFaceDownCoachSeen() {
+    faceDownCoachSeen = true;
+    _persist();
+  }
+
+  void markEarphonePromptSeen() {
+    earphonePromptSeen = true;
+    _persist();
+  }
+
   void reset() {
     bookMode = false;
     disguiseName = DisguiseName.none;
@@ -64,6 +96,10 @@ class PreferencesController extends ChangeNotifier {
     hideStreak = false;
     reminderHour = 20;
     reminderMinute = 0;
+    hapticsEnabled = true;
+    voiceEnabled = true;
+    faceDownCoachSeen = false;
+    earphonePromptSeen = false;
     _store?.clear();
     notifyListeners();
   }
@@ -80,6 +116,10 @@ class PreferencesController extends ChangeNotifier {
         'hideStreak': hideStreak,
         'reminderHour': reminderHour,
         'reminderMinute': reminderMinute,
+        'hapticsEnabled': hapticsEnabled,
+        'voiceEnabled': voiceEnabled,
+        'faceDownCoachSeen': faceDownCoachSeen,
+        'earphonePromptSeen': earphonePromptSeen,
       };
 
   void loadFrom(Map<String, dynamic> json) {
@@ -89,6 +129,10 @@ class PreferencesController extends ChangeNotifier {
     hideStreak = (json['hideStreak'] as bool?) ?? false;
     reminderHour = (json['reminderHour'] as int?) ?? 20;
     reminderMinute = (json['reminderMinute'] as int?) ?? 0;
+    hapticsEnabled = (json['hapticsEnabled'] as bool?) ?? true;
+    voiceEnabled = (json['voiceEnabled'] as bool?) ?? true;
+    faceDownCoachSeen = (json['faceDownCoachSeen'] as bool?) ?? false;
+    earphonePromptSeen = (json['earphonePromptSeen'] as bool?) ?? false;
     notifyListeners();
   }
 }

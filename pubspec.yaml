@@ -57,7 +57,7 @@ dependencies:
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
   intl: ^0.20.1
-  google_fonts: ^6.2.1
+  wakelock_plus: ^1.2.8
   flutter_markdown: ^0.7.4+3
   local_auth: ^2.3.0
   url_launcher: ^6.3.0
@@ -90,3 +90,31 @@ flutter:
     - assets/content/sessions.json
     - assets/content/articles.json
     - assets/audio/
+    - assets/images/
+
+  # Bundled type (Lamplight A3) — no runtime font fetch; the app stays
+  # fully offline. Fraunces = display + numerals, Manrope = UI/body.
+  fonts:
+    - family: Fraunces
+      fonts:
+        - asset: assets/fonts/Fraunces-300.ttf
+          weight: 300
+        - asset: assets/fonts/Fraunces-400Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/Fraunces-500.ttf
+          weight: 500
+        - asset: assets/fonts/Fraunces-600.ttf
+          weight: 600
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/Manrope-400.ttf
+          weight: 400
+        - asset: assets/fonts/Manrope-500.ttf
+          weight: 500
+        - asset: assets/fonts/Manrope-600.ttf
+          weight: 600
+        - asset: assets/fonts/Manrope-700.ttf
+          weight: 700
+        - asset: assets/fonts/Manrope-800.ttf
+          weight: 800

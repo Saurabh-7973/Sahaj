@@ -1,0 +1,152 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Sahaj — Lamplight UI kit</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0F0D0B;color:#EDE3D2;font-family:Manrope,sans-serif;padding:48px 32px}
+.wrap{max-width:1240px;margin:0 auto}
+h1{font-family:Fraunces,serif;font-weight:600;font-size:34px;letter-spacing:-.4px}
+.sub{color:#B5A892;font-size:14px;line-height:21px;margin-top:10px;max-width:760px}
+.rule{display:flex;align-items:center;gap:10px;margin:22px 0 6px;max-width:760px}
+.rule i{flex:1;height:4px;border-top:1px solid rgba(201,145,63,.28);border-bottom:1px solid rgba(201,145,63,.28)}
+.rule b{width:6px;height:6px;background:rgba(201,145,63,.5);transform:rotate(45deg)}
+h2{font-family:Fraunces,serif;font-weight:500;font-size:20px;margin:38px 0 16px;color:#D9C9A8}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:20px}
+a.card{display:block;text-decoration:none;color:#EDE3D2}
+.shot{width:178px;height:330px;overflow:hidden;border-radius:14px;outline:1px solid #2E2820;background:#191511}
+.shot iframe{width:510px;height:946px;transform:scale(.349);transform-origin:top left;border:0;pointer-events:none}
+.name{font-size:12.5px;font-weight:600;margin-top:9px}
+.k{font-size:11px;color:#8A7F6D;margin-top:2px}
+a.card:hover .shot{outline-color:#C9913F}
+.spec{display:inline-block;margin-top:14px;color:#C9913F;font-weight:600;font-size:13px;text-decoration:none}
+</style></head><body><div class="wrap">
+<h1>Sahaj — Lamplight UI kit</h1>
+<div class="sub">Every screen from §6, rebuilt at full-dress fidelity (v2) on one shared stylesheet (<b>lamplight.css</b> — the token system from Part A of the spec). Click any tile to open it full-size; multi-state screens hold several phones side by side. Companion document: <b>sahaj_ui_design_spec.md</b>.</div>
+<a class="spec" href="sahaj_ui_design_spec.md">→ open the full design spec</a> &nbsp;&nbsp; <a class="spec" href="00_MASTER_HANDOFF.md">→ master handoff · build order &amp; all 32 open decisions</a>
+<div class="rule"><i></i><b></b><i></i></div>
+
+
+<h2 style="color:#E2AC57">Module 1 · Session Loop — curated pass (current)</h2>
+<div class="grid">
+<a class="card" href="m1_01_mood_checkin.html"><div class="shot"><iframe src="m1_01_mood_checkin.html" loading="lazy"></iframe></div><div class="name">M1·01 · Mood check-in ×2</div><div class="k">threshold ritual + prescription echo</div></a>
+<a class="card" href="m1_02_player_hold.html"><div class="shot"><iframe src="m1_02_player_hold.html" loading="lazy"></iframe></div><div class="name">M1·02 · Player, holdPulse ×2</div><div class="k">squeeze · release phases</div></a>
+<a class="card" href="m1_03_player_breath_paused.html"><div class="shot"><iframe src="m1_03_player_breath_paused.html" loading="lazy"></iframe></div><div class="name">M1·03 · Breath + Paused ×2</div><div class="k">the signature, animated · calm pause</div></a>
+<a class="card" href="m1_04_player_facedown.html"><div class="shot"><iframe src="m1_04_player_facedown.html" loading="lazy"></iframe></div><div class="name">M1·04 · Face-down ×2</div><div class="k">cue coach + Ember mode</div></a>
+<a class="card" href="m1_05_reflection.html"><div class="shot"><iframe src="m1_05_reflection.html" loading="lazy"></iframe></div><div class="name">M1·05 · Reflection</div><div class="k">Harder = data, not failure</div></a>
+<a class="card" href="m1_06_completion.html"><div class="shot"><iframe src="m1_06_completion.html" loading="lazy"></iframe></div><div class="name">M1·06 · Completion ×2</div><div class="k">standard + week-4 milestone</div></a>
+</div>
+<div class="sub" style="margin-top:10px">Spec: <a class="spec" href="m1_session_loop_spec.md" style="margin-top:0">m1_session_loop_spec.md</a> — mockups are visual ground truth; behavior, states, haptics and acceptance criteria live in the spec.</div>
+
+
+<h2 style="color:#E2AC57">Module 2 · Today — curated pass (current)</h2>
+<div class="grid">
+<a class="card" href="m2_01_today_default.html"><div class="shot"><iframe src="m2_01_today_default.html" loading="lazy"></iframe></div><div class="name">M2·01 · Default ×2</div><div class="k">the doorway + hidden-streak variant</div></a>
+<a class="card" href="m2_02_today_done.html"><div class="shot"><iframe src="m2_02_today_done.html" loading="lazy"></iframe></div><div class="name">M2·02 · Done</div><div class="k">confirm, preview tomorrow, leave</div></a>
+<a class="card" href="m2_03_today_day0.html"><div class="shot"><iframe src="m2_03_today_day0.html" loading="lazy"></iframe></div><div class="name">M2·03 · Day 0</div><div class="k">ordinary on purpose</div></a>
+<a class="card" href="m2_04_today_gap_return.html"><div class="shot"><iframe src="m2_04_today_gap_return.html" loading="lazy"></iframe></div><div class="name">M2·04 · Gap return</div><div class="k">principle 8's proof screen</div></a>
+</div>
+<div class="sub" style="margin-top:10px">Spec: <a class="spec" href="m2_today_spec.md" style="margin-top:0">m2_today_spec.md</a> — includes the why-line grammar, the doorway doctrine, and the steady-tile existence rule.</div>
+
+
+<h2 style="color:#E2AC57">Module 3 · Me / Progress — curated pass (current)</h2>
+<div class="grid">
+<a class="card" href="m3_01_dashboard_wk3.html"><div class="shot"><iframe src="m3_01_dashboard_wk3.html" loading="lazy"></iframe></div><div class="name">M3·01 · Week 3</div><div class="k">the silent weeks — belief without lying</div></a>
+<a class="card" href="m3_02_dashboard_wk5.html"><div class="shot"><iframe src="m3_02_dashboard_wk5.html" loading="lazy"></iframe></div><div class="name">M3·02 · Week 5</div><div class="k">the chart earns its first line</div></a>
+<a class="card" href="m3_03_dashboard_wk1.html"><div class="shot"><iframe src="m3_03_dashboard_wk1.html" loading="lazy"></iframe></div><div class="name">M3·03 · Week 1, day 2</div><div class="k">sparse, never empty — the growth rule</div></a>
+<a class="card" href="m3_04_checkin.html"><div class="shot"><iframe src="m3_04_checkin.html" loading="lazy"></iframe></div><div class="name">M3·04 · Check-in ×2</div><div class="k">intro ceremony + input-paired result</div></a>
+</div>
+<div class="sub" style="margin-top:10px">Spec: <a class="spec" href="m3_progress_spec.md" style="margin-top:0">m3_progress_spec.md</a> — the honesty doctrine, the growth rule, and the check-in ceremony.</div>
+
+
+<h2 style="color:#E2AC57">Module 4 · Onboarding — curated pass (current)</h2>
+<div class="grid">
+<a class="card" href="m4_02_plan_reveal_live.html"><div class="shot"><iframe src="m4_02_plan_reveal_live.html" loading="lazy"></iframe></div><div class="name">M4·02 · Plan reveal, live</div><div class="k">eight-beat choreography — reload to replay</div></a>
+<a class="card" href="m4_01_phq_item.html"><div class="shot"><iframe src="m4_01_phq_item.html" loading="lazy"></iframe></div><div class="name">M4·01 · PHQ-2 item</div><div class="k">wrap, don't reword</div></a>
+<a class="card" href="m4_03_resume.html"><div class="shot"><iframe src="m4_03_resume.html" loading="lazy"></iframe></div><div class="name">M4·03 · Resume</div><div class="k">interrupted onboarding, no punishment</div></a>
+</div>
+<div class="sub" style="margin-top:10px">Spec: <a class="spec" href="m4_onboarding_spec.md" style="margin-top:0">m4_onboarding_spec.md</a> — canonical copy for all twelve screens, the arc table, routing &amp; resume. v2 screens 01–09, 11, 12 below are adopted into Module 4 as-is; 10 is superseded.</div>
+
+<h2>Onboarding · C1–C12 (adopted into Module 4)</h2>
+<div class="grid">
+<a class="card" href="01_welcome.html"><div class="shot"><iframe src="01_welcome.html" loading="lazy"></iframe></div><div class="name">01 · Welcome</div><div class="k">arrival, one promise</div></a>
+<a class="card" href="02_promise.html"><div class="shot"><iframe src="02_promise.html" loading="lazy"></iframe></div><div class="name">02 · The promise</div><div class="k">trust contract</div></a>
+<a class="card" href="03_education.html"><div class="shot"><iframe src="03_education.html" loading="lazy"></iframe></div><div class="name">03 · Education ×3</div><div class="k">hammock → anatomy → why</div></a>
+<a class="card" href="04_persona.html"><div class="shot"><iframe src="04_persona.html" loading="lazy"></iframe></div><div class="name">04 · Persona routing</div><div class="k">Persona Zero, first-class</div></a>
+<a class="card" href="05_goals.html"><div class="shot"><iframe src="05_goals.html" loading="lazy"></iframe></div><div class="name">05 · Goals</div><div class="k">multi-select</div></a>
+<a class="card" href="06_health_question.html"><div class="shot"><iframe src="06_health_question.html" loading="lazy"></iframe></div><div class="name">06 · Health screening ×2</div><div class="k">intro + question template</div></a>
+<a class="card" href="07_triage.html"><div class="shot"><iframe src="07_triage.html" loading="lazy"></iframe></div><div class="name">07 · Triage</div><div class="k">doctor first, no alarm</div></a>
+<a class="card" href="07b_crisis.html"><div class="shot"><iframe src="07b_crisis.html" loading="lazy"></iframe></div><div class="name">07b · Crisis</div><div class="k">highest-care screen</div></a>
+<a class="card" href="08_function_baseline.html"><div class="shot"><iframe src="08_function_baseline.html" loading="lazy"></iframe></div><div class="name">08 · Function baseline</div><div class="k">week-0 mark</div></a>
+<a class="card" href="09_mindbody_baseline.html"><div class="shot"><iframe src="09_mindbody_baseline.html" loading="lazy"></iframe></div><div class="name">09 · Mind/body baseline</div><div class="k">neutral frequencies</div></a>
+<a class="card" href="10_plan_reveal.html"><div class="shot"><iframe src="10_plan_reveal.html" loading="lazy"></iframe></div><div class="name">10 · Plan reveal</div><div class="k">superseded by M4·02</div></a>
+<a class="card" href="11_privacy_setup.html"><div class="shot"><iframe src="11_privacy_setup.html" loading="lazy"></iframe></div><div class="name">11 · Privacy setup</div><div class="k">disguise preview</div></a>
+<a class="card" href="12_first_session.html"><div class="shot"><iframe src="12_first_session.html" loading="lazy"></iframe></div><div class="name">12 · First session ready</div><div class="k">both choices win</div></a>
+</div>
+
+<h2>Daily loop · D1–D5</h2>
+<div class="grid">
+<a class="card" href="13_today.html"><div class="shot"><iframe src="13_today.html" loading="lazy"></iframe></div><div class="name">13 · Today ×3</div><div class="k">superseded by M2</div></a>
+<a class="card" href="16_mood_sheet.html"><div class="shot"><iframe src="16_mood_sheet.html" loading="lazy"></iframe></div><div class="name">16 · Mood check-in</div><div class="k">superseded by M1·01</div></a>
+<a class="card" href="17_session_player.html"><div class="shot"><iframe src="17_session_player.html" loading="lazy"></iframe></div><div class="name">17 · Session player ×2</div><div class="k">superseded by M1·02/03</div></a>
+<a class="card" href="18_reflection.html"><div class="shot"><iframe src="18_reflection.html" loading="lazy"></iframe></div><div class="name">18 · Reflection</div><div class="k">superseded by M1·05</div></a>
+<a class="card" href="19_completion.html"><div class="shot"><iframe src="19_completion.html" loading="lazy"></iframe></div><div class="name">19 · Completion</div><div class="k">superseded by M1·06</div></a>
+</div>
+
+
+<h2 style="color:#E2AC57">Module 5 · Library &amp; Reader — curated pass (current)</h2>
+<div class="grid">
+<a class="card" href="m5_01_library_search.html"><div class="shot"><iframe src="m5_01_library_search.html" loading="lazy"></iframe></div><div class="name">M5·01 · Search active</div><div class="k">the chapter-list law applied</div></a>
+<a class="card" href="m5_02_reader_footer.html"><div class="shot"><iframe src="m5_02_reader_footer.html" loading="lazy"></iframe></div><div class="name">M5·02 · Trust footer</div><div class="k">the doctor-gate made visible</div></a>
+</div>
+<div class="sub" style="margin-top:10px">Spec: <a class="spec" href="m5_library_spec.md" style="margin-top:0">m5_library_spec.md</a> — the two registers, the "never not-yet" lock law, search rules. 14 and 20 below are adopted into Module 5 with the heritage-chip patch (heritage pieces never wear medical badges).</div>
+
+<h2>Library &amp; reading · E (adopted into Module 5)</h2>
+<div class="grid">
+<a class="card" href="14_library.html"><div class="shot"><iframe src="14_library.html" loading="lazy"></iframe></div><div class="name">14 · Library ×2</div><div class="k">adopted into M5 · heritage chip patched</div></a>
+<a class="card" href="20_article_reader.html"><div class="shot"><iframe src="20_article_reader.html" loading="lazy"></iframe></div><div class="name">20 · Reader ×2</div><div class="k">adopted into M5 · heritage chip patched</div></a>
+</div>
+
+<h2>Me · F</h2>
+<div class="grid">
+<a class="card" href="15_me_dashboard.html"><div class="shot"><iframe src="15_me_dashboard.html" loading="lazy"></iframe></div><div class="name">15 · Progress dashboard</div><div class="k">superseded by M3</div></a>
+</div>
+
+
+<h2 style="color:#E2AC57">Module 6 · Privacy system — curated pass (current)</h2>
+<div class="grid">
+<a class="card" href="m6_01_cover_depth.html"><div class="shot"><iframe src="m6_01_cover_depth.html" loading="lazy"></iframe></div><div class="name">M6·01 · Cover depth ×2</div><div class="k">the tap that saves the disguise + recents test</div></a>
+<a class="card" href="m6_02_gate_pin.html"><div class="shot"><iframe src="m6_02_gate_pin.html" loading="lazy"></iframe></div><div class="name">M6·02 · PIN gate ×2</div><div class="k">entry + turmeric failure</div></a>
+</div>
+<div class="sub" style="margin-top:10px">Spec: <a class="spec" href="m6_privacy_spec.md" style="margin-top:0">m6_privacy_spec.md</a> — the worst-seconds table, cover depth rules, gate logic, the glance protocol. 21–24 below are adopted into Module 6; Settings gained the haptic-cues row.</div>
+
+<h2>Settings &amp; privacy · G (adopted into Module 6)</h2>
+<div class="grid">
+<a class="card" href="21_settings.html"><div class="shot"><iframe src="21_settings.html" loading="lazy"></iframe></div><div class="name">21 · Settings</div><div class="k">adopted into M6 · haptic-cues row added</div></a>
+<a class="card" href="22_erase_confirm.html"><div class="shot"><iframe src="22_erase_confirm.html" loading="lazy"></iframe></div><div class="name">22 · Erase confirm</div><div class="k">adopted into M6</div></a>
+<a class="card" href="23_book_cover.html"><div class="shot"><iframe src="23_book_cover.html" loading="lazy"></iframe></div><div class="name">23 · Book Mode cover</div><div class="k">adopted into M6</div></a>
+<a class="card" href="24_biometric_gate.html"><div class="shot"><iframe src="24_biometric_gate.html" loading="lazy"></iframe></div><div class="name">24 · Biometric gate</div><div class="k">adopted into M6 · PIN states in M6·02</div></a>
+</div>
+
+
+<h2 style="color:#E2AC57">Module 7 · Monetisation — curated pass (current)</h2>
+<div class="grid">
+<a class="card" href="m7_01_paywall_selected.html"><div class="shot"><iframe src="m7_01_paywall_selected.html" loading="lazy"></iframe></div><div class="name">M7·01 · ₹499 selected</div><div class="k">the dignity proof</div></a>
+<a class="card" href="m7_02_zero_dismissal.html"><div class="shot"><iframe src="m7_02_zero_dismissal.html" loading="lazy"></iframe></div><div class="name">M7·02 · ₹0 dismissal</div><div class="k">"Good — train on."</div></a>
+<a class="card" href="m7_03_subscription_pro.html"><div class="shot"><iframe src="m7_03_subscription_pro.html" loading="lazy"></iframe></div><div class="name">M7·03 · Pro ×2</div><div class="k">trial &amp; active — dates, not countdowns</div></a>
+</div>
+<div class="sub" style="margin-top:10px">Spec: <a class="spec" href="m7_monetisation_spec.md" style="margin-top:0">m7_monetisation_spec.md</a> — pull-never-push, the banned-pattern list, the five subscription states. 25–26 below are adopted into Module 7.</div>
+
+
+<h2 style="color:#E2AC57">Module 8 · System — curated pass (current)</h2>
+<div class="grid">
+<a class="card" href="m8_01_lockscreen.html"><div class="shot"><iframe src="m8_01_lockscreen.html" loading="lazy"></iframe></div><div class="name">M8·01 · Lock screen</div><div class="k">the audio seam — media metadata law</div></a>
+<a class="card" href="m8_02_icon_adaptive.html"><div class="shot"><iframe src="m8_02_icon_adaptive.html" loading="lazy"></iframe></div><div class="name">M8·02 · Icon, adaptive</div><div class="k">Concept A finalized · Material You</div></a>
+</div>
+<div class="sub" style="margin-top:10px">Spec: <a class="spec" href="m8_system_spec.md" style="margin-top:0">m8_system_spec.md</a> — notification doctrine, the surface audit, never-HIGH importance. 27 below is adopted into Module 8.</div>
+
+<h2>Monetisation &amp; system · H–I (25–26 adopted into M7 · 27 adopted into M8)</h2>
+<div class="grid">
+<a class="card" href="25_paywall.html"><div class="shot"><iframe src="25_paywall.html" loading="lazy"></iframe></div><div class="name">25 · Paywall</div><div class="k">adopted into M7 · selected state in M7·01</div></a>
+<a class="card" href="26_subscription.html"><div class="shot"><iframe src="26_subscription.html" loading="lazy"></iframe></div><div class="name">26 · Subscription</div><div class="k">adopted into M7 · Pro states in M7·03</div></a>
+<a class="card" href="27_system.html"><div class="shot"><iframe src="27_system.html" loading="lazy"></iframe></div><div class="name">27 · Icons & notifications</div><div class="k">adopted into M8</div></a>
+</div>
+</div></body></html>

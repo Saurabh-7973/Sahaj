@@ -1,18 +1,16 @@
-/// A check-in mood option (key persisted, label shown).
-class CheckinMood {
-  const CheckinMood(this.key, this.label);
-  final String key;
-  final String label;
-}
+import '../../shared/widgets/app_mood_selector.dart';
 
-/// Fixed pre-session mood list (multi-select 1-3).
-const kCheckinMoods = <CheckinMood>[
-  CheckinMood('anxious', 'Anxious'),
-  CheckinMood('hopeful', 'Hopeful'),
-  CheckinMood('restless', 'Restless'),
-  CheckinMood('disappointed', 'Disappointed'),
-  CheckinMood('calm', 'Calm'),
-  CheckinMood('distracted', 'Distracted'),
-  CheckinMood('motivated', 'Motivated'),
-  CheckinMood('low', 'Low'),
-];
+export '../../shared/widgets/app_mood_selector.dart'
+    show ArrivalMood, ArrivalMoodLabel;
+
+/// Persisted key for an arrival mood (`SessionLog.moodBefore` strings).
+/// Logs written before the 5-mood migration may hold legacy keys
+/// (anxious/hopeful/…) — readers must tolerate unknown keys.
+String moodKey(ArrivalMood mood) => mood.name;
+
+ArrivalMood? moodFromKey(String key) {
+  for (final m in ArrivalMood.values) {
+    if (m.name == key) return m;
+  }
+  return null;
+}

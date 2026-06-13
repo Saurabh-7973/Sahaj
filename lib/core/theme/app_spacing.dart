@@ -11,11 +11,14 @@ class AppSpacing {
   static const double xxxl = 48;
 }
 
-/// Border radii: 8 small, 16 cards, 24 major surfaces.
+/// Border radii (mock: chips 999, buttons 18, option rows 19, cards 24,
+/// sheets 30 top).
 class AppRadius {
   AppRadius._();
 
   static const double sm = 8;
   static const double md = 16;
+  static const double button = 18;
   static const double lg = 24;
+  static const double sheet = 30;
 }

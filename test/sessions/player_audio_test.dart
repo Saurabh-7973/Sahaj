@@ -64,11 +64,11 @@ void main() {
     await _pump(tester, _def(audioRef: {'en': 'a.m4a'}), audio);
     await tester.pump();
 
-    await tester.tap(find.byIcon(Icons.pause));
+    await tester.tap(find.byIcon(Icons.pause_rounded));
     await tester.pump();
     expect(audio.calls.last, 'pause');
 
-    await tester.tap(find.byIcon(Icons.play_arrow));
+    await tester.tap(find.byIcon(Icons.play_arrow_rounded));
     await tester.pump();
     expect(audio.calls.last, 'play');
   });
@@ -86,7 +86,7 @@ void main() {
     final audio = FakeSessionAudio();
     await _pump(tester, _def(), audio);
     await tester.pump();
-    await tester.tap(find.byIcon(Icons.pause));
+    await tester.tap(find.byIcon(Icons.pause_rounded));
     await tester.pump();
     expect(audio.calls, isEmpty);
   });

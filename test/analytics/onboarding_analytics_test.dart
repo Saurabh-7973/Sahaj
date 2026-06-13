@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sahaj/core/analytics/analytics.dart';
 import 'package:sahaj/features/onboarding/onboarding_controller.dart';
 import 'package:sahaj/features/onboarding/onboarding_flow.dart';
+import 'package:sahaj/shared/widgets/widgets.dart';
 
 import '../support/fake_analytics.dart';
 
@@ -27,7 +28,12 @@ void main() {
 
     for (var i = 0; i < 25; i++) {
       if (controller.complete) break;
-      final cta = find.byType(FilledButton);
+      final cta = find.byWidgetPredicate(
+        (w) =>
+            w is AppButton &&
+            w.variant == AppButtonVariant.filled &&
+            w.onPressed != null,
+      );
       if (cta.evaluate().isEmpty) break;
       await tester.tap(cta.first);
       await tester.pumpAndSettle();

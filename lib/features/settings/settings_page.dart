@@ -11,6 +11,7 @@ import '../notifications/notification_service.dart';
 import '../notifications/reminder_coordinator.dart';
 import '../onboarding/onboarding_controller.dart';
 import '../onboarding/widgets/selectable_option.dart';
+import '../sessions/pages/face_down_coach.dart';
 import '../sessions/progress_controller.dart';
 import '../subscription/subscription_controller.dart';
 import 'account.dart';
@@ -121,6 +122,31 @@ class SettingsPage extends ConsumerWidget {
               ),
             ),
           ],
+          const SizedBox(height: AppSpacing.sm),
+          AppCard(
+            child: SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Haptic cues'),
+              subtitle: const Text(
+                  'Feel the session through gentle taps — works with the screen off.'),
+              value: prefs.hapticsEnabled,
+              onChanged: (v) =>
+                  ref.read(preferencesControllerProvider).setHapticsEnabled(v),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppCard(
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('The cue guide'),
+              subtitle: const Text('Relearn the four haptic cues.'),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const FaceDownCoachPage(firstSession: false),
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: AppSpacing.xl),
           Text('Progress', style: theme.textTheme.titleMedium),
           const SizedBox(height: AppSpacing.sm),

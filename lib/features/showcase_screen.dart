@@ -13,7 +13,7 @@ class ShowcaseScreen extends StatefulWidget {
 }
 
 class _ShowcaseScreenState extends State<ShowcaseScreen> {
-  int? _mood = 3;
+  final _mood = <ArrivalMood>{ArrivalMood.level};
   bool _loading = false;
   double _progress = 0.65;
 
@@ -74,7 +74,9 @@ class _ShowcaseScreenState extends State<ShowcaseScreen> {
           _section(theme, 'Mood selector'),
           AppMoodSelector(
             selected: _mood,
-            onSelected: (v) => setState(() => _mood = v),
+            onToggle: (m) => setState(
+              () => _mood.contains(m) ? _mood.remove(m) : _mood.add(m),
+            ),
           ),
 
           _section(theme, 'Progress ring'),
