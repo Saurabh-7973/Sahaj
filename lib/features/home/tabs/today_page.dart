@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +14,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../me/checkin_controller.dart';
 import '../../me/pages/checkin_flow.dart';
+import '../../notifications/notification_service.dart';
 import '../../onboarding/onboarding_controller.dart';
 import '../../settings/preferences_controller.dart';
 import '../../subscription/logic/feature_gate.dart';
@@ -292,6 +295,16 @@ class TodayPage extends ConsumerWidget {
         journalNote: reflection?.note,
       ),
     );
+
+    // Suppression (M8 §0): a man who trained today gets no reminder tonight —
+    // push the next fire to tomorrow.
+    if (prefs.notificationsEnabled) {
+      unawaited(ref.read(notificationServiceProvider).scheduleDailyReminder(
+            hour: prefs.reminderHour,
+            minute: prefs.reminderMinute,
+            skipToday: true,
+          ));
+    }
 
     // Tomorrow's preview from the advanced plan position.
     SessionDef? tomorrow;

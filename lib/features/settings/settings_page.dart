@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../core/analytics/events.dart';
@@ -82,8 +85,18 @@ class SettingsPage extends ConsumerWidget {
               subtitle: const Text(
                   'Open into a plain reading screen; double-tap to reveal'),
               value: prefs.bookMode,
-              onChanged: (v) =>
-                  ref.read(preferencesControllerProvider).setBookMode(v),
+              onChanged: (v) {
+                ref.read(preferencesControllerProvider).setBookMode(v);
+                if (v && context.mounted) {
+                  // M8 §3: launcher caches vary, so set expectations once.
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Your launcher icon just changed to My '
+                          'Notes — it may take a moment to appear.'),
+                    ),
+                  );
+                }
+              },
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -240,7 +253,16 @@ class SettingsPage extends ConsumerWidget {
       exportedAt: DateTime.now(),
     );
     ref.read(appEventsProvider).dataExported();
-    await Share.share(json, subject: 'My Sahaj data');
+    // Share as a neutral-named file (M8 §3) so nothing identifying outlives
+    // the share. Falls back to plain text if the temp file can't be written.
+    try {
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/${exportFileName(DateTime.now())}');
+      await file.writeAsString(json);
+      await Share.shareXFiles([XFile(file.path)], subject: 'Backup');
+    } catch (_) {
+      await Share.share(json, subject: 'Backup');
+    }
   }
 
   Future<void> _setPin(BuildContext context, WidgetRef ref) async {

@@ -22,9 +22,14 @@
          doesn't kill the scheduled fire. -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     <application
-        android:label="sahaj"
+        android:label="@string/app_name"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round">
+        <!-- The launcher entry lives on activity-aliases, not MainActivity, so
+             Book Mode can swap identity at runtime: enable one alias, disable
+             the other (M6 mechanics). MainActivity carries no LAUNCHER filter
+             to avoid a duplicate home-screen entry. -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -42,11 +47,40 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+        </activity>
+
+        <!-- Real identity (default enabled): "Sahaj" + the lotus bud icon. -->
+        <activity-alias
+            android:name=".SahajLauncher"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="true"
+            android:label="@string/app_name"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
+        </activity-alias>
+
+        <!-- Disguise identity (default disabled): "My Notes" + grey-blue
+             pencil icon. Book Mode flips the enabled state of the two aliases
+             at runtime; until that native swap is wired this stays off so the
+             home screen shows exactly one "Sahaj" entry. -->
+        <activity-alias
+            android:name=".NotesLauncher"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:label="@string/notes_label"
+            android:icon="@mipmap/ic_launcher_disguise"
+            android:roundIcon="@mipmap/ic_launcher_disguise_round">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

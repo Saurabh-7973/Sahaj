@@ -12,7 +12,14 @@ abstract class NotificationService {
   Future<bool> requestPermission();
 
   /// Schedule (or replace) the single daily reminder at [hour]:[minute].
-  Future<void> scheduleDailyReminder({required int hour, required int minute});
+  /// When [skipToday] is true the first fire is pushed to tomorrow — used
+  /// after a session completes so a man who already trained today isn't
+  /// reminded (M8 §0 suppression).
+  Future<void> scheduleDailyReminder({
+    required int hour,
+    required int minute,
+    bool skipToday = false,
+  });
 
   /// Cancel the daily reminder.
   Future<void> cancelReminder();
@@ -37,6 +44,7 @@ class NoopNotificationService implements NotificationService {
   Future<void> scheduleDailyReminder({
     required int hour,
     required int minute,
+    bool skipToday = false,
   }) async {}
 
   @override

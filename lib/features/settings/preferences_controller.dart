@@ -27,9 +27,9 @@ class PreferencesController extends ChangeNotifier {
   /// synthesis section 8: streak must never become a pressure lever).
   bool hideStreak = false;
 
-  /// Daily reminder time. Default 20:00 (calm evening nudge); user-adjustable.
-  int reminderHour = 20;
-  int reminderMinute = 0;
+  /// Daily reminder time. Default 21:30 (calm evening nudge, M8 §3); user-adjustable.
+  int reminderHour = 21;
+  int reminderMinute = 30;
 
   /// Haptic cue language in the player — on by default (the discretion
   /// feature: sessions followable face-down, silent, lights off).
@@ -94,8 +94,8 @@ class PreferencesController extends ChangeNotifier {
     disguiseName = DisguiseName.none;
     notificationsEnabled = false;
     hideStreak = false;
-    reminderHour = 20;
-    reminderMinute = 0;
+    reminderHour = 21;
+    reminderMinute = 30;
     hapticsEnabled = true;
     voiceEnabled = true;
     faceDownCoachSeen = false;
@@ -127,8 +127,8 @@ class PreferencesController extends ChangeNotifier {
     disguiseName = _disguiseByName(json['disguiseName'] as String?);
     notificationsEnabled = (json['notificationsEnabled'] as bool?) ?? false;
     hideStreak = (json['hideStreak'] as bool?) ?? false;
-    reminderHour = (json['reminderHour'] as int?) ?? 20;
-    reminderMinute = (json['reminderMinute'] as int?) ?? 0;
+    reminderHour = (json['reminderHour'] as int?) ?? 21;
+    reminderMinute = (json['reminderMinute'] as int?) ?? 30;
     hapticsEnabled = (json['hapticsEnabled'] as bool?) ?? true;
     voiceEnabled = (json['voiceEnabled'] as bool?) ?? true;
     faceDownCoachSeen = (json['faceDownCoachSeen'] as bool?) ?? false;

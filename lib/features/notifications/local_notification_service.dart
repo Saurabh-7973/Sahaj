@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
+import 'logic/reminder_copy.dart';
 import 'logic/reminder_schedule.dart';
 import 'notification_service.dart';
 
@@ -114,10 +115,16 @@ class LocalNotificationService implements NotificationService {
   Future<void> scheduleDailyReminder({
     required int hour,
     required int minute,
+    bool skipToday = false,
   }) async {
     await init();
-    final next =
+    var next =
         nextReminderTime(hour: hour, minute: minute, now: DateTime.now());
+    // Suppression: if the user already trained today, push the first fire to
+    // tomorrow when the computed time still lands today.
+    if (skipToday && next.day == DateTime.now().day) {
+      next = next.add(const Duration(days: 1));
+    }
     final scheduled = tz.TZDateTime.from(next, tz.local);
 
     const details = NotificationDetails(
@@ -147,10 +154,13 @@ class LocalNotificationService implements NotificationService {
     NotificationDetails details,
     AndroidScheduleMode mode,
   ) {
+    // Title = a rotating lock-screen-safe copy-bank line (M8 §0); no body, no
+    // name (the OS shows the app/alias name itself). Empty string for body so
+    // the notification stays a single calm line.
     return _plugin.zonedSchedule(
       _reminderId,
-      'Sahaj',
-      'A few quiet minutes for yourself today.',
+      reminderLine(when),
+      '',
       when,
       details,
       payload: _payload,

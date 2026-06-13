@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Adaptive icon backgrounds. Sahaj: the warm surface brown (A2).
+         Disguise: a flat grey-blue, another developer's app. -->
+    <color name="ic_launcher_background">#221D17</color>
+    <color name="ic_launcher_disguise_background">#566A7D</color>
+</resources>

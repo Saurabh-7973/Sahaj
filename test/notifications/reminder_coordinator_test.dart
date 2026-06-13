@@ -22,6 +22,7 @@ class FakeNotificationService implements NotificationService {
   Future<void> scheduleDailyReminder({
     required int hour,
     required int minute,
+    bool skipToday = false,
   }) async {
     calls.add('schedule');
     scheduledHour = hour;

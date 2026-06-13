@@ -681,3 +681,27 @@ Build-order step 8 (`m7_monetisation_spec.md`, mocks m7_01–03 + adopted v2 25�
 - #3: grace-period copy is spec-only (no live billing yet) — mirror Play's actual grace window when wiring RevenueCat.
 - #4: Me tile shows tier presence ("· Pro"), as recommended.
 - #5: UPI-mandate strip held until real support data.
+
+## Lamplight M8 — System (icons, notifications, OS seams) — 2026-06-13
+
+Build-order step 9 (last — `m8_system_spec.md`, mocks m8_01–02 + adopted v2 27). This module lives on Android's surfaces, not the app's screens, so the deliverables are governed logic + native config, verified on-device.
+
+- **Notification doctrine (§0):** `reminder_copy.dart` — the 6-line canon copy bank (lock-screen safe: no emoji, no name, no technique words, no streak-risk framing, never sells), a deterministic daily rotation, and a `shouldRemind(doneToday, sessionActive)` suppression predicate. The scheduled reminder now uses the rotating copy-bank line as its title (no body); channel stays DEFAULT importance (never a heads-up).
+- **Suppression wired:** completing a session reschedules the reminder with `skipToday: true` — a man who trained today gets no nudge tonight.
+- **Media-session law (§1):** `media_metadata.dart` — governed lock-screen metadata for audio sessions: neutral title (the catalog's display title), `"Audio"` as the only subtitle, app name following the disguise alias when Book Mode is on. No technique words ever reach the media notification.
+- **Default reminder time → 21:30** (§3 / decision #3). **Export filename → `backup_{yyyy-MM-dd}.json`** (§3) — never "sahaj" in a filename in either identity; the export now shares a neutral-named temp file via the share sheet, subject "Backup".
+- **Book Mode toggle** shows the one-time expectation line: "Your launcher icon just changed to My Notes — it may take a moment to appear."
+- **Concept A adaptive icon (§2, native):** three-layer adaptive set in `mipmap-anydpi-v26` — foreground lotus-bud line-art (ochre, scaled into the 66% safe zone), flat `#221D17` background, and a monochrome bud layer so Material You themed icons become maximally anonymous. A grey-blue pencil disguise icon ships the same structure. The launcher entry moved onto two **activity-aliases** (`SahajLauncher` enabled / `NotesLauncher` "My Notes" disabled) so Book Mode can swap identity by flipping their enabled state — MainActivity carries no LAUNCHER filter to avoid a duplicate home-screen entry.
+- **Verification:** 273 tests green (copy-bank safety + rotation, suppression, media metadata, export filename, reminder defaults). The OS surfaces (launcher icon, reminder + media notifications, recents thumbnail, splash, App Info, share-sheet source, export filename) are the device-side surface-audit checklist (§4) — run on real hardware, both identities, before release.
+
+### Open decisions surfaced
+
+- #1: splash-alias carry-through on Android 12+ — verify on target APIs/OEMs.
+- #2: media-notification compact-view/paused-dismiss behavior — device test.
+- #3: default reminder 21:30 set; "This evening" uses the same default (confirmed).
+- #4: launcher badge/dot OEM variance (MIUI/ColorOS) — accept or add a settings note after a device check.
+- **Native runtime swap:** the activity-alias enable/disable toggle (the actual icon/label change) is the remaining native task — the resources, aliases, and in-app expectation copy all ship; the `PackageManager.setComponentEnabledSetting` call from Book Mode is the device-side piece.
+
+---
+
+**The Lamplight UI pass is complete — all eight modules (M1–M8) built, 273 tests green.** Remaining work is device-side: the activity-alias runtime swap, the surface-audit on real hardware, doctor sign-off on evidence articles, and Play Console setup (keystore, AAB, the four subscription products + trial). Screenshots for M1–M7 are in `docs/ui_review/`.

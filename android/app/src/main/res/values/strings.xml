@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Real launcher label. The disguise alias uses notes_label instead. -->
+    <string name="app_name">Sahaj</string>
+    <string name="notes_label">My Notes</string>
+</resources>

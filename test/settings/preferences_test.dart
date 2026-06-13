@@ -8,8 +8,8 @@ void main() {
     expect(c.disguiseName, DisguiseName.none);
     expect(c.notificationsEnabled, isFalse);
     expect(c.hideStreak, isFalse);
-    expect(c.reminderHour, 20);
-    expect(c.reminderMinute, 0);
+    expect(c.reminderHour, 21);
+    expect(c.reminderMinute, 30);
   });
 
   test('setters update and toJson/loadFrom round-trips', () {
