@@ -2,13 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../../core/theme/app_background.dart';
+import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_theme.dart';
+import '../../shared/widgets/widgets.dart';
 import '../onboarding/onboarding_controller.dart';
+import 'lock_controller.dart';
+import 'pin_pad.dart';
 
-/// Wraps the app: if biometric lock is on and we haven't authenticated this
-/// launch, require local auth before revealing [child].
+/// G2 / `24` — the gate. Mark + sensor only: no app name, no purpose (it may
+/// be glimpsed). Biometric auto-fires; "Use PIN" falls back to the pad when a
+/// PIN is set. Forgot PIN routes to the erase confirm (no recovery — local-
+/// first means wipe-and-restart is the honest path).
 class BiometricGate extends ConsumerStatefulWidget {
-  const BiometricGate({super.key, required this.child});
+  const BiometricGate({super.key, required this.child, this.onForgotPin});
   final Widget child;
+
+  /// Opens the erase-confirm flow (settings wires it to the real wipe).
+  final VoidCallback? onForgotPin;
 
   @override
   ConsumerState<BiometricGate> createState() => _BiometricGateState();
@@ -18,6 +29,7 @@ class _BiometricGateState extends ConsumerState<BiometricGate> {
   final _auth = LocalAuthentication();
   bool _unlocked = false;
   bool _checked = false;
+  bool _showPin = false;
 
   @override
   void initState() {
@@ -28,15 +40,9 @@ class _BiometricGateState extends ConsumerState<BiometricGate> {
   Future<void> _maybeAuth() async {
     final locked = ref.read(onboardingControllerProvider).biometricLock;
     if (!locked) {
-      setState(() {
-        _unlocked = true;
-        _checked = true;
-      });
+      _open();
       return;
     }
-    // Fail open if the device cannot authenticate at all (no biometrics AND no
-    // device passcode). Otherwise the user would be permanently locked out of
-    // their own data with no way to satisfy the lock.
     bool supported;
     try {
       supported = await _auth.isDeviceSupported();
@@ -44,47 +50,105 @@ class _BiometricGateState extends ConsumerState<BiometricGate> {
       supported = false;
     }
     if (!supported) {
-      setState(() {
-        _unlocked = true;
-        _checked = true;
-      });
+      // No biometrics/passcode: fall back to PIN if set, else fail open so the
+      // user is never locked out of their own data.
+      if (ref.read(lockControllerProvider).hasPin) {
+        setState(() {
+          _showPin = true;
+          _checked = true;
+        });
+      } else {
+        _open();
+      }
       return;
     }
     try {
       final ok = await _auth.authenticate(
-        localizedReason: 'Unlock Sahaj',
-        // biometricOnly: false lets the OS fall back to the device PIN/passcode
-        // when biometrics are unavailable or fail — the escape hatch that keeps
-        // the user from being locked out.
+        localizedReason: 'Unlock',
         options: const AuthenticationOptions(
           stickyAuth: true,
           biometricOnly: false,
         ),
       );
-      setState(() {
-        _unlocked = ok;
-        _checked = true;
-      });
+      if (ok) {
+        _open();
+      } else {
+        setState(() => _checked = true);
+      }
     } catch (_) {
-      setState(() {
-        _unlocked = false;
-        _checked = true;
-      });
+      setState(() => _checked = true);
     }
   }
+
+  void _open() => setState(() {
+        _unlocked = true;
+        _checked = true;
+      });
 
   @override
   Widget build(BuildContext context) {
     if (_unlocked) return widget.child;
+
+    if (_showPin) {
+      final lock = ref.read(lockControllerProvider);
+      return PinPad(
+        onComplete: (pin) async {
+          final ok = await lock.verify(pin);
+          if (ok) _open();
+          return ok;
+        },
+        onUseFingerprint:
+            ref.read(onboardingControllerProvider).biometricLock
+                ? () {
+                    setState(() => _showPin = false);
+                    _maybeAuth();
+                  }
+                : null,
+        onForgot: widget.onForgotPin,
+      );
+    }
+
+    // Biometric gate face (mark + sensor).
+    final lamp = context.lamp;
+    final theme = Theme.of(context);
     return Scaffold(
-      body: Center(
-        child: _checked
-            ? IconButton(
-                iconSize: 48,
-                icon: const Icon(Icons.lock_outline),
-                onPressed: _maybeAuth,
-              )
-            : const SizedBox.shrink(),
+      body: LampBackground(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(22, 16, 22, 18),
+            child: Column(
+              children: [
+                const Spacer(),
+                LotusMark(size: 58, color: lamp.gold, strokeWidth: 3),
+                const SizedBox(height: 28),
+                GestureDetector(
+                  onTap: _checked ? _maybeAuth : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(26),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: lamp.sand.withValues(alpha: 0.3),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Icon(Icons.fingerprint, size: 58, color: lamp.sand),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xl),
+                Text('Touch the sensor to unlock',
+                    style: theme.textTheme.bodySmall),
+                const Spacer(),
+                if (ref.read(lockControllerProvider).hasPin)
+                  AppButton(
+                    label: 'Use PIN',
+                    variant: AppButtonVariant.text,
+                    onPressed: () => setState(() => _showPin = true),
+                  ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

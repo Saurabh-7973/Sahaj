@@ -642,3 +642,22 @@ Build-order step 6 (`m5_library_spec.md`, mocks m5_01–02 + adopted v2 14/20).
 - #3: related-session footer (read→do bridge) — not adopted; needs a new content field, revisit before seeding.
 - #4: search is titles-only, as recommended.
 - Heritage seeding: the pull-quote line is a placeholder until a verified excerpt is seeded; citation "what it showed" lines need the doctor-pass verification.
+
+## Lamplight M6 — The Privacy System — 2026-06-13
+
+Build-order step 7 (`m6_privacy_spec.md`, mocks m6_01–02 + adopted v2 21–24).
+
+- **Book Mode cover** rebuilt as a believable stock-Material notes app (the sanctioned design-system exception, commented in code): "My Notes" list of 6 canned, mundane Indian-household notes (static dates), each opening **one level** to a read-only note — the grocery checklist with one ticked/struck item and an "ask Mummy re: jeera brand" line; FAB + toolbars are inert decoys. Double-tap anywhere reveals the app. Backgrounding (any route, Book Mode on) re-arms the cover via `didChangeAppLifecycleState` so the recents thumbnail shows the notes app, never the last real screen. All content is canned — never generated from anything real.
+- **Gate** reskinned to Lamplight (`24`): lotus mark + dashed sensor ring + "Touch the sensor to unlock", biometric auto-fires, `Use PIN` falls back to the pad. No app name, no purpose (it may be glimpsed).
+- **PIN pad (m6_02):** mark + dots + 76dp keys; wrong PIN → dots flash turmeric + 200ms shake (flash-only under reduced motion) + "Try again" — no red, no countdown. `Use fingerprint` and `Forgot PIN` affordances; Forgot routes to the erase confirm (no recovery — local-first means wipe-and-restart is the honest path). TalkBack announces "N of 4 digits entered", never the digit. `PinSetupScreen` does choose-then-confirm.
+- **Lock layer:** `LockController` + `PinStore` seam — `SecurePinStore` (flutter_secure_storage / Android Keystore is the real protection for a 4-digit PIN; no hashing theater) in prod, `MemoryPinStore` in tests. PIN length 4, lockout policy flagged (decision #1).
+- **Erase confirm (`22`)** is now a full-screen page, never a dialog: "Erase everything", no-cloud body, the new `HoldToConfirm` (press-hold 3s, ring-fill meter, release resets with no penalty copy), `Keep my data` ghost. Wipes everything including onboarding answers and the PIN, then returns to Welcome.
+- **Settings (`21`)** patched: a `Set/Change PIN` row in the Lock section, the haptic-cues relearn row (from M1), and the delete flow now pushes the full-screen erase confirm. Button copy fixed to "Erase everything".
+- **New widgets:** `HoldToConfirm`, `PinPad`/`PinSetupScreen`, `DialCard` reuse. No red on any failure state anywhere.
+- **Verification:** 248 tests green (lock controller, PIN pad ceremony + setup flow, erase hold/release, settings sections, existing cover double-tap, 1.3× string-room). Screenshots m6_01/02 + cover + erase → `docs/ui_review/`.
+
+### Open decisions surfaced
+
+- #1: PIN length 4 + lockout policy after repeated failures — flagged, no lockout enforced yet; the screen absorbs either.
+- #2: panic gesture (in-app two-finger swipe to cover) — proposal, not adopted.
+- #3/#4: native concerns (activity-alias label flow to App Info / notifications, recents FLAG_SECURE fallback, alias collision on OEM skins) remain device-side TODOs — the Flutter cover/recents-swap half is done; the OS-level alias is a separate native task.

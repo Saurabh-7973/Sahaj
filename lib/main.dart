@@ -18,6 +18,7 @@ import 'data/session_log_store.dart';
 import 'data/subscription_store.dart';
 import 'features/me/checkin_controller.dart';
 import 'features/notifications/local_notification_service.dart';
+import 'features/security/lock_controller.dart';
 import 'features/notifications/notification_service.dart';
 import 'features/onboarding/onboarding_controller.dart';
 import 'features/sessions/just_audio_session_audio.dart';
@@ -66,6 +67,10 @@ Future<void> main() async {
   // Check-ins (M3) — week 4/8/12 instrument records.
   final checkinStore = await CheckinStore.open();
   final checkins = CheckinController(checkinStore);
+
+  // Lock / PIN (M6) — PIN persisted in the platform keystore.
+  final lock = LockController(const SecurePinStore());
+  await lock.load();
 
   // Privacy / Settings (Privacy Task 4)
   final prefsStore = await PreferencesStore.open();
@@ -116,6 +121,7 @@ Future<void> main() async {
         articleCatalogProvider.overrideWithValue(articleCatalog),
         preferencesControllerProvider.overrideWith((ref) => preferences),
         checkinControllerProvider.overrideWith((ref) => checkins),
+        lockControllerProvider.overrideWith((ref) => lock),
         notificationServiceProvider.overrideWithValue(notifications),
         subscriptionControllerProvider.overrideWith((ref) => subscription),
         analyticsProvider.overrideWithValue(analytics),

@@ -12,10 +12,13 @@ import '../notifications/reminder_coordinator.dart';
 import '../onboarding/onboarding_controller.dart';
 import '../onboarding/widgets/selectable_option.dart';
 import '../me/checkin_controller.dart';
+import '../security/lock_controller.dart';
+import '../security/pin_pad.dart';
 import '../sessions/pages/face_down_coach.dart';
 import '../sessions/progress_controller.dart';
 import '../subscription/subscription_controller.dart';
 import 'account.dart';
+import 'erase_confirm_screen.dart';
 import 'logic/data_export.dart';
 import 'preferences_controller.dart';
 
@@ -55,6 +58,18 @@ class SettingsPage extends ConsumerWidget {
                 ref.read(onboardingControllerProvider).setBiometricLock(v);
                 if (v) ref.read(appEventsProvider).biometricLockEnabled();
               },
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppCard(
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(ref.watch(lockControllerProvider).hasPin
+                  ? 'Change PIN'
+                  : 'Set a PIN'),
+              subtitle: const Text('A 4-digit fallback when biometrics fail.'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => _setPin(context, ref),
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
@@ -172,8 +187,8 @@ class SettingsPage extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           AppButton(
-            label: 'Delete everything',
-            variant: AppButtonVariant.text,
+            label: 'Erase everything',
+            variant: AppButtonVariant.outlined,
             onPressed: () => _confirmDelete(context, ref),
           ),
         ],
@@ -228,33 +243,34 @@ class SettingsPage extends ConsumerWidget {
     await Share.share(json, subject: 'My Sahaj data');
   }
 
+  Future<void> _setPin(BuildContext context, WidgetRef ref) async {
+    final pin = await Navigator.of(context).push<String>(
+      MaterialPageRoute<String>(builder: (_) => const PinSetupScreen()),
+    );
+    if (pin == null) return;
+    await ref.read(lockControllerProvider).setPin(pin);
+  }
+
+  // G1 erase — a full-screen confirm, never a dialog. Wipes everything
+  // including onboarding answers and the PIN, then returns to Welcome.
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Delete everything?'),
-        content: const Text(
-            'This permanently removes your plan, progress, logs, and settings '
-            'from this device. This cannot be undone.'),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel')),
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Delete')),
-        ],
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => EraseConfirmScreen(
+          onErase: () {
+            ref.read(appEventsProvider).accountDeleted();
+            wipeAllData(
+              onboarding: ref.read(onboardingControllerProvider),
+              progress: ref.read(progressControllerProvider),
+              preferences: ref.read(preferencesControllerProvider),
+              subscription: ref.read(subscriptionControllerProvider),
+              checkins: ref.read(checkinControllerProvider),
+            );
+            ref.read(lockControllerProvider).clearPin();
+            context.go(Routes.onboarding);
+          },
+        ),
       ),
     );
-    if (ok != true || !context.mounted) return;
-    ref.read(appEventsProvider).accountDeleted();
-    wipeAllData(
-      onboarding: ref.read(onboardingControllerProvider),
-      progress: ref.read(progressControllerProvider),
-      preferences: ref.read(preferencesControllerProvider),
-      subscription: ref.read(subscriptionControllerProvider),
-      checkins: ref.read(checkinControllerProvider),
-    );
-    if (context.mounted) context.go(Routes.onboarding);
   }
 }

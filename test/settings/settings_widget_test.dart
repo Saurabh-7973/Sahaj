@@ -22,9 +22,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Biometric lock'), findsOneWidget);
+    expect(find.text('Set a PIN'), findsOneWidget);
     expect(find.text('Book Mode'), findsOneWidget);
+    expect(find.text('Haptic cues'), findsOneWidget);
     expect(find.text('Export my data'), findsOneWidget);
-    expect(find.text('Delete everything'), findsOneWidget);
+    expect(find.text('Erase everything'), findsOneWidget);
 
     expect(prefs.bookMode, isFalse);
     await tester.tap(find.widgetWithText(SwitchListTile, 'Book Mode'));

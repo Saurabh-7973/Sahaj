@@ -5,6 +5,7 @@ export 'app_button.dart';
 export 'app_card.dart';
 export 'app_chip.dart';
 export 'dial_card.dart';
+export 'hold_to_confirm.dart';
 export 'app_list_tile.dart';
 export 'app_mood_selector.dart';
 export 'app_progress_ring.dart';
