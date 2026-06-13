@@ -19,6 +19,7 @@ import 'data/subscription_store.dart';
 import 'features/me/checkin_controller.dart';
 import 'features/notifications/local_notification_service.dart';
 import 'features/security/lock_controller.dart';
+import 'features/settings/launcher_disguise.dart';
 import 'features/notifications/notification_service.dart';
 import 'features/onboarding/onboarding_controller.dart';
 import 'features/sessions/just_audio_session_audio.dart';
@@ -122,6 +123,8 @@ Future<void> main() async {
         preferencesControllerProvider.overrideWith((ref) => preferences),
         checkinControllerProvider.overrideWith((ref) => checkins),
         lockControllerProvider.overrideWith((ref) => lock),
+        launcherDisguiseProvider
+            .overrideWithValue(const PlatformLauncherDisguise()),
         notificationServiceProvider.overrideWithValue(notifications),
         subscriptionControllerProvider.overrideWith((ref) => subscription),
         analyticsProvider.overrideWithValue(analytics),

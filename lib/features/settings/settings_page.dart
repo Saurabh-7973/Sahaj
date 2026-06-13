@@ -22,6 +22,7 @@ import '../sessions/progress_controller.dart';
 import '../subscription/subscription_controller.dart';
 import 'account.dart';
 import 'erase_confirm_screen.dart';
+import 'launcher_disguise.dart';
 import 'logic/data_export.dart';
 import 'preferences_controller.dart';
 
@@ -87,6 +88,8 @@ class SettingsPage extends ConsumerWidget {
               value: prefs.bookMode,
               onChanged: (v) {
                 ref.read(preferencesControllerProvider).setBookMode(v);
+                // Swap the launcher icon/label to match (M8 native).
+                ref.read(launcherDisguiseProvider).setDisguise(v);
                 if (v && context.mounted) {
                   // M8 §3: launcher caches vary, so set expectations once.
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -289,6 +292,7 @@ class SettingsPage extends ConsumerWidget {
               checkins: ref.read(checkinControllerProvider),
             );
             ref.read(lockControllerProvider).clearPin();
+            ref.read(launcherDisguiseProvider).setDisguise(false);
             context.go(Routes.onboarding);
           },
         ),

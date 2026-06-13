@@ -705,3 +705,13 @@ Build-order step 9 (last — `m8_system_spec.md`, mocks m8_01–02 + adopted v2 
 ---
 
 **The Lamplight UI pass is complete — all eight modules (M1–M8) built, 273 tests green.** Remaining work is device-side: the activity-alias runtime swap, the surface-audit on real hardware, doctor sign-off on evidence articles, and Play Console setup (keystore, AAB, the four subscription products + trial). Screenshots for M1–M7 are in `docs/ui_review/`.
+
+## M8 follow-up — launcher disguise runtime swap — 2026-06-13
+
+The last native piece from M8's open list. Toggling Book Mode now actually
+changes the home-screen icon and label.
+
+- **Native (`MainActivity.kt`):** a `sahaj/launcher_disguise` MethodChannel handles `setDisguise(bool)` — enables the chosen activity-alias and disables the other via `PackageManager.setComponentEnabledSetting(..., DONT_KILL_APP)`, enabling-first so there's never a zero-launcher-entry window.
+- **Dart seam (`launcher_disguise.dart`):** `LauncherDisguise` with a `PlatformLauncherDisguise` (channel) wired in `main()` and a `NoopLauncherDisguise` default for tests/non-Android. Errors are swallowed — a launcher-cache hiccup never crashes a toggle.
+- **Wired:** the Settings Book Mode switch swaps identity (Sahaj ↔ My Notes) alongside the existing in-app cover + expectation toast; Erase everything restores the real identity.
+- **Verified:** Kotlin compiles, debug resources + manifest merge clean, 276 Dart tests green. Real on-device icon/label swap + launcher-cache timing remain the device-side check.
