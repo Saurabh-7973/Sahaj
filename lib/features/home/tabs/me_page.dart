@@ -82,7 +82,8 @@ class MePage extends ConsumerWidget {
                     Expanded(
                       child: _MeTile(
                         icon: Icons.workspace_premium_outlined,
-                        label: isPro ? 'Sahaj Pro' : 'Subscription',
+                        // Decision #4: tier name when Pro, plain when Free.
+                        label: isPro ? 'Subscription · Pro' : 'Subscription',
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute<void>(
                             builder: (_) => const SubscriptionPage(),

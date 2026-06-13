@@ -26,13 +26,19 @@ enum PricingTier {
 
   bool get isRecommended => this == PricingTier.standard;
 
-  /// Short label shown on each tier card.
-  String get label => switch (this) {
-        PricingTier.free => 'For users who genuinely cannot afford',
-        PricingTier.low => 'Students and lower income',
-        PricingTier.standard => 'The standard',
-        PricingTier.supporter => 'Supporter — helps fund the ₹0 tier',
+  /// Tier meaning line (M7 §1 canon). The ₹1499 pay-it-forward line ships only
+  /// if a real mechanism backs it (DECISION #1 — flagged, not invented).
+  String get meaning => switch (this) {
+        PricingTier.free =>
+          'Keep training free. The core program is yours either way.',
+        PricingTier.low => 'A fair price on a tight budget.',
+        PricingTier.standard => 'The fair price.',
+        PricingTier.supporter =>
+          "Covers you — and quietly covers someone's ₹499.",
       };
+
+  /// Price as shown ("₹0", "₹499").
+  String get priceLabel => '₹$rupees';
 
   static PricingTier? fromProductId(String? id) {
     for (final t in PricingTier.values) {

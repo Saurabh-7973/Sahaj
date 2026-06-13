@@ -661,3 +661,23 @@ Build-order step 7 (`m6_privacy_spec.md`, mocks m6_01–02 + adopted v2 21–24)
 - #1: PIN length 4 + lockout policy after repeated failures — flagged, no lockout enforced yet; the screen absorbs either.
 - #2: panic gesture (in-app two-finger swipe to cover) — proposal, not adopted.
 - #3/#4: native concerns (activity-alias label flow to App Info / notifications, recents FLAG_SECURE fallback, alias collision on OEM skins) remain device-side TODOs — the Flutter cover/recents-swap half is done; the OS-level alias is a separate native task.
+
+## Lamplight M7 — Monetisation (the fair shopkeeper) — 2026-06-13
+
+Build-order step 8 (`m7_monetisation_spec.md`, mocks m7_01–03 + adopted v2 25–26).
+
+- **Paywall** rebuilt to Lamplight (25/m7_01): eyebrow + always-visible X · H1 "Pick what's reasonable for you" · pothi rule · scale-explanation line · 4-benefit moss-tick grid · four `TierCard`s (`.opt` style, Fraunces price + canon meaning line, gold border + filled radio when selected, ₹999's Recommended chip a fixed label with a faint gold glow). **Nothing is pre-selected** — the CTA sits disabled with "Nothing is pre-selected — tap a tier first." and wakes on selection; the tiny print becomes price-specific ("₹499/yr after 7 days free · cancel anytime in Play · price never changes mid-subscription"). Choosing **below** the recommendation triggers no nudge — selection ends the conversation (equal dignity at every price).
+- **₹0 dismissal (m7_02):** tapping ₹0 grants the free entitlement, closes to the originating screen, and shows a single-line moss-tick toast "Good — train on." (fade only). Pull-never-push: the wall never re-prompts unprompted.
+- **Subscription page** rebuilt to the five-state model (26/m7_03): **Free** ("You're on Free / It stays free." + quiet See Pro), **Trial** ("Sahaj Pro" + `trial until {date}` + `then ₹X/yr` + cancel-without-charge line), **Active** (`₹X/yr` + `renews {date}` + "Your price stays ₹X — it never changes mid-subscription"). Manage-in-Play + Restore tiles (inline result, no dialog) + "handled by Play — we never see your card" strip. **Dates, not countdowns** everywhere (`billingDate`: "18 June" / "14 June 2027").
+- **Trial/renewal on the controller:** `inTrial` + `trialEndsAt` + `renewsAt` (persisted); choosing a paid tier starts a real local 7-day trial (renews a year after it ends) so the trial/active states are live before RevenueCat is wired. **One entitlement** — every paid tier unlocks the identical `pro` flag (unit-tested across tiers).
+- **Me tile** now reads "Subscription · Pro" when Pro, plain "Subscription" when Free (closes M3 decision #4).
+- **New widget:** `TierCard`. No red, no countdowns, no decoys, no upsell-after-lower-tier anywhere in the flow.
+- **Verification:** 265 tests green (canon tier lines, entitlement-identical-across-tiers, trial dates, billing-date format, paywall no-preselect + ₹0 dismissal, 1.3× string-room). Screenshots m7_01 + subscription free/trial/active → `docs/ui_review/`.
+
+### Open decisions surfaced
+
+- #1: ₹1499 pay-it-forward line ships as written — keep only if a real mechanism backs it before launch, else cut.
+- #2: trial 7 days, applied per the local stub; confirm length + once-per-account vs per-tier in Play config.
+- #3: grace-period copy is spec-only (no live billing yet) — mirror Play's actual grace window when wiring RevenueCat.
+- #4: Me tile shows tier presence ("· Pro"), as recommended.
+- #5: UPI-mandate strip held until real support data.
