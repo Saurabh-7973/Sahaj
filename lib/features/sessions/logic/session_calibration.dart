@@ -108,6 +108,13 @@ CalibratedSession calibrateSession({
   );
 }
 
+/// Gap return (M2·6): the plan "restarts a notch gentler" — the same
+/// calibrate-down the heavy mood uses, applied to today's session before the
+/// mood sheet sees it. Returns the session unchanged when nothing in it is
+/// calibratable (still honest).
+SessionDef calibrateGapReturn(SessionDef session) =>
+    _calibrateDown(session)?.session ?? session;
+
 class _Adjusted {
   const _Adjusted(this.session, this.deltaLine);
   final SessionDef session;

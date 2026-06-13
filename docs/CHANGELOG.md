@@ -563,3 +563,21 @@ Build-order step 1 of the design handoff (`docs/design/00_MASTER_HANDOFF.md`).
 - #8/#9: haptic primitives + face-down sensing are device tests; seams in place.
 - #14: "you can stop any time" implemented as specced (holds 1–2 then drops) pending the tone read.
 - M3 will wire the milestone "Take the check-in" action; until then it lands on Today.
+
+## Lamplight M2 — Today, the daily front door — 2026-06-13
+
+Build-order step 3 (`m2_today_spec.md`, mocks m2_01–04).
+
+- **Doorway doctrine:** one hero with CTA energy; the 12-week spine is cut from Today (week position = top-right `WK N · phase` chip only); no dashboard creep.
+- **today_logic.dart** (pure, tested): `TodayKind` (empty/day0/gapReturn/done/standard), why-line table verbatim from spec (priority: day0 > gap > milestone > week-start > after-harder > normal), display-streak (stored streak survives only if last completion was today/yesterday — never stale), Mon-start week dots + completions, greeting bands, `Thursday · 11 June` eyebrow.
+- **Gap return (principle 8's proof screen):** `kGapThresholdDays = 3` behind a constant (DECISION #2 — spec's own candidates were 2/3; engine has no value), `calibrateGapReturn` reuses M1's calibrate-down so "a notch gentler" is a real reduction, week chip `plan adjusted`, hero chip `adjusted`, steady zero in faint with `longest N` kept as the dignity anchor.
+- **States:** default (hero card with lotus watermark, type/duration/day-N chips, why-line, mood micro-row, 52dp Start) · hidden-streak (tile simply absent) · done (moss card, tomorrow chips, free-practice link → Library) · day 0 (`first session` ok-chip, `starts tonight` week card, no steady tile — earned into existence) · true-empty (calm-contour lamp).
+- **New shared widgets:** `WeekDots` (B2), `LotusMark` (watermark + medal glyph), `MoodGlyph` single-glyph export, `AppButton.height`.
+- **Verification:** 174 tests green (today_logic table tests, widget-state tests, 1.3× string-room incl. Start-above-the-fold check). Screenshots m2_01a/01b/02/03/04 → `docs/ui_review/`.
+
+### Open decisions surfaced
+
+- #1 (M2): weekly denominator — engine schedules 7/7 days, so `N done` without denominator stands.
+- #2: gap threshold default 3 — constant in `today_logic.dart`, change there.
+- #3: date format hardcoded English pending l10n call.
+- #4: free-practice link done-state-only, as recommended.

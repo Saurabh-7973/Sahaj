@@ -40,7 +40,7 @@ void main() {
 
     // Redirect cleared onboarding → landed on the Today tab inside the shell.
     expect(find.byType(NavigationBar), findsOneWidget);
-    expect(find.text('Week 1 of 12 — Foundation'), findsOneWidget);
+    expect(find.textContaining('WK 1'), findsOneWidget);
 
     // Switch to Library tab via its destination icon.
     await tester.tap(find.byIcon(Icons.menu_book_outlined));

@@ -152,6 +152,36 @@ class _MoodOption extends StatelessWidget {
   }
 }
 
+/// A single mood glyph at any size (e.g. Today's "adjusts to how you arrive"
+/// micro-row). Stroke only, eyes-less at tiny sizes would be illegible, so
+/// the full face always draws.
+class MoodGlyph extends StatelessWidget {
+  const MoodGlyph({
+    super.key,
+    required this.mood,
+    required this.size,
+    required this.color,
+  });
+
+  final ArrivalMood mood;
+  final double size;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExcludeSemantics(
+      child: CustomPaint(
+        size: Size.square(size),
+        painter: _MoodGlyphPainter(
+          mood: mood,
+          stroke: color,
+          idleFill: Colors.transparent,
+        ),
+      ),
+    );
+  }
+}
+
 /// Calm-contour mood faces from the mock SVGs (52-unit viewBox): circle,
 /// two eye strokes, a mouth curve; Charged adds two spark strokes.
 class _MoodGlyphPainter extends CustomPainter {

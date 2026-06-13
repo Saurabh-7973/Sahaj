@@ -39,7 +39,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Know the ground'), findsOneWidget);
-    expect(find.text('Start session'), findsOneWidget);
+    expect(find.text('Start'), findsOneWidget);
+    // No logs ever → day 0: the ok-chip's only appearance on Today, and the
+    // steady tile doesn't exist yet.
+    expect(find.text('first session'), findsOneWidget);
+    expect(find.text('Steady days'), findsNothing);
   });
 
   group('streak header respects hideStreak', () {
@@ -97,16 +101,20 @@ void main() {
       );
     }
 
-    testWidgets('shows the streak when not hidden', (tester) async {
+    testWidgets('shows the steady tile when not hidden', (tester) async {
       await pump(tester, hide: false);
       await tester.pumpAndSettle();
-      expect(find.textContaining('day streak'), findsOneWidget);
+      // Completed today → done state + the steady tile.
+      expect(find.text('Done for today'), findsOneWidget);
+      expect(find.text('Steady days'), findsOneWidget);
     });
 
-    testWidgets('hides the streak when hideStreak is on', (tester) async {
+    testWidgets('hides the steady tile when hideStreak is on', (tester) async {
       await pump(tester, hide: true);
       await tester.pumpAndSettle();
-      expect(find.textContaining('day streak'), findsNothing);
+      // Absent — no gap, no placeholder, no "hidden" label.
+      expect(find.text('Steady days'), findsNothing);
+      expect(find.text('Done for today'), findsOneWidget);
     });
   });
 }

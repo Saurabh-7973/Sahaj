@@ -30,6 +30,7 @@ class AppButton extends StatefulWidget {
     this.icon,
     this.loading = false,
     this.expand = true,
+    this.height,
   });
 
   final String label;
@@ -38,6 +39,9 @@ class AppButton extends StatefulWidget {
   final IconData? icon;
   final bool loading;
   final bool expand;
+
+  /// Overrides the variant's default height (e.g. the 52dp Today Start).
+  final double? height;
 
   @override
   State<AppButton> createState() => _AppButtonState();
@@ -84,11 +88,12 @@ class _AppButtonState extends State<AppButton> {
       AppButtonVariant.text => (lamp.inkMuted, null, null, null),
     };
 
-    final height = switch (widget.variant) {
-      AppButtonVariant.filled || AppButtonVariant.moss => 56.0,
-      AppButtonVariant.outlined => 54.0,
-      AppButtonVariant.text => 48.0,
-    };
+    final height = widget.height ??
+        switch (widget.variant) {
+          AppButtonVariant.filled || AppButtonVariant.moss => 56.0,
+          AppButtonVariant.outlined => 54.0,
+          AppButtonVariant.text => 48.0,
+        };
 
     final content = AnimatedSwitcher(
       duration: AppMotion.quick,
