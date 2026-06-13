@@ -1,35 +1,455 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
+import '../../../core/theme/app_background.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../logic/article.dart';
+import '../widgets/library_widgets.dart';
 
-/// Renders a single article's markdown body.
-class ArticleReaderPage extends StatelessWidget {
-  const ArticleReaderPage({super.key, required this.article});
+/// M5 reader — two registers, never blended. Evidence: doctor badge, drop
+/// cap, sources footer, claims allowed. Heritage: era chip, pull quotes,
+/// anti-shame canon line, zero health claims.
+class ArticleReaderPage extends StatefulWidget {
+  const ArticleReaderPage({super.key, required this.article, this.nextArticle});
 
   final Article article;
+  final Article? nextArticle;
+
+  @override
+  State<ArticleReaderPage> createState() => _ArticleReaderPageState();
+}
+
+class _ArticleReaderPageState extends State<ArticleReaderPage> {
+  final _scroll = ScrollController();
+  double _progress = 0;
+  bool _bookmarked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scroll.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final max = _scroll.position.maxScrollExtent;
+    setState(() => _progress = max <= 0 ? 1 : (_scroll.offset / max).clamp(0, 1));
+  }
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return AppScaffold(
-      title: article.title,
-      leading: const BackButton(),
-      scrollable: true,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${article.category} - ~${article.readMinutes} min read',
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+    final lamp = context.lamp;
+    final a = widget.article;
+    final heritage = a.isHeritage;
+    final blocks = _parseBlocks(a.body);
+
+    return Scaffold(
+      body: LampBackground(
+        child: SafeArea(
+          child: Column(
+            children: [
+              // The only reading gamification that will ever exist.
+              _ProgressBar(progress: _progress, lamp: lamp),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(22, 4, 22, 0),
+                child: Row(
+                  children: [
+                    _IconBtn(
+                      icon: Icons.chevron_left,
+                      label: 'Back',
+                      onTap: () => Navigator.of(context).maybePop(),
+                      lamp: lamp,
+                    ),
+                    const Spacer(),
+                    _IconBtn(
+                      icon: _bookmarked
+                          ? Icons.bookmark
+                          : Icons.bookmark_outline,
+                      label: 'Bookmark',
+                      onTap: () => setState(() => _bookmarked = !_bookmarked),
+                      lamp: lamp,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: _scroll,
+                  padding: const EdgeInsets.fromLTRB(22, 12, 22, 28),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        heritage ? 'Read · heritage' : 'Read · evidence-based',
+                        style: AppTypography.eyebrow(
+                          (heritage ? lamp.turmeric : lamp.ochre)
+                              .withValues(alpha: 0.92),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(a.title,
+                          style: theme.textTheme.headlineMedium
+                              ?.copyWith(fontSize: 26, height: 33 / 26)),
+                      const SizedBox(height: AppSpacing.md),
+                      _MetaRow(article: a, lamp: lamp, theme: theme),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4),
+                        child: RuleDivider(),
+                      ),
+                      if (heritage)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                          child: Text(
+                            'Heritage, not instruction — and never medicine.',
+                            style: AppTypography.italic(13.5, lamp.sand),
+                          ),
+                        ),
+                      ..._renderBlocks(blocks, theme, lamp, heritage),
+                      const SizedBox(height: AppSpacing.lg),
+                      _TrustFooter(
+                        article: a,
+                        next: widget.nextArticle,
+                        lamp: lamp,
+                        theme: theme,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Split the markdown body into typed blocks.
+  List<_Block> _parseBlocks(String body) {
+    final out = <_Block>[];
+    for (final raw in body.split(RegExp(r'\n\s*\n'))) {
+      final p = raw.trim();
+      if (p.isEmpty) continue;
+      if (p.startsWith('## ')) {
+        out.add(_Block(_BlockKind.heading, p.substring(3).trim()));
+      } else if (p.startsWith('> ')) {
+        out.add(_Block(_BlockKind.quote,
+            p.substring(2).replaceAll('\n> ', ' ').trim()));
+      } else {
+        out.add(_Block(_BlockKind.para, p.replaceAll('\n', ' ')));
+      }
+    }
+    return out;
+  }
+
+  List<Widget> _renderBlocks(
+      List<_Block> blocks, ThemeData theme, LamplightTokens lamp, bool heritage) {
+    final widgets = <Widget>[];
+    var firstPara = true;
+    for (final b in blocks) {
+      switch (b.kind) {
+        case _BlockKind.heading:
+          widgets.add(Padding(
+            padding: const EdgeInsets.fromLTRB(0, 18, 0, 8),
+            child: Text(b.text, style: theme.textTheme.headlineMedium),
+          ));
+        case _BlockKind.quote:
+          widgets.add(const Padding(
+            padding: EdgeInsets.symmetric(vertical: 6),
+            child: RuleDivider(),
+          ));
+          widgets.add(PullQuote(
+            quote: b.text,
+            eraTag: widget.article.eraTag ?? 'language of its time',
+          ));
+          widgets.add(const Padding(
+            padding: EdgeInsets.symmetric(vertical: 6),
+            child: RuleDivider(),
+          ));
+        case _BlockKind.para:
+          // Evidence opening paragraph gets the Fraunces drop cap.
+          if (firstPara && !heritage) {
+            widgets.add(_DropCapParagraph(text: b.text, lamp: lamp));
+          } else {
+            widgets.add(Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: Text(b.text, style: AppTypography.reader(lamp.inkMuted)),
+            ));
+          }
+          firstPara = false;
+      }
+    }
+    return widgets;
+  }
+}
+
+enum _BlockKind { heading, quote, para }
+
+class _Block {
+  const _Block(this.kind, this.text);
+  final _BlockKind kind;
+  final String text;
+}
+
+class _DropCapParagraph extends StatelessWidget {
+  const _DropCapParagraph({required this.text, required this.lamp});
+  final String text;
+  final LamplightTokens lamp;
+
+  @override
+  Widget build(BuildContext context) {
+    if (text.isEmpty) return const SizedBox.shrink();
+    final cap = text.characters.first;
+    final rest = text.characters.skip(1).toString();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: cap,
+              style: TextStyle(
+                fontFamily: AppTypography.display,
+                fontSize: 46,
+                height: 0.9,
+                fontWeight: FontWeight.w600,
+                color: lamp.gold,
+              ),
+            ),
+            TextSpan(text: rest, style: AppTypography.reader(lamp.inkMuted)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MetaRow extends StatelessWidget {
+  const _MetaRow({required this.article, required this.lamp, required this.theme});
+  final Article article;
+  final LamplightTokens lamp;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.xs,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        if (article.isHeritage)
+          HeritageChip(
+            label: article.eraTag == null
+                ? 'heritage'
+                : 'heritage · ${_year(article.eraTag!)}',
+          )
+        else
+          DoctorBadge(state: article.reviewState),
+        Text('${article.readMinutes} min',
+            style: theme.textTheme.labelSmall?.copyWith(color: lamp.faint)),
+        if (!article.isHeritage && article.sources.isNotEmpty) ...[
+          Text('·', style: theme.textTheme.labelSmall?.copyWith(color: lamp.faint)),
+          Text('${article.sources.length} sources',
+              style: theme.textTheme.labelSmall?.copyWith(color: lamp.faint)),
+        ],
+      ],
+    );
+  }
+
+  String _year(String eraTag) {
+    final m = RegExp(r'(\d{4})').firstMatch(eraTag);
+    return m?.group(1) ?? eraTag;
+  }
+}
+
+/// The trust footer (m5_02) — the clinic register's proof-of-work. Heritage
+/// pieces show neither badge nor sources here.
+class _TrustFooter extends StatelessWidget {
+  const _TrustFooter({
+    required this.article,
+    required this.next,
+    required this.lamp,
+    required this.theme,
+  });
+
+  final Article article;
+  final Article? next;
+  final LamplightTokens lamp;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!article.isHeritage) ...[
+          const RuleDivider(),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              DoctorBadge(state: article.reviewState),
+              const SizedBox(width: AppSpacing.sm),
+              Flexible(
+                child: Text(
+                  article.reviewState == ReviewState.reviewed
+                      ? '${article.reviewedDate ?? ''} · review record on file'
+                      : 'awaiting a doctor\'s sign-off',
+                  style:
+                      theme.textTheme.labelSmall?.copyWith(color: lamp.faint),
+                ),
+              ),
+            ],
+          ),
+          if (article.sources.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.md),
+            SourcesBlock(sources: article.sources),
+          ],
+        ],
+        if (next != null) ...[
+          const SizedBox(height: AppSpacing.md),
+          _NextCard(next: next!, lamp: lamp, theme: theme),
+        ],
+      ],
+    );
+  }
+}
+
+class _NextCard extends StatelessWidget {
+  const _NextCard({required this.next, required this.lamp, required this.theme});
+  final Article next;
+  final LamplightTokens lamp;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF332915), Color(0xFF251E14)],
+          ),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: lamp.ochre.withValues(alpha: 0.2)),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              right: -30,
+              bottom: -40,
+              child: LotusMark(
+                  size: 130, color: lamp.ochre.withValues(alpha: 0.13)),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(17),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Next',
+                      style: AppTypography.eyebrow(
+                          lamp.inkMuted.withValues(alpha: 0.72))),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(next.title,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontFamily: AppTypography.display,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      )),
+                  const SizedBox(height: AppSpacing.sm),
+                  Wrap(
+                    spacing: AppSpacing.sm,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text('${next.readMinutes} min read',
+                          style: theme.textTheme.labelSmall
+                              ?.copyWith(color: lamp.faint)),
+                      if (next.isHeritage)
+                        HeritageChip(label: 'heritage')
+                      else
+                        DoctorBadge(state: next.reviewState, compact: true),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProgressBar extends StatelessWidget {
+  const _ProgressBar({required this.progress, required this.lamp});
+  final double progress;
+  final LamplightTokens lamp;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 3,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: FractionallySizedBox(
+          widthFactor: progress.clamp(0.02, 1),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [lamp.gold, const Color(0xFFBA8030)],
+              ),
+              borderRadius: const BorderRadius.horizontal(right: Radius.circular(3)),
+              boxShadow: [
+                BoxShadow(
+                    color: lamp.ochre.withValues(alpha: 0.55), blurRadius: 10),
+              ],
             ),
           ),
-          const SizedBox(height: AppSpacing.lg),
-          MarkdownBody(data: article.body),
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+class _IconBtn extends StatelessWidget {
+  const _IconBtn({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    required this.lamp,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final LamplightTokens lamp;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: label,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(13),
+        child: Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: lamp.ink.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(13),
+            border: Border.all(color: lamp.hairline),
+          ),
+          child: Icon(icon, size: 18, color: lamp.inkMuted),
+        ),
       ),
     );
   }

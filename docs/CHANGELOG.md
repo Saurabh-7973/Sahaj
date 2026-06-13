@@ -621,3 +621,24 @@ Build-order step 5 (`m4_onboarding_spec.md`, mocks m4_01–03 + adopted v2 01–
 - #3: Start over is onboarding-only wipe, as recommended.
 - #4: screening-incomplete-on-Today is **not reachable** — onboarding is gated all-or-nothing (router redirect), the flow only completes at C12, so there is no partial-screening Today state to write. Revisit only if the gate changes.
 - Validated-item wording: shown with calm framing but the existing prompts are kept as-is; making them byte-identical to the published PHQ-2/GAD-2 source is a content/clinical task, not this visual pass.
+
+## Lamplight M5 — Library & Reader — 2026-06-13
+
+Build-order step 6 (`m5_library_spec.md`, mocks m5_01–02 + adopted v2 14/20).
+
+- **Two registers, never blended (law 1):** the `Article` model gained `register` (evidence/heritage), `reviewState` (reviewed/pending), `reviewedDate`, `sources[]` (name + one-line finding), and `eraTag` — all optional, so the 6 existing articles render as evidence/review-pending (honest, shippable). Evidence pieces carry a `DoctorBadge`; heritage pieces carry a sand `heritage · 1885` chip and **never** a review badge in any state.
+- **One lock type (law 2):** `isSessionLocked` via `kFreeSessionBaseTags` — the Foundation base techniques (and their `_vN` variants) are free, everything past is a `Pro` chip, never a week-gate (DECISION #1 flagged). Library exposes all free sessions regardless of plan week.
+- **Library tab** rebuilt to Lamplight: reading first (article cards with type medallion + badge), then collapsible practice groups (one open at a time, medallion + count + chevron); rows are pure utility (title · context · duration · faint ✓ done-before · `Pro`); **free rows sort before Pro** within every group.
+- **Search (m5_01):** filter-as-you-type, local, titles-only (decision #4), match substring highlighted ochre, `N matches` line, zero-match sections simply disappear, ✕ clears — no search history ever.
+- **PreviewSheet:** a locked row opens a bottom sheet that describes (using the session's real working step, never a fabricated pitch) → `See Pro` / `Maybe later`; never blocks mid-task. Free practice goes straight to the player (no mood sheet — it isn't the prescribed session).
+- **Reader (20 + m5_02):** scroll-driven ochre progress bar (the only reading gamification), back + bookmark. Evidence register: `READ · EVIDENCE-BASED` eyebrow, Fraunces drop cap on the opening paragraph, 17/27.5 reading scale, pothi rule, trust footer (review badge + date + "review record on file", collapsible `SourcesBlock`, next-article hero card). Heritage register: `READ · HERITAGE` turmeric eyebrow, the standing canon line *"Heritage, not instruction — and never medicine."*, `> ` blockquotes become `PullQuote`s (oversized Fraunces quote-mark, pothi rules, era tag in small caps), zero health claims.
+- **New widgets:** `DoctorBadge`, `HeritageChip`, `LockChip` (no padlock glyph), `DoneTick`, `TypeMedallion`, `HighlightedTitle`, `SourcesBlock`, `PullQuote`. Removed the unused `flutter_markdown` dependency (reader renders blocks itself for drop-cap + pull-quote control). Deleted the superseded `library_catalog.dart` (replaced by `library_logic.dart`).
+- **Verification:** 232 tests green (session-lock/grouping/search logic, library widget states, evidence + heritage reader, 1.3× string-room). Screenshots m5_01/02 + library + evidence/heritage readers → `docs/ui_review/`.
+
+### Open decisions surfaced
+
+- #1: free-session set = Foundation base techniques + variants — confirm the intended free scope.
+- #2: heritage doctor-gate — pieces are outside the medical gate by design; the badge stays off the cards regardless of whether you review them.
+- #3: related-session footer (read→do bridge) — not adopted; needs a new content field, revisit before seeding.
+- #4: search is titles-only, as recommended.
+- Heritage seeding: the pull-quote line is a placeholder until a verified excerpt is seeded; citation "what it showed" lines need the doctor-pass verification.
