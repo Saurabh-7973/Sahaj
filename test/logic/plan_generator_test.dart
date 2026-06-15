@@ -17,10 +17,10 @@ void main() {
         {'Foundation', 'Integration', 'Mastery'});
   });
 
-  test('finishTooQuick adds stop-start emphasis', () {
+  test('control adds stop-start emphasis', () {
     final p = generatePlan(
       track: Track.solo,
-      goals: {Goal.finishTooQuick},
+      goals: {Goal.control},
       baseline: emptyBaseline,
       mindBody: {},
     );
@@ -30,7 +30,7 @@ void main() {
   test('emphasis personalises the plan: goal tags appear in Weeks 5-12', () {
     final p = generatePlan(
       track: Track.solo,
-      goals: {Goal.pornRelationship}, // -> dopamine_rewire
+      goals: {Goal.erections}, // -> arousal_confidence
       baseline: emptyBaseline,
       mindBody: {},
     );
@@ -38,8 +38,8 @@ void main() {
         p.weeks.where((w) => w.number <= 4).expand((w) => w.moduleTags);
     final later =
         p.weeks.where((w) => w.number >= 5).expand((w) => w.moduleTags);
-    expect(later, contains('dopamine_rewire'));
-    expect(foundation, isNot(contains('dopamine_rewire')));
+    expect(later, contains('arousal_confidence'));
+    expect(foundation, isNot(contains('arousal_confidence')));
   });
 
   test('low baseline band → gentle difficulty', () {

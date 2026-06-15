@@ -4,48 +4,41 @@ import '../onboarding_controller.dart' show Goal;
 /// real goal the user picked — `Because you chose "X", …`. Generated from
 /// goals only; we show at most two and never pad. Order follows the goal
 /// enum so the output is stable.
-///
-/// The two tone examples in the spec/mock are `firstTimeOrGap` and a
-/// "calmer before and during" goal; the remaining lines are written to the
-/// plan engine's actual week-5–12 adaptations (stop_start / reverse_kegel,
-/// arousal_confidence, dopamine_rewire, advanced_control).
-// DECISION #5 (resolved): the handoff's six new lines were keyed to goal
-// *labels* (Control/Erections/Confidence/Calm/Foundation/Partner) that don't
-// exist in [Goal]. Rather than break the honesty frame (`Because you chose
-// "X", …` ties each line to a pick the user actually made) or orphan the
-// themes with no goal home, we keep the frame + enum mapping and lift the new
-// copy's warmer tone into the effect clause. Confidence/Calm fold into the
-// erections + control lines; the partner line is dropped (the program is
-// persona-agnostic — no partnered goal exists).
+// DECISION #5 (resolved) + reconcile B: the handoff's six lines are keyed to
+// the goal taxonomy now adopted in [Goal] (control/erections/anxiety/
+// confidence/foundation/partner), so each maps 1:1. The honesty frame
+// (`Because you chose "X", …`) still ties every line to a pick the user
+// actually made; the warmer handoff copy lives in the effect clause.
 const Map<Goal, ({String choice, String effect})> _lineByGoal = {
-  Goal.finishTooQuick: (
-    choice: 'finish sooner than you want',
+  Goal.control: (
+    choice: 'more control',
     effect: 'we build control the way it actually holds — steady reps you '
         'own, not a trick you have to keep pulling off.',
   ),
-  Goal.hardness: (
-    choice: 'unreliable erections',
+  Goal.erections: (
+    choice: 'more reliable erections',
     effect: 'we start with the foundations an erection rests on — '
         'steadiness, calm, a body you trust — at the pace of real change.',
   ),
-  Goal.firstTimeOrGap: (
-    choice: 'first-time ready',
-    effect: "you're building a strong base on your own terms — readiness, "
-        'not repair.',
+  Goal.anxiety: (
+    choice: 'less anxiety around sex',
+    effect: 'we take the pressure down first, not up — get calm, and the '
+        'rest comes easier.',
   ),
-  Goal.pornRelationship: (
-    choice: 'real-life response',
-    effect: 'the plan rewires toward real arousal — ease over intensity, '
-        'from week 5.',
+  Goal.confidence: (
+    choice: 'more confidence',
+    effect: "it isn't bravado — it's knowing your own body and trusting it, "
+        'built quietly, one session at a time.',
   ),
-  Goal.lastLongerOptimize: (
-    choice: 'general control and fitness',
-    effect: 'Mastery weeks sharpen advanced control — we take the pressure '
-        'down first, not up.',
+  Goal.foundation: (
+    choice: 'a healthy foundation',
+    effect: "nothing here needs fixing — you're building a strong base on "
+        'your own terms, the best place anyone can start.',
   ),
-  Goal.exploring: (
-    choice: 'to get better',
-    effect: 'the plan stays broad and adapts as you go.',
+  Goal.partner: (
+    choice: 'to reconnect with a partner',
+    effect: 'this is about ease as much as anything physical — the kind of '
+        'steadiness that lets closeness feel unforced.',
   ),
 };
 

@@ -92,11 +92,13 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
           children: [
             Icon(Icons.check, size: 16, color: lamp.mossBright),
             const SizedBox(width: 10),
-            Text('Good — train on.',
-                style: TextStyle(
-                    fontFamily: AppTypography.body,
-                    fontWeight: FontWeight.w700,
-                    color: lamp.ink)),
+            Flexible(
+              child: Text("Done — the plan's yours. Pay later only if it helps.",
+                  style: TextStyle(
+                      fontFamily: AppTypography.body,
+                      fontWeight: FontWeight.w700,
+                      color: lamp.ink)),
+            ),
           ],
         ),
       ),

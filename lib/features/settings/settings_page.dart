@@ -21,6 +21,7 @@ import '../sessions/pages/face_down_coach.dart';
 import '../sessions/progress_controller.dart';
 import '../subscription/subscription_controller.dart';
 import 'account.dart';
+import 'consultation_screen.dart';
 import 'erase_confirm_screen.dart';
 import 'launcher_disguise.dart';
 import 'logic/data_export.dart';
@@ -71,7 +72,7 @@ class SettingsPage extends ConsumerWidget {
               title: Text(ref.watch(lockControllerProvider).hasPin
                   ? 'Change PIN'
                   : 'Set a PIN'),
-              subtitle: const Text('A 4-digit fallback when biometrics fail.'),
+              subtitle: const Text('A 6-digit fallback when biometrics fail.'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => _setPin(context, ref),
             ),
@@ -94,8 +95,8 @@ class SettingsPage extends ConsumerWidget {
                   // M8 §3: launcher caches vary, so set expectations once.
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Your launcher icon just changed to My '
-                          'Notes — it may take a moment to appear.'),
+                      content: Text('Your launcher icon just changed to '
+                          'Notebook — it may take a moment to appear.'),
                     ),
                   );
                 }
@@ -191,6 +192,25 @@ class SettingsPage extends ConsumerWidget {
               value: prefs.hideStreak,
               onChanged: (v) =>
                   ref.read(preferencesControllerProvider).setHideStreak(v),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          Text('Care', style: theme.textTheme.titleMedium),
+          const SizedBox(height: AppSpacing.sm),
+          AppCard(
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Talk to a doctor'),
+              subtitle: const Text(
+                  'An optional one-time consultation — only if you go looking.'),
+              trailing: const Icon(Icons.chevron_right),
+              // Opt-in and Settings-only by design; never linked from any
+              // health-screening or "see a doctor" message (firewall, §4).
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const ConsultationScreen(),
+                ),
+              ),
             ),
           ),
           const SizedBox(height: AppSpacing.xl),

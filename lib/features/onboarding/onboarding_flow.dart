@@ -69,12 +69,12 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
         resumeLabel: 'You were learning the basics.',
       ),
       _Screen(
-        () => PersonaScreen(onNext: _next, onBack: _back),
-        resumeLabel: 'You were telling us where you\'re at.',
-      ),
-      _Screen(
         () => GoalsScreen(onNext: _next, onBack: _back),
         resumeLabel: 'You were choosing what to work on.',
+      ),
+      _Screen(
+        () => PersonaScreen(onNext: _next, onBack: _back),
+        resumeLabel: 'You were telling us where you\'re at.',
       ),
       _Screen(
         () => HealthIntroScreen(onNext: _next, onBack: _back),

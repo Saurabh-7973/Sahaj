@@ -8,27 +8,27 @@ void main() {
   });
 
   test('one goal → exactly one line, tied to the choice', () {
-    final lines = planRevealLines({Goal.firstTimeOrGap});
+    final lines = planRevealLines({Goal.foundation});
     expect(lines, hasLength(1));
-    expect(lines.first, contains('first-time ready'));
+    expect(lines.first, contains('a healthy foundation'));
     expect(lines.first, startsWith('Because you chose'));
   });
 
   test('caps at two lines even with many goals', () {
     final lines = planRevealLines({
-      Goal.finishTooQuick,
-      Goal.hardness,
-      Goal.pornRelationship,
-      Goal.exploring,
+      Goal.control,
+      Goal.erections,
+      Goal.anxiety,
+      Goal.partner,
     });
     expect(lines, hasLength(2));
   });
 
   test('order follows the goal enum, stable', () {
-    final a = planRevealLines({Goal.hardness, Goal.finishTooQuick});
-    final b = planRevealLines({Goal.finishTooQuick, Goal.hardness});
+    final a = planRevealLines({Goal.erections, Goal.control});
+    final b = planRevealLines({Goal.control, Goal.erections});
     expect(a, b);
-    // finishTooQuick precedes hardness in the enum.
-    expect(a.first, contains('finish sooner'));
+    // control precedes erections in the enum.
+    expect(a.first, contains('more control'));
   });
 }

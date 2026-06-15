@@ -305,12 +305,12 @@ class GoalsScreen extends ConsumerWidget {
   final VoidCallback onBack;
 
   static const _labels = {
-    Goal.finishTooQuick: 'Last longer',
-    Goal.hardness: 'More reliable erections',
-    Goal.pornRelationship: 'Rebuild sensitivity',
-    Goal.lastLongerOptimize: 'Calmer before and during sex',
-    Goal.firstTimeOrGap: 'First-time ready',
-    Goal.exploring: 'General control and fitness',
+    Goal.control: 'More control / lasting longer',
+    Goal.erections: 'More reliable erections',
+    Goal.anxiety: 'Less anxiety around sex',
+    Goal.confidence: 'More confidence',
+    Goal.foundation: 'Just building a healthy foundation',
+    Goal.partner: 'Reconnecting with a partner',
   };
 
   @override

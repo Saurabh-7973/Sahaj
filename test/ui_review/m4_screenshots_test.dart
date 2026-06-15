@@ -23,8 +23,8 @@ final _boundaryKey = GlobalKey();
 
 OnboardingController _onboarding() => OnboardingController()
   ..setPersona(Persona.singleInexperienced)
-  ..toggleGoal(Goal.firstTimeOrGap)
-  ..toggleGoal(Goal.lastLongerOptimize);
+  ..toggleGoal(Goal.foundation)
+  ..toggleGoal(Goal.control);
 
 Future<void> _loadFonts() async {
   Future<void> load(String f, List<String> a) async {

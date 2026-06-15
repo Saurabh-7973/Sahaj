@@ -19,14 +19,15 @@ enum Persona {
   preferNotToSay,
 }
 
-/// Goals (synthesis §6 screen 5 — multi-select).
+/// Goals (onboarding_copy.md S4 — multi-select, "What brings you here").
+/// Persona-Zero-inclusive: [foundation] is a first-class option, never lesser.
 enum Goal {
-  finishTooQuick,
-  hardness,
-  firstTimeOrGap,
-  pornRelationship,
-  lastLongerOptimize,
-  exploring,
+  control,
+  erections,
+  anxiety,
+  confidence,
+  foundation,
+  partner,
 }
 
 class OnboardingController extends ChangeNotifier {

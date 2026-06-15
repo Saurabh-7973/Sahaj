@@ -13,9 +13,9 @@ void main() {
 
   test('goalSelected joins the goals list to a comma string', () {
     final fake = FakeAnalytics();
-    AppEvents(fake).goalSelected(['finishTooQuick', 'hardness']);
+    AppEvents(fake).goalSelected(['control', 'erections']);
     expect(fake.last('goal_selected')!.params,
-        {'goals': 'finishTooQuick,hardness'});
+        {'goals': 'control,erections'});
   });
 
   test('planGenerated carries persona + goalCount', () {

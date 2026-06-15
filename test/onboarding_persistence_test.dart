@@ -5,7 +5,7 @@ void main() {
   test('toJson/loadFrom round-trips answers and completion', () {
     final a = OnboardingController();
     a.setPersona(Persona.singleInexperienced);
-    a.toggleGoal(Goal.firstTimeOrGap);
+    a.toggleGoal(Goal.foundation);
     a.setHealthAnswer('morning_erections', 0);
     a.setBaselineAnswer('arousal_control', 1);
     a.setMindBodyAnswer('sleep', 2);
@@ -17,7 +17,7 @@ void main() {
     b.loadFrom(json);
 
     expect(b.persona, Persona.singleInexperienced);
-    expect(b.goals, contains(Goal.firstTimeOrGap));
+    expect(b.goals, contains(Goal.foundation));
     expect(b.complete, isTrue);
     expect(b.track, Track.solo);
     expect(b.plan, isNotNull);

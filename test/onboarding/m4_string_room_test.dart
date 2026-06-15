@@ -33,8 +33,8 @@ Future<void> _pump(WidgetTester tester, Widget home,
 
 OnboardingController _ob() => OnboardingController()
   ..setPersona(Persona.singleInexperienced)
-  ..toggleGoal(Goal.firstTimeOrGap)
-  ..toggleGoal(Goal.lastLongerOptimize);
+  ..toggleGoal(Goal.foundation)
+  ..toggleGoal(Goal.control);
 
 void main() {
   testWidgets('welcome at 1.3', (tester) async {

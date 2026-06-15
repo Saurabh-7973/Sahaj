@@ -16,18 +16,18 @@ Plan generatePlan({
   final emphasis = <String>{};
   for (final g in goals) {
     switch (g) {
-      case Goal.finishTooQuick:
-        emphasis.addAll(['stop_start', 'reverse_kegel']);
-      case Goal.hardness:
+      case Goal.control:
+        emphasis.addAll(['stop_start', 'advanced_control']);
+      case Goal.erections:
         emphasis.add('arousal_confidence');
-      case Goal.firstTimeOrGap:
+      case Goal.anxiety:
+        emphasis.add('down_training');
+      case Goal.confidence:
+        emphasis.add('arousal_confidence');
+      case Goal.foundation:
         emphasis.add('readiness');
-      case Goal.pornRelationship:
-        emphasis.add('dopamine_rewire');
-      case Goal.lastLongerOptimize:
-        emphasis.add('advanced_control');
-      case Goal.exploring:
-        break;
+      case Goal.partner:
+        emphasis.add('readiness');
     }
   }
 
