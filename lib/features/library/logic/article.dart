@@ -43,6 +43,8 @@ class Article {
     this.reviewedDate,
     this.sources = const [],
     this.eraTag,
+    this.relatedSessionTag,
+    this.relatedSessionLabel,
   });
 
   final String slug;
@@ -64,6 +66,13 @@ class Article {
   /// Heritage only — "Ananga Ranga · Burton tr., 1885 — language of its time".
   final String? eraTag;
 
+  /// Read→do bridge (decision #16): the training session this article pairs
+  /// with. [relatedSessionTag] is the catalog tag (for any future deep-link);
+  /// [relatedSessionLabel] is the human title shown in the reader footer.
+  /// Both null for pieces with no honest training pairing (e.g. warning-signs).
+  final String? relatedSessionTag;
+  final String? relatedSessionLabel;
+
   bool get isHeritage => register == ArticleRegister.heritage;
 
   factory Article.fromJson(Map json) => Article(
@@ -83,5 +92,7 @@ class Article {
             .map((e) => Citation.fromJson(e as Map))
             .toList(growable: false),
         eraTag: json['eraTag'] as String?,
+        relatedSessionTag: json['relatedSessionTag'] as String?,
+        relatedSessionLabel: json['relatedSessionLabel'] as String?,
       );
 }

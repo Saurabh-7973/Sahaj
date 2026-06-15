@@ -30,6 +30,48 @@ void main() {
     expect(find.byType(DoctorBadge), findsWidgets);
   });
 
+  testWidgets('read→do bridge shows the paired training when set (#16)',
+      (tester) async {
+    const article = Article(
+      slug: 's',
+      title: 'How your pelvic floor works',
+      category: 'Anatomy',
+      readMinutes: 3,
+      body: 'The pelvic floor is a hammock of muscles.',
+      relatedSessionTag: 'pfmt_identify',
+      relatedSessionLabel: 'Finding the muscles',
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.dark(),
+        home: const ArticleReaderPage(article: article),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Put it into practice'), findsOneWidget);
+    expect(find.textContaining('Finding the muscles'), findsOneWidget);
+  });
+
+  testWidgets('no bridge when the article has no paired session', (tester) async {
+    const article = Article(
+      slug: 's',
+      title: 'Warning signs',
+      category: 'Health',
+      readMinutes: 2,
+      body: 'Some things are a doctor’s job, not more training.',
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.dark(),
+        home: const ArticleReaderPage(article: article),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Put it into practice'), findsNothing);
+  });
+
   testWidgets('heritage article: heritage eyebrow + canon line, no badge',
       (tester) async {
     const article = Article(

@@ -28,7 +28,9 @@
         "name": "Hypertonic / down-training-first point",
         "finding": "where ED/dysfunction is driven by an over-active (hypertonic) pelvic floor, the starting point is down-training/reverse kegels under physiotherapy guidance before strengthening."
       }
-    ]
+    ],
+    "relatedSessionTag": "pfmt_identify",
+    "relatedSessionLabel": "Finding the muscles"
   },
   {
     "slug": "how-erections-work",
@@ -51,7 +53,9 @@
         "name": "(ED common, increases with age, not inevitable): general urology references",
         "finding": "Prevalence / age association."
       }
-    ]
+    ],
+    "relatedSessionTag": "pfmt_identify",
+    "relatedSessionLabel": "Finding the muscles"
   },
   {
     "slug": "performance-anxiety",
@@ -78,7 +82,9 @@
         "name": "clinical commentary, Indian andrology/OBGYN setting (PMC)",
         "finding": "Indian-context pressures (unconsummated marriage, conception-timed performance demands → psychogenic ED)."
       }
-    ]
+    ],
+    "relatedSessionTag": "down_training",
+    "relatedSessionLabel": "Down-training"
   },
   {
     "slug": "lasting-longer",
@@ -105,7 +111,9 @@
         "name": "RCT, PLOS One 2023",
         "finding": "Combining pelvic-floor/sphincter-control training with behavioural technique is more effective than behavioural alone."
       }
-    ]
+    ],
+    "relatedSessionTag": "kegel_reverse_combined",
+    "relatedSessionLabel": "Longer holds + hold-and-pulse"
   },
   {
     "slug": "delayed-ejaculation",
@@ -128,7 +136,9 @@
         "name": "referenced in the sexual-medicine literature (e",
         "finding": "Idiosyncratic masturbation practice as a contributing factor."
       }
-    ]
+    ],
+    "relatedSessionTag": "reverse_kegel",
+    "relatedSessionLabel": "Lengthening"
   },
   {
     "slug": "sleep-and-metabolic-health",
@@ -151,7 +161,9 @@
         "name": "general urology/endocrinology references",
         "finding": "Metabolic syndrome / obesity / diabetes / hypertension impair vascular function → ED; obesity lowers testosterone."
       }
-    ]
+    ],
+    "relatedSessionTag": "breathwork_basics",
+    "relatedSessionLabel": "The longer exhale"
   },
   {
     "slug": "pornography-myths",
@@ -178,7 +190,9 @@
         "name": "sexual-medicine literature (J Sex Med 2014)",
         "finding": "Idiosyncratic/unusual masturbatory practice as a factor."
       }
-    ]
+    ],
+    "relatedSessionTag": "pfmt_functional",
+    "relatedSessionLabel": "On demand + presence"
   },
   {
     "slug": "warning-signs",

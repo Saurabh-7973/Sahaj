@@ -36,4 +36,28 @@ void main() {
       }
     }
   });
+
+  test('read→do bridge (#16): articles pair to a session — except warning-signs',
+      () {
+    for (final a in articles) {
+      if (a.slug == 'warning-signs') {
+        // Never funnel a "see a doctor" piece into "just train more".
+        expect(a.relatedSessionTag, isNull);
+        expect(a.relatedSessionLabel, isNull);
+      } else {
+        expect(a.relatedSessionTag, isNotNull, reason: a.slug);
+        expect(a.relatedSessionLabel, isNotEmpty, reason: a.slug);
+      }
+    }
+  });
+
+  test('every related-session tag resolves to a real catalog session', () {
+    final catalog = File('assets/content/sessions.json').readAsStringSync();
+    for (final a in articles) {
+      final tag = a.relatedSessionTag;
+      if (tag != null) {
+        expect(catalog.contains('"$tag"'), isTrue, reason: '${a.slug} -> $tag');
+      }
+    }
+  });
 }

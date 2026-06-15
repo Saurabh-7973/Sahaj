@@ -15,16 +15,30 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 ARTICLES_DIR = ROOT / "sahaj_handoff" / "articles"
 OUT = ROOT / "assets" / "content" / "articles.json"
 
-# filename stem → (slug, category)
+# filename stem → (slug, category, relatedSessionTag, relatedSessionLabel)
+# The read->do bridge (decision #16): an informational pairing to a training
+# session, shown in the reader footer. warning-signs deliberately has NO bridge
+# — never funnel a "see a doctor" piece into "just train more".
 META = {
-    "article_1_pelvic_floor": ("your-pelvic-floor", "Anatomy"),
-    "article_2_erections": ("how-erections-work", "Erections"),
-    "article_3_performance_anxiety": ("performance-anxiety", "Mind & body"),
-    "article_4_premature_ejaculation": ("lasting-longer", "Control"),
-    "article_5_delayed_ejaculation": ("delayed-ejaculation", "Control"),
-    "article_6_sleep_metabolic": ("sleep-and-metabolic-health", "Health"),
-    "article_7_pornography_myths": ("pornography-myths", "Mind & body"),
-    "article_8_warning_signs": ("warning-signs", "Health"),
+    "article_1_pelvic_floor":
+        ("your-pelvic-floor", "Anatomy", "pfmt_identify", "Finding the muscles"),
+    "article_2_erections":
+        ("how-erections-work", "Erections", "pfmt_identify", "Finding the muscles"),
+    "article_3_performance_anxiety":
+        ("performance-anxiety", "Mind & body", "down_training", "Down-training"),
+    "article_4_premature_ejaculation":
+        ("lasting-longer", "Control", "kegel_reverse_combined",
+         "Longer holds + hold-and-pulse"),
+    "article_5_delayed_ejaculation":
+        ("delayed-ejaculation", "Control", "reverse_kegel", "Lengthening"),
+    "article_6_sleep_metabolic":
+        ("sleep-and-metabolic-health", "Health", "breathwork_basics",
+         "The longer exhale"),
+    "article_7_pornography_myths":
+        ("pornography-myths", "Mind & body", "pfmt_functional",
+         "On demand + presence"),
+    "article_8_warning_signs":
+        ("warning-signs", "Health", None, None),
 }
 ORDER = list(META.keys())
 
@@ -105,10 +119,10 @@ def words(text):
 def main():
     out = []
     for stem in ORDER:
-        slug, category = META[stem]
+        slug, category, rel_tag, rel_label = META[stem]
         text = (ARTICLES_DIR / f"{stem}.md").read_text()
         body = parse_body(text)
-        out.append({
+        entry = {
             "slug": slug,
             "title": parse_title(text),
             "category": category,
@@ -117,7 +131,11 @@ def main():
             "register": "evidence",
             "reviewState": "pending",
             "sources": parse_sources(text),
-        })
+        }
+        if rel_tag:
+            entry["relatedSessionTag"] = rel_tag
+            entry["relatedSessionLabel"] = rel_label
+        out.append(entry)
     OUT.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n")
     print(f"wrote {len(out)} articles")
     for a in out:

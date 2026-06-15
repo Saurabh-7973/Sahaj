@@ -311,12 +311,56 @@ class _TrustFooter extends StatelessWidget {
             const SizedBox(height: AppSpacing.md),
             SourcesBlock(sources: article.sources),
           ],
+          if (article.relatedSessionLabel != null) ...[
+            const SizedBox(height: AppSpacing.md),
+            _ReadDoBridge(label: article.relatedSessionLabel!, lamp: lamp),
+          ],
         ],
         if (next != null) ...[
           const SizedBox(height: AppSpacing.md),
           _NextCard(next: next!, lamp: lamp, theme: theme),
         ],
       ],
+    );
+  }
+}
+
+/// Read→do bridge (decision #16) — an informational pairing, not a jump. The
+/// daily loop plays today's scheduled session, so this names the training the
+/// reading connects to rather than deep-linking an arbitrary one.
+class _ReadDoBridge extends StatelessWidget {
+  const _ReadDoBridge({required this.label, required this.lamp});
+  final String label;
+  final LamplightTokens lamp;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: lamp.moss.withValues(alpha: 0.07),
+        borderRadius: BorderRadius.circular(14),
+        border: Border(
+          left: BorderSide(color: lamp.moss.withValues(alpha: 0.5), width: 2.5),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Put it into practice',
+              style: AppTypography.eyebrow(
+                  lamp.mossBright.withValues(alpha: 0.92))),
+          const SizedBox(height: 6),
+          Text(
+            'This pairs with your “$label” training — it’s already part of your '
+            'plan, and shows up on the days it fits.',
+            style: theme.textTheme.bodySmall
+                ?.copyWith(color: lamp.inkMuted, height: 1.45),
+          ),
+        ],
+      ),
     );
   }
 }
