@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/analytics/events.dart';
+import '../library/article_catalog.dart';
+import '../library/logic/article.dart';
+import '../library/pages/article_reader_page.dart';
 import 'baseline_questions.dart';
 import 'health_questions.dart';
 import 'logic/safety_screening.dart';
@@ -129,7 +132,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
         ),
       _Screen(
         () => TriageScreen(
-          onArticle: _next, // TODO(M5): open the doctor-conversation article
+          onArticle: _openWarningSigns,
           onContinue: () {
             ref
                 .read(onboardingControllerProvider)
@@ -240,6 +243,29 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
 
   bool _triageHasFlags() =>
       evaluate(ref.read(onboardingControllerProvider).healthAnswers).hasFlags;
+
+  /// Triage S9 "How to bring this up with a doctor" → opens the doctor-gated
+  /// warning-signs article (its "review pending" badge stays honest). Never a
+  /// diagnosis, never a paid-consultation funnel. No-ops if the catalog or the
+  /// piece is missing rather than blocking the flow.
+  void _openWarningSigns() {
+    Article? article;
+    try {
+      final catalog = ref.read(articleCatalogProvider);
+      for (final a in catalog.articles) {
+        if (a.slug == 'warning-signs') {
+          article = a;
+          break;
+        }
+      }
+    } catch (_) {/* catalog not available (e.g. in a bare test) — skip */}
+    if (article == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ArticleReaderPage(article: article!),
+      ),
+    );
+  }
 
   void _next() {
     final screens = _screens(ref.read(onboardingControllerProvider));
