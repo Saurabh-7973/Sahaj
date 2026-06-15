@@ -1,10 +1,10 @@
 import '../../sessions/logic/models/session_models.dart';
 import '../../sessions/logic/progress_logic.dart';
 
-/// DECISION #2 (handoff): the missed-days count that triggers the adjusted
-/// plan. Nothing in the plan engine or docs defines it yet — 3 is a working
-/// default between the spec's own candidates (2? 3?). Change here only.
-const kGapThresholdDays = 3;
+/// DECISION #2 (resolved): the missed-days count that triggers the adjusted
+/// plan. Set to 4 — three skipped days is still within a normal week's slip;
+/// the blameless reset fires only once a clear gap has formed. Change here only.
+const kGapThresholdDays = 4;
 
 /// Which doorway Today shows (M2 spec states, priority order).
 enum TodayKind {

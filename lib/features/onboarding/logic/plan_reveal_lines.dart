@@ -9,26 +9,39 @@ import '../onboarding_controller.dart' show Goal;
 /// "calmer before and during" goal; the remaining lines are written to the
 /// plan engine's actual week-5–12 adaptations (stop_start / reverse_kegel,
 /// arousal_confidence, dopamine_rewire, advanced_control).
+// DECISION #5 (resolved): the handoff's six new lines were keyed to goal
+// *labels* (Control/Erections/Confidence/Calm/Foundation/Partner) that don't
+// exist in [Goal]. Rather than break the honesty frame (`Because you chose
+// "X", …` ties each line to a pick the user actually made) or orphan the
+// themes with no goal home, we keep the frame + enum mapping and lift the new
+// copy's warmer tone into the effect clause. Confidence/Calm fold into the
+// erections + control lines; the partner line is dropped (the program is
+// persona-agnostic — no partnered goal exists).
 const Map<Goal, ({String choice, String effect})> _lineByGoal = {
   Goal.finishTooQuick: (
     choice: 'finish sooner than you want',
-    effect: 'weeks 5–8 lead with stop-start and release work.',
+    effect: 'we build control the way it actually holds — steady reps you '
+        'own, not a trick you have to keep pulling off.',
   ),
   Goal.hardness: (
     choice: 'unreliable erections',
-    effect: 'arousal-confidence drills run through Integration.',
+    effect: 'we start with the foundations an erection rests on — '
+        'steadiness, calm, a body you trust — at the pace of real change.',
   ),
   Goal.firstTimeOrGap: (
     choice: 'first-time ready',
-    effect: 'weeks 5–12 build readiness, not repair.',
+    effect: "you're building a strong base on your own terms — readiness, "
+        'not repair.',
   ),
   Goal.pornRelationship: (
     choice: 'real-life response',
-    effect: 'the plan adds dopamine-rewiring sessions from week 5.',
+    effect: 'the plan rewires toward real arousal — ease over intensity, '
+        'from week 5.',
   ),
   Goal.lastLongerOptimize: (
     choice: 'general control and fitness',
-    effect: 'Mastery weeks sharpen advanced control.',
+    effect: 'Mastery weeks sharpen advanced control — we take the pressure '
+        'down first, not up.',
   ),
   Goal.exploring: (
     choice: 'to get better',

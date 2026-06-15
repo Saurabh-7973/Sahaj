@@ -1,11 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Swaps the launcher identity (icon + label) between "Sahaj" and "My Notes"
+/// Swaps the launcher identity (icon + label) between "Sahaj" and "Notebook"
 /// by flipping the two Android activity-aliases (M6/M8). Behind a seam so
 /// tests stay platform-free and non-Android builds no-op.
 abstract class LauncherDisguise {
-  /// [disguised] true → "My Notes" + grey-blue icon; false → "Sahaj".
+  /// [disguised] true → "Notebook" + grey-blue icon; false → "Sahaj".
   Future<void> setDisguise(bool disguised);
 }
 

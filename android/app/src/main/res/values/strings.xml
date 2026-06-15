@@ -2,5 +2,5 @@
 <resources>
     <!-- Real launcher label. The disguise alias uses notes_label instead. -->
     <string name="app_name">Sahaj</string>
-    <string name="notes_label">My Notes</string>
+    <string name="notes_label">Notebook</string>
 </resources>

@@ -8,29 +8,29 @@ void main() {
     await c.load();
     expect(c.hasPin, isFalse);
 
-    await store.write('1234');
+    await store.write('123456');
     await c.load();
     expect(c.hasPin, isTrue);
   });
 
   test('setPin persists and flips hasPin', () async {
     final c = LockController(MemoryPinStore());
-    await c.setPin('4321');
+    await c.setPin('654321');
     expect(c.hasPin, isTrue);
   });
 
   test('verify accepts the right PIN, rejects others', () async {
     final c = LockController(MemoryPinStore());
-    await c.setPin('2580');
-    expect(await c.verify('2580'), isTrue);
-    expect(await c.verify('0000'), isFalse);
+    await c.setPin('258025');
+    expect(await c.verify('258025'), isTrue);
+    expect(await c.verify('000000'), isFalse);
   });
 
   test('clearPin wipes it', () async {
     final c = LockController(MemoryPinStore());
-    await c.setPin('1111');
+    await c.setPin('111111');
     await c.clearPin();
     expect(c.hasPin, isFalse);
-    expect(await c.verify('1111'), isFalse);
+    expect(await c.verify('111111'), isFalse);
   });
 }

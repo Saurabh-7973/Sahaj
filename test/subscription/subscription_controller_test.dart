@@ -90,9 +90,9 @@ void main() {
   test('toJson/loadFrom round-trips', () async {
     final repo = FakeRepo();
     final a = SubscriptionController(repo);
-    await a.choose(PricingTier.supporter);
+    await a.choose(PricingTier.standard);
     final b = SubscriptionController(repo)..loadFrom(a.toJson());
     expect(b.isPro, isTrue);
-    expect(b.tier, PricingTier.supporter);
+    expect(b.tier, PricingTier.standard);
   });
 }

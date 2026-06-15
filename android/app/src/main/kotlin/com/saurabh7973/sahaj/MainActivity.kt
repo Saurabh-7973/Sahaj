@@ -21,7 +21,7 @@ class MainActivity : FlutterFragmentActivity() {
                 when (call.method) {
                     // Book Mode (M6/M8): swap the launcher identity by flipping
                     // the enabled state of the two activity-aliases. The home
-                    // screen shows exactly one entry — "Sahaj" or "My Notes".
+                    // screen shows exactly one entry — "Sahaj" or "Notebook".
                     "setDisguise" -> {
                         val disguised = call.arguments as? Boolean ?: false
                         setDisguise(disguised)

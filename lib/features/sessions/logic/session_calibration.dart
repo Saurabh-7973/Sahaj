@@ -42,9 +42,15 @@ class CalibratedSession {
 ///   charged → one extra hold                             ("calibrated-up")
 ///   level   → unchanged, said honestly
 ///
-/// DECISION #1 (handoff): rows for `low` and `open` are not defined anywhere
-/// in code or docs — they run unchanged until the plan-engine table lands.
-/// Do not add rows here without that decision.
+/// DECISION #1 (resolved): `low` and `open` flex *framing*, not workload —
+/// here [ArrivalMood] is a single 5-point scale (not a separate mood axis), so
+/// they don't compound with heavy/charged. `low` → soften, don't shrink: same
+/// session, lower stakes, gentlest words (no numeric change, so no `gentler`
+/// chip — that would imply a reduction we didn't make). `open` → offer, don't
+/// escalate: the plan as set, never auto-extended. The richer behaviours the
+/// spec names (cut reflection, optional add-on) land with the seeded session
+/// content that carries those fields; the echo never promises one that isn't
+/// rendered.
 ///
 /// Precedence when several moods are picked (mock m1_01b shows Heavy+Low →
 /// the heavy echo): calibrate-down beats calibrate-up beats unchanged.
@@ -95,8 +101,27 @@ CalibratedSession calibrateSession({
       );
 
     case ArrivalMood.low:
-    case ArrivalMood.level:
+      // Soften, don't shrink: same session, lower stakes. No numeric change,
+      // so no gentler chip.
+      return CalibratedSession(
+        session: session,
+        drivingMood: driver,
+        echoLine:
+            'You arrived low — same work, lower stakes. Showing up is the '
+            'whole win $when.',
+      );
+
     case ArrivalMood.open:
+      // Offer, don't escalate: the plan exactly as set, never auto-extended.
+      return CalibratedSession(
+        session: session,
+        drivingMood: driver,
+        echoLine:
+            'You arrived open — $when as planned; take it as far as feels '
+            'right.',
+      );
+
+    case ArrivalMood.level:
       break;
   }
 

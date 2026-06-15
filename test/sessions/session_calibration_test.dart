@@ -91,12 +91,22 @@ void main() {
     expect(c.deltaLine, isNull);
   });
 
-  test('low/open run unchanged pending decision #1', () {
-    for (final mood in [ArrivalMood.low, ArrivalMood.open]) {
-      final c = calibrateSession(session: _kegel(), moods: [mood]);
-      expect(c.changed, isFalse, reason: mood.name);
-      expect(c.echoLine, contains('runs as planned'));
-    }
+  test('low softens framing only — no workload change, no gentler chip', () {
+    final c = calibrateSession(session: _kegel(), moods: [ArrivalMood.low]);
+    expect(c.changed, isFalse);
+    expect(c.gentler, isFalse);
+    expect(c.echoLine, contains('lower stakes'));
+    expect(c.session.totalSeconds, _kegel().totalSeconds);
+    expect(c.deltaLine, isNull);
+  });
+
+  test('open offers without escalating — plan as set, never auto-extended', () {
+    final c = calibrateSession(session: _kegel(), moods: [ArrivalMood.open]);
+    expect(c.changed, isFalse);
+    expect(c.calibratedUp, isFalse);
+    expect(c.echoLine, contains('as far as feels right'));
+    expect(c.session.totalSeconds, _kegel().totalSeconds);
+    expect(c.deltaLine, isNull);
   });
 
   test('precedence: heavy wins over charged (mock m1_01b shows heavy+low → heavy)',

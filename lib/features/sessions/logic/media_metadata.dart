@@ -28,7 +28,7 @@ class MediaMetadata {
   factory MediaMetadata.forSession({
     required String sessionTitle,
     required bool bookMode,
-    String aliasName = 'My Notes',
+    String aliasName = 'Notebook',
     String realName = 'Sahaj',
   }) =>
       MediaMetadata(

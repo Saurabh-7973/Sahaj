@@ -11,7 +11,7 @@ void main() {
   test('app name follows the disguise alias when Book Mode is on', () {
     final disguised = MediaMetadata.forSession(
         sessionTitle: 'Calm breathing', bookMode: true);
-    expect(disguised.appName, 'My Notes');
+    expect(disguised.appName, 'Notebook');
 
     final real = MediaMetadata.forSession(
         sessionTitle: 'Calm breathing', bookMode: false);

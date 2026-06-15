@@ -11,8 +11,6 @@ void main() {
           'Keep training free. The core program is yours either way.');
       expect(PricingTier.low.meaning, 'A fair price on a tight budget.');
       expect(PricingTier.standard.meaning, 'The fair price.');
-      expect(PricingTier.supporter.meaning,
-          "Covers you — and quietly covers someone's ₹499.");
     });
 
     test('only ₹999 is recommended', () {
@@ -20,7 +18,6 @@ void main() {
       for (final t in [
         PricingTier.free,
         PricingTier.low,
-        PricingTier.supporter
       ]) {
         expect(t.isRecommended, isFalse);
       }
@@ -30,7 +27,6 @@ void main() {
       for (final t in [
         PricingTier.low,
         PricingTier.standard,
-        PricingTier.supporter
       ]) {
         final c = SubscriptionController(const _AlwaysOkRepo());
         await c.choose(t);

@@ -6,21 +6,18 @@ void main() {
     expect(PricingTier.free.rupees, 0);
     expect(PricingTier.low.rupees, 499);
     expect(PricingTier.standard.rupees, 999);
-    expect(PricingTier.supporter.rupees, 1499);
   });
 
   test('only paid tiers have a Play product id; free has none', () {
     expect(PricingTier.free.productId, isNull);
     expect(PricingTier.low.productId, 'sahaj_pro_499');
     expect(PricingTier.standard.productId, 'sahaj_pro_999');
-    expect(PricingTier.supporter.productId, 'sahaj_pro_1499');
   });
 
   test('free tier does not require a purchase; paid tiers do', () {
     expect(PricingTier.free.requiresPurchase, isFalse);
     expect(PricingTier.low.requiresPurchase, isTrue);
     expect(PricingTier.standard.requiresPurchase, isTrue);
-    expect(PricingTier.supporter.requiresPurchase, isTrue);
   });
 
   test('standard (₹999) is the recommended tier', () {

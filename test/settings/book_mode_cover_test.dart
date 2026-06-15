@@ -20,7 +20,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('REAL APP'), findsOneWidget);
-    expect(find.text('My Notes'), findsNothing);
+    expect(find.text('Notebook'), findsNothing);
   });
 
   testWidgets('covers when book mode on, double-tap reveals', (tester) async {
@@ -36,12 +36,12 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('My Notes'), findsOneWidget);
+    expect(find.text('Notebook'), findsOneWidget);
     expect(find.text('REAL APP'), findsNothing);
 
     // Drive a deterministic double-tap via TestGesture so both pointer events
     // land within kDoubleTapTimeout regardless of wall-clock timing.
-    final center = tester.getCenter(find.text('My Notes'));
+    final center = tester.getCenter(find.text('Notebook'));
     final gesture = await tester.startGesture(center, kind: PointerDeviceKind.touch);
     await gesture.up();
     // Second tap must start before kDoubleTapTimeout (300 ms). Advance fake

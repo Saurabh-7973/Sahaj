@@ -57,7 +57,7 @@ void main() {
 
   testWidgets('subscription trial at 1.3', (tester) async {
     final sub = SubscriptionController(_Repo());
-    await sub.choose(PricingTier.supporter);
+    await sub.choose(PricingTier.standard);
     await _pump(tester, const SubscriptionPage(), sub);
     expect(tester.takeException(), isNull);
   });

@@ -64,7 +64,7 @@
             </intent-filter>
         </activity-alias>
 
-        <!-- Disguise identity (default disabled): "My Notes" + grey-blue
+        <!-- Disguise identity (default disabled): "Notebook" + grey-blue
              pencil icon. Book Mode flips the enabled state of the two aliases
              at runtime; until that native swap is wired this stays off so the
              home screen shows exactly one "Sahaj" entry. -->

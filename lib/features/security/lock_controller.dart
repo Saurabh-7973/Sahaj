@@ -5,9 +5,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 /// How the app gate authenticates (M6 §3).
 enum LockMethod { none, biometric, pin }
 
-/// Persists the 4-digit PIN. The protection is the platform keystore behind
-/// [FlutterSecureStorage], not a hash — a 4-digit PIN has no cryptographic
-/// strength to add. Swapped for an in-memory store in tests.
+/// Persists the 6-digit PIN. The protection is the platform keystore behind
+/// [FlutterSecureStorage], not a hash — a short numeric PIN has no
+/// cryptographic strength to add. Swapped for an in-memory store in tests.
 abstract class PinStore {
   Future<String?> read();
   Future<void> write(String pin);
@@ -40,10 +40,9 @@ class MemoryPinStore implements PinStore {
   Future<void> clear() async => _pin = null;
 }
 
-/// DECISION #1 (M6): PIN length (4 here) + lockout policy after repeated
-/// failures are flagged, not invented. The screens absorb either; no lockout
-/// is enforced yet.
-const int kPinLength = 4;
+/// DECISION #8 (resolved): 6-digit PIN, no lockout enforced. The screens
+/// absorb either length; lockout stays deferred (keystore is the real guard).
+const int kPinLength = 6;
 
 /// Holds the lock method + PIN-set state. Biometric on/off still lives on the
 /// onboarding controller (legacy); this adds the PIN fallback the gate needs.

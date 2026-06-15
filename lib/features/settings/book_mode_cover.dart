@@ -99,7 +99,7 @@ class _BookModeCoverState extends ConsumerState<BookModeCover>
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text('My Notes',
+        title: const Text('Notebook',
             style: TextStyle(color: _ink, fontWeight: FontWeight.w500, fontSize: 20)),
         actions: const [
           Padding(

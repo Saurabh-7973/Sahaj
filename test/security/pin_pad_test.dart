@@ -22,9 +22,9 @@ void main() {
         return true;
       },
     )));
-    await _enter(tester, '1234');
+    await _enter(tester, '123456');
     await tester.pumpAndSettle();
-    expect(got, '1234');
+    expect(got, '123456');
     expect(find.text('Try again'), findsNothing);
   });
 
@@ -32,7 +32,7 @@ void main() {
     await tester.pumpWidget(_app(PinPad(
       onComplete: (pin) async => false,
     )));
-    await _enter(tester, '0000');
+    await _enter(tester, '000000');
     await tester.pump(); // error frame
     expect(find.text('Try again'), findsOneWidget);
     // entry resets after the ceremony
@@ -73,11 +73,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Choose a PIN'), findsOneWidget);
-    await _enter(tester, '2580');
+    await _enter(tester, '258025');
     await tester.pumpAndSettle();
     expect(find.text('Confirm your PIN'), findsOneWidget);
-    await _enter(tester, '2580');
+    await _enter(tester, '258025');
     await tester.pumpAndSettle();
-    expect(result, '2580');
+    expect(result, '258025');
   });
 }
