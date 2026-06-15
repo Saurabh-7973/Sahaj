@@ -4,19 +4,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/analytics/events.dart';
 import 'baseline_questions.dart';
 import 'health_questions.dart';
+import 'logic/safety_screening.dart';
 import 'logic/triage.dart';
 import 'onboarding_controller.dart';
 import 'onboarding_pages.dart';
 import 'pages/crisis_screen.dart';
 import 'pages/plan_reveal_screen.dart';
 import 'pages/resume_screen.dart';
+import 'pages/safety_screens.dart';
 
 /// One screen in the linear flow, with the metadata the orchestrator needs
-/// to route, label the resume screen, and skip the conditional triage.
+/// to route, label the resume screen, and skip conditional screens (triage,
+/// the down-training advisory) when their condition doesn't hold.
 class _Screen {
-  const _Screen(this.build, {this.isTriage = false, this.resumeLabel});
+  const _Screen(this.build, {this.skipWhen, this.resumeLabel});
   final Widget Function() build;
-  final bool isTriage;
+
+  /// When non-null and true at navigation time, this screen is skipped in
+  /// both directions (e.g. triage with no flags, advisory for a non-tight
+  /// floor).
+  final bool Function()? skipWhen;
   final String? resumeLabel;
 }
 
@@ -33,6 +40,7 @@ class OnboardingFlow extends ConsumerStatefulWidget {
 class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
   int _index = 0;
   bool _showingCrisis = false;
+  bool _showingEmergency = false;
   bool _showingResume = false;
 
   @override
@@ -95,6 +103,30 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
           },
           resumeLabel: 'You were on the health check.',
         ),
+      // Emergency carve-out (safety pack §3) — a "Yes" raises the urgent-care
+      // interrupt, which overrides everything else.
+      for (var i = 0; i < kEmergencyQuestions.length; i++)
+        _Screen(
+          () {
+            final q = kEmergencyQuestions[i];
+            return HealthQuestionScreen(
+              question: q,
+              value: c.emergencyAnswers[q.id],
+              stepIndex: i,
+              stepCount: kEmergencyQuestions.length,
+              onBack: _back,
+              onAnswer: (v) {
+                c.setEmergencyAnswer(q.id, v);
+                if (v > 0) {
+                  setState(() => _showingEmergency = true);
+                  return;
+                }
+                _next();
+              },
+            );
+          },
+          resumeLabel: 'You were on the health check.',
+        ),
       _Screen(
         () => TriageScreen(
           onArticle: _next, // TODO(M5): open the doctor-conversation article
@@ -106,8 +138,36 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
           },
           onBack: _back,
         ),
-        isTriage: true,
+        skipWhen: () => !_triageHasFlags(),
         resumeLabel: 'You were on a quick care note.',
+      ),
+      // Hypertonic / tension screen (safety pack §2) — between the red-flag
+      // triage and plan generation. Two or more "Yes" routes to the
+      // down-training advisory below.
+      for (var i = 0; i < kTensionQuestions.length; i++)
+        _Screen(
+          () {
+            final q = kTensionQuestions[i];
+            return HealthQuestionScreen(
+              question: q,
+              value: c.tensionAnswers[q.id],
+              stepIndex: i,
+              stepCount: kTensionQuestions.length,
+              onBack: _back,
+              onAnswer: (v) {
+                c.setTensionAnswer(q.id, v);
+                _next();
+              },
+            );
+          },
+          resumeLabel: 'You were on a quick muscle-pattern check.',
+        ),
+      _Screen(
+        () => TensionAdvisoryScreen(onContinue: _next, onBack: _back),
+        skipWhen: () =>
+            ref.read(onboardingControllerProvider).pelvicFloorPattern !=
+            PelvicFloorPattern.likelyTight,
+        resumeLabel: 'You were reading a gentler starting note.',
       ),
       // Function baseline (C8).
       for (var i = 0; i < baseline.length; i++)
@@ -155,6 +215,18 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
         () => PrivacyScreen(onDone: _next, onBack: _back),
         resumeLabel: 'You were setting up privacy.',
       ),
+      // Must-accept health disclaimer (safety pack §1a) — the gate before the
+      // first session. Acceptance + version/date are stored.
+      _Screen(
+        () => DisclaimerScreen(
+          onAccept: () {
+            ref.read(onboardingControllerProvider).acceptDisclaimer();
+            _next();
+          },
+          onBack: _back,
+        ),
+        resumeLabel: 'You were reading the must-read note.',
+      ),
       _Screen(
         () => FirstSessionScreen(
           onStartNow: _finish,
@@ -172,10 +244,9 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
   void _next() {
     final screens = _screens(ref.read(onboardingControllerProvider));
     var target = _index + 1;
-    // Skip the triage screen when no red flags fired.
-    if (target < screens.length &&
-        screens[target].isTriage &&
-        !_triageHasFlags()) {
+    // Skip any conditional screens whose condition doesn't hold (triage with
+    // no flags, the advisory for a non-tight floor).
+    while (target < screens.length && (screens[target].skipWhen?.call() ?? false)) {
       target += 1;
     }
     if (target >= screens.length) {
@@ -190,7 +261,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
     if (_index == 0) return;
     final screens = _screens(ref.read(onboardingControllerProvider));
     var target = _index - 1;
-    if (target >= 0 && screens[target].isTriage && !_triageHasFlags()) {
+    while (target >= 0 && (screens[target].skipWhen?.call() ?? false)) {
       target -= 1;
     }
     if (target < 0) return;
@@ -248,6 +319,15 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
       return CrisisScreen(
         onContinue: () {
           setState(() => _showingCrisis = false);
+          _next();
+        },
+      );
+    }
+
+    if (_showingEmergency) {
+      return EmergencyScreen(
+        onContinue: () {
+          setState(() => _showingEmergency = false);
           _next();
         },
       );

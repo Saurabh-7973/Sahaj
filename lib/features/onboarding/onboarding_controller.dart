@@ -5,6 +5,7 @@ import '../../data/onboarding_store.dart';
 import 'logic/banding.dart';
 import 'logic/models/onboarding_models.dart';
 import 'logic/plan_generator.dart';
+import 'logic/safety_screening.dart';
 import 'logic/triage.dart';
 
 export 'logic/models/onboarding_models.dart';
@@ -36,10 +37,25 @@ class OnboardingController extends ChangeNotifier {
   Persona? persona;
   final Set<Goal> goals = <Goal>{};
   final Map<String, int> healthAnswers = <String, int>{};
+  final Map<String, int> emergencyAnswers = <String, int>{};
+  final Map<String, int> tensionAnswers = <String, int>{};
   final Map<String, int> baselineRaw = <String, int>{};
   final Map<String, int> mindBodyRaw = <String, int>{};
   bool complete = false;
   bool biometricLock = false;
+
+  /// Must-accept health disclaimer (safety pack §1a): the version the user
+  /// accepted and when. [disclaimerAccepted] is true only when the accepted
+  /// version matches the current [kDisclaimerVersion].
+  String? disclaimerVersion;
+  DateTime? disclaimerAcceptedAt;
+  bool get disclaimerAccepted => disclaimerVersion == kDisclaimerVersion;
+
+  /// Emergency carve-out flags (safety pack §3) — override all routing.
+  Set<EmergencyFlag> get emergencyFlags => evaluateEmergency(emergencyAnswers);
+
+  /// Hypertonic-screen outcome (safety pack §2).
+  PelvicFloorPattern get pelvicFloorPattern => evaluateTension(tensionAnswers);
 
   /// The onboarding step the user last reached, persisted after every
   /// advance so an interruption (lock / kill) resumes at the exact screen
@@ -78,6 +94,23 @@ class OnboardingController extends ChangeNotifier {
 
   void setHealthAnswer(String key, int value) {
     healthAnswers[key] = value;
+    _persist();
+  }
+
+  void setEmergencyAnswer(String key, int value) {
+    emergencyAnswers[key] = value;
+    _persist();
+  }
+
+  void setTensionAnswer(String key, int value) {
+    tensionAnswers[key] = value;
+    _persist();
+  }
+
+  /// Records acceptance of the current disclaimer version with a timestamp.
+  void acceptDisclaimer() {
+    disclaimerVersion = kDisclaimerVersion;
+    disclaimerAcceptedAt = DateTime.now();
     _persist();
   }
 
@@ -122,6 +155,7 @@ class OnboardingController extends ChangeNotifier {
       goals: goals,
       baseline: baseline,
       mindBody: _band(mindBodyRaw),
+      pelvicFloor: pelvicFloorPattern,
     );
     complete = true;
     _persist();
@@ -134,6 +168,8 @@ class OnboardingController extends ChangeNotifier {
     persona = null;
     goals.clear();
     healthAnswers.clear();
+    emergencyAnswers.clear();
+    tensionAnswers.clear();
     baselineRaw.clear();
     mindBodyRaw.clear();
     triage = null;
@@ -141,6 +177,8 @@ class OnboardingController extends ChangeNotifier {
     plan = null;
     complete = false;
     biometricLock = false;
+    disclaimerVersion = null;
+    disclaimerAcceptedAt = null;
     lastStep = 0;
     _store?.clear();
     notifyListeners();
@@ -155,9 +193,13 @@ class OnboardingController extends ChangeNotifier {
         'persona': persona?.name,
         'goals': goals.map((g) => g.name).toList(),
         'health': healthAnswers,
+        'emergency': emergencyAnswers,
+        'tension': tensionAnswers,
         'baseline': baselineRaw,
         'mindBody': mindBodyRaw,
         'medicalClearance': medicalClearance?.name,
+        'disclaimerVersion': disclaimerVersion,
+        'disclaimerAcceptedAt': disclaimerAcceptedAt?.toIso8601String(),
         'complete': complete,
         'biometricLock': biometricLock,
         'lastStep': lastStep,
@@ -173,6 +215,12 @@ class OnboardingController extends ChangeNotifier {
     healthAnswers
       ..clear()
       ..addAll(Map<String, int>.from(json['health'] as Map? ?? {}));
+    emergencyAnswers
+      ..clear()
+      ..addAll(Map<String, int>.from(json['emergency'] as Map? ?? {}));
+    tensionAnswers
+      ..clear()
+      ..addAll(Map<String, int>.from(json['tension'] as Map? ?? {}));
     baselineRaw
       ..clear()
       ..addAll(Map<String, int>.from(json['baseline'] as Map? ?? {}));
@@ -181,6 +229,9 @@ class OnboardingController extends ChangeNotifier {
       ..addAll(Map<String, int>.from(json['mindBody'] as Map? ?? {}));
     medicalClearance =
         _enumByName(MedicalClearance.values, json['medicalClearance'] as String?);
+    disclaimerVersion = json['disclaimerVersion'] as String?;
+    disclaimerAcceptedAt =
+        DateTime.tryParse((json['disclaimerAcceptedAt'] as String?) ?? '');
     complete = (json['complete'] as bool?) ?? false;
     biometricLock = (json['biometricLock'] as bool?) ?? false;
     lastStep = (json['lastStep'] as num?)?.toInt() ?? 0;

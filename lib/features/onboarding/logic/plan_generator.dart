@@ -8,6 +8,7 @@ Plan generatePlan({
   required Set<Goal> goals,
   required Baseline baseline,
   required Map<String, Band> mindBody,
+  PelvicFloorPattern pelvicFloor = PelvicFloorPattern.likelyWeak,
 }) {
   final trackTag = track == Track.partnered ? 'partnered' : 'solo';
 
@@ -60,9 +61,18 @@ Plan generatePlan({
       ]),
   ];
 
-  // Baseline band → difficulty: any low band → gentle ramp.
+  // Hypertonic (likely-tight) floor → relaxation-first v1 fallback (safety
+  // pack §2): lead with down-training rather than strengthening, and always a
+  // gentle ramp. The full program reorder (lengthening leads) is deferred to a
+  // clinician pass; here we surface down-training early and soften the start.
+  final tight = pelvicFloor == PelvicFloorPattern.likelyTight;
+  if (tight) emphasis.addAll(['down_training', 'reverse_kegel']);
+
+  // Baseline band → difficulty: any low band → gentle ramp; a tight floor is
+  // gentle regardless.
   final hasLow = baseline.bands.values.any((b) => b == Band.low);
-  final difficulty = hasLow ? Difficulty.gentle : Difficulty.standard;
+  final difficulty =
+      (tight || hasLow) ? Difficulty.gentle : Difficulty.standard;
 
   return Plan(
     weeks: spine,

@@ -22,4 +22,31 @@ void main() {
     expect(b.track, Track.solo);
     expect(b.plan, isNotNull);
   });
+
+  test('round-trips safety answers + disclaimer acceptance', () {
+    final a = OnboardingController();
+    a.setEmergencyAnswer('em_priapism', 1);
+    a.setTensionAnswer('tn_tension_not_weak', 1);
+    a.setTensionAnswer('tn_pelvic_pressure', 1);
+    a.acceptDisclaimer();
+
+    final b = OnboardingController()..loadFrom(a.toJson());
+
+    expect(b.emergencyFlags, contains(EmergencyFlag.priapism));
+    expect(b.pelvicFloorPattern, PelvicFloorPattern.likelyTight);
+    expect(b.disclaimerAccepted, isTrue);
+    expect(b.disclaimerAcceptedAt, isNotNull);
+  });
+
+  test('a likely-tight floor softens the generated plan to a gentle start', () {
+    final c = OnboardingController()
+      ..setPersona(Persona.singleInexperienced)
+      ..setTensionAnswer('tn_tension_not_weak', 1)
+      ..setTensionAnswer('tn_pain_sex', 1)
+      ..finish();
+
+    expect(c.pelvicFloorPattern, PelvicFloorPattern.likelyTight);
+    expect(c.plan!.startDifficulty, Difficulty.gentle);
+    expect(c.plan!.emphasis, contains('down_training'));
+  });
 }
