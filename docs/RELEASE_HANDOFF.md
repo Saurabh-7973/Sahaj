@@ -16,24 +16,28 @@ library → privacy → paywall → notifications.
 Each is implemented with a sensible, flagged default so nothing blocks the
 build. Confirm or change before release.
 
-| # | Decision | Current default (in code) | Where to change |
-|---|---|---|---|
-| 1 | **Mood→calibration deltas** for `low` / `open` moods | run unchanged (only heavy/level/charged calibrate) | `session_calibration.dart` |
-| 2 | **Gap-return threshold** (missed days → "plan adjusted") | `kGapThresholdDays = 3` | `today_logic.dart` |
-| 3 | **Per-persona check-in domains** | derived 1:1 from baseline batteries (Control/Confidence/Calm · …/Staying-power) | `dashboard_logic.dart` (`kSoloDomains`/`kPartneredDomains`) |
-| 4 | **Delta display granularity** | relative-only ("on your own week-0 scale") | M3 — keep, raw scores medicalize |
-| 5 | **Personalized plan-reveal lines** | 6 goal→line mappings (2 match spec, 4 new) — review tone | `plan_reveal_lines.dart` |
-| 6 | **Free-session scope** (library) | Foundation base techniques + variants free; rest Pro | `feature_gate.dart` (`kFreeSessionBaseTags`) |
-| 7 | **Search scope** | titles-only | M5 — keep |
-| 8 | **PIN length + lockout policy** | 4 digits, no lockout enforced | `lock_controller.dart` (`kPinLength`) |
-| 9 | **Panic gesture** (in-app two-finger → cover) | not adopted (proposal) | — |
-| 10 | **₹1499 pay-it-forward line** | ships as written | `pricing_tier.dart` — cut if no real mechanism |
-| 11 | ~~Trial length~~ → **one-time lifetime unlock** (decided) | no trial, no renewal; pay once | `subscription_controller.dart` + Play in-app products |
-| 12 | **Default reminder time** | 21:30; "This evening" uses same | `preferences_controller.dart` |
-| 13 | **"You can stop any time" clause** | shown on holds 1–2 then drops | M1 — confirm tone with a real read |
-| 14 | **Disguise alias label** | "My Notes" | `strings.xml` / cover — check OEM collision |
-| 15 | **Heritage doctor-gate** | heritage pieces outside the medical gate (no claims); badge stays off cards | M5 policy |
-| 16 | **Related-session footer** (read→do bridge) | not adopted (needs a content field) | before seeding |
+_Status as of 2026-06-16. RESOLVED = implemented; OPEN = ships on a sensible
+default, confirm-or-leave._
+
+| # | Decision | Status |
+|---|---|---|
+| 1 | Mood→calibration for `low`/`open` | **RESOLVED** — low=soften framing, open=offer; no workload change (single-scale) |
+| 2 | Gap-return threshold | **RESOLVED** — `kGapThresholdDays = 4` |
+| 3 | Per-persona check-in domains | OPEN — ships on baseline-derived default (low stakes) |
+| 4 | Delta display granularity | OPEN — relative-only (keep; raw scores medicalize) |
+| 5 | Personalized plan-reveal lines | **RESOLVED** — 6 lines, 1:1 to the goal taxonomy, tested |
+| 6 | **Free-session scope** | OPEN — Foundation (wks 1–4) + first 3 articles free, rest Pro. **Confirm this free/paid line** |
+| 7 | Search scope | OPEN — titles-only (keep) |
+| 8 | PIN length + lockout | **RESOLVED** — `kPinLength = 6`, no lockout |
+| 9 | Panic gesture | OPEN — deferred to v1.1 |
+| 10 | ₹1499 pay-it-forward | **RESOLVED** — cut (no real grant mechanism) |
+| 11 | Billing model | **RESOLVED** — one-time lifetime unlock; no trial/renewal |
+| 12 | Default reminder time | **RESOLVED** — 21:30, code+copy consistent |
+| 13 | "You can stop any time" clause | OPEN — shown holds 1–2; confirm tone on a real read |
+| 14 | Disguise alias label | **RESOLVED** — "Notebook" (no stock-app collision) |
+| 15 | Heritage doctor-gate | OPEN — outside medical gate, claim-free, no badge (keep) |
+| 16 | Related-session footer (read→do) | **RESOLVED** — content field + reader footer; warning-signs excluded |
+| — | **Disguise-name picker** | **CHANGED** — broken picker removed; fixed "Notebook" label. User-choosable names = v1.1 (founding vision listed name-choice as v1 — confirm OK for closed test) |
 
 ---
 
