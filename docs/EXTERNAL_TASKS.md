@@ -11,10 +11,12 @@
 ```
 [CC] keystore → [CC] signed AAB → create app in Play → host privacy policy URL
 → upload AAB to Internal testing → store listing + content rating + data safety
-→ create subscription products in Play → set up RevenueCat (Cloud service acct → link → import → key)
+→ create one-time unlock products in Play → set up RevenueCat (Cloud service acct → link → import → key)
 → give key to [CC] → [CC] wires it → internal testing pass
 → (closed-testing window if your account needs it) → production
 ```
+
+> **Billing model = one-time lifetime unlock (decided).** Pay once, kept forever — no renewal, no trial clock. Code reflects this (`subscription_controller.dart`). In Play these are **in-app products (one-time / non-consumable)**, NOT subscriptions.
 **Parallel (anytime):** recruit testers · device verification (during testing) · TTS ear-check (optional) · heritage curation (optional).
 **Deferred to first revenue:** doctor sign-off · lawyer · clinician thresholds.
 
@@ -52,12 +54,11 @@
 
 ## PHASE 2 — Monetisation (only after the app exists in Play)
 
-### 2.1 Create the subscription products in Play
-- Play Console → **Monetise with Play → Products → Subscriptions → Create subscription**.
+### 2.1 Create the one-time unlock products in Play
+- Play Console → **Monetise with Play → Products → In-app products → Create product**. (NOT Subscriptions — the model is a one-time lifetime unlock.)
 - **Product IDs must exactly match `pricing_tier.dart`:** `sahaj_pro_499` and `sahaj_pro_999`. (₹1499 is cut; ₹0 is a **local grant in code, not a Play product**.)
-- Each subscription needs a **base plan** (billing period + price + renewal). Set price ₹499 / ₹999, then **Activate**.
-- Add the **7-day free trial** as an *offer* on the base plan.
-- ⚠️ **Decision to confirm first:** is "pay-what-you-can" meant to be a **recurring subscription** or a **one-time unlock**? The brief says subscription, but if it's really a one-time lifetime unlock, you'd create **One-time products** instead and the setup differs. Lock this before creating products. *(If subscription, also pick the billing period — monthly vs annual.)*
+- Set price ₹499 / ₹999, then **Activate**. No base plan, no billing period, **no trial offer** — one-time products don't have them.
+- These are **non-consumable** (bought once, owned forever; RevenueCat treats them as a lifetime entitlement).
 - **Done when:** the two products are Active in Play.
 
 ### 2.2 Set up RevenueCat (the multi-console one — switch between Play, Google Cloud, and RevenueCat)
@@ -68,7 +69,7 @@ b. **Google Cloud Console** (the project linked to your Play account): enable th
 c. **Create a service account** (IAM & Admin → Service Accounts), give it the roles RevenueCat's doc specifies (currently Pub/Sub Admin + Monitoring Viewer), then **create a JSON key** and download it.
 d. **Google Play Console → Users and permissions** (API access): grant that service-account email access to the Sahaj app with the needed (finance/admin) permissions. *(Tip: editing any product's description in Play nudges the new credentials to validate faster.)*
 e. **RevenueCat:** create an **Android app** — name, package name `com.saurabh7973.sahaj`, and **upload the service-account JSON**.
-f. **Import** your two subscription products into RevenueCat. Create an **Entitlement** (e.g. `pro`), attach both products, then create an **Offering**.
+f. **Import** your two one-time (non-consumable) products into RevenueCat. Create an **Entitlement** (e.g. `pro`), attach both products, then create an **Offering**.
 g. Set up **Pub/Sub server notifications** (RevenueCat app settings → Google Developer Notifications topic → Connect to Google).
 h. Copy the **public SDK API key** (RevenueCat → Project → API Keys → **SDK API keys**, the Android/Google one). *Tip: there's also a Test Store `test_` key + Play **License testing** (Play Console → Settings → License testing) so you can test purchases without real charges.*
 - **Done when:** RevenueCat shows your products imported and a green connection to Play, and you have the public SDK key.
@@ -131,4 +132,4 @@ Run the full surface audit (the detailed checklist Claude Code gave you). The on
 ---
 
 ### Bottom line
-The only things gating a **free closed-testing launch** are in Phases 1–3: keystore/AAB **[CC]**, the Play setup, RevenueCat, device checks, testers. Doctor, lawyer, and clinician are all first-revenue. Confirm the **subscription-vs-one-time** decision (2.1) before you create products — it's the one thing that's annoying to redo.
+The only things gating a **free closed-testing launch** are in Phases 1–3: keystore/AAB **[CC]**, the Play setup, RevenueCat, device checks, testers. Doctor, lawyer, and clinician are all first-revenue. Billing model is **locked: one-time lifetime unlock** (in-app products, not subscriptions) — code already matches.

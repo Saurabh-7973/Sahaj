@@ -28,7 +28,7 @@ build. Confirm or change before release.
 | 8 | **PIN length + lockout policy** | 4 digits, no lockout enforced | `lock_controller.dart` (`kPinLength`) |
 | 9 | **Panic gesture** (in-app two-finger → cover) | not adopted (proposal) | — |
 | 10 | **₹1499 pay-it-forward line** | ships as written | `pricing_tier.dart` — cut if no real mechanism |
-| 11 | **Trial length / eligibility** | 7-day local trial, once granted | confirm in Play config |
+| 11 | ~~Trial length~~ → **one-time lifetime unlock** (decided) | no trial, no renewal; pay once | `subscription_controller.dart` + Play in-app products |
 | 12 | **Default reminder time** | 21:30; "This evening" uses same | `preferences_controller.dart` |
 | 13 | **"You can stop any time" clause** | shown on holds 1–2 then drops | M1 — confirm tone with a real read |
 | 14 | **Disguise alias label** | "My Notes" | `strings.xml` / cover — check OEM collision |
@@ -84,12 +84,13 @@ ColorOS / OneUI.
 ## D. Play Console / release
 
 - [ ] Keystore + signed AAB.
-- [ ] Four subscription products at the tier prices (₹499 / ₹999 / ₹1499) +
-      the ₹0 local grant (not a Play SKU) + 7-day trial; product ids match
-      `pricing_tier.dart` (`sahaj_pro_499/999/1499`).
+- [ ] Two **one-time** in-app products (non-consumable) at ₹499 / ₹999 +
+      the ₹0 local grant (not a Play SKU); product ids match `pricing_tier.dart`
+      (`sahaj_pro_499/999`). ₹1499 cut (#10); billing = one-time lifetime
+      unlock, no subscriptions, no trial.
 - [ ] RevenueCat API key → wire `PlatformSubscriptionRepository`; then the
-      trial/grace/active/lapsed states become backend-driven (today a real
-      local 7-day trial stands in).
+      lifetime entitlement becomes backend-driven (today a local unlock stands
+      in). See `docs/EXTERNAL_TASKS.md`.
 - [ ] Deferred keys still stubbed in `main.dart`: Sentry DSN, Mixpanel token
       (both currently off per the "paid services off" decision — telemetry is
       Firebase only).

@@ -35,32 +35,27 @@ void main() {
     });
   });
 
-  group('trial / renewal', () {
-    test('choosing a paid tier starts a 7-day trial with a renewal date',
-        () async {
+  group('one-time unlock (no trial, no renewal)', () {
+    test('choosing a paid tier unlocks Pro for that tier', () async {
       final c = SubscriptionController(const _AlwaysOkRepo());
       await c.choose(PricingTier.low);
-      expect(c.inTrial, isTrue);
-      expect(c.trialEndsAt, isNotNull);
-      expect(c.renewsAt, isNotNull);
-      // Renewal is ~a year after the trial ends.
-      expect(c.renewsAt!.isAfter(c.trialEndsAt!), isTrue);
+      expect(c.isPro, isTrue);
+      expect(c.tier, PricingTier.low);
     });
 
-    test('free grant carries no trial dates', () async {
+    test('free grant unlocks Pro at ₹0', () async {
       final c = SubscriptionController(const _AlwaysOkRepo());
       await c.choose(PricingTier.free);
       expect(c.isPro, isTrue);
-      expect(c.inTrial, isFalse);
-      expect(c.trialEndsAt, isNull);
+      expect(c.tier, PricingTier.free);
     });
 
-    test('reset clears trial state', () async {
+    test('reset clears the entitlement', () async {
       final c = SubscriptionController(const _AlwaysOkRepo());
       await c.choose(PricingTier.standard);
       c.reset();
-      expect(c.inTrial, isFalse);
-      expect(c.renewsAt, isNull);
+      expect(c.isPro, isFalse);
+      expect(c.tier, isNull);
     });
   });
 

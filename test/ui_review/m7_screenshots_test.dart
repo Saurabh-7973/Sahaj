@@ -120,17 +120,16 @@ void main() {
     await _capture(tester, 'm7_26_subscription_free');
   });
 
-  testWidgets('m7_03a subscription — trial', (tester) async {
+  testWidgets('m7_03a subscription — unlocked (₹499 paid once)', (tester) async {
     final sub = SubscriptionController(_Repo());
-    await sub.choose(PricingTier.low); // starts the 7-day trial
+    await sub.choose(PricingTier.low); // one-time unlock
     await _pump(tester, const SubscriptionPage(), sub);
     await _capture(tester, 'm7_03_subscription_trial');
   });
 
-  testWidgets('m7_03b subscription — active', (tester) async {
+  testWidgets('m7_03b subscription — unlocked (₹0 grant)', (tester) async {
     final sub = SubscriptionController(_Repo());
-    await sub.choose(PricingTier.low);
-    sub.inTrial = false; // simulate trial→active transition
+    await sub.choose(PricingTier.free);
     await _pump(tester, const SubscriptionPage(), sub);
     await _capture(tester, 'm7_03_subscription_active');
   });

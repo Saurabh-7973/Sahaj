@@ -166,9 +166,9 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                 const SizedBox(height: AppSpacing.sm),
                 AppButton(
                   label: selected == null
-                      ? 'Start 7 days free'
+                      ? 'Unlock forever'
                       : selected.requiresPurchase
-                          ? 'Start 7 days free'
+                          ? 'Unlock forever'
                           : 'Keep training free',
                   loading: _busy,
                   onPressed: (selected == null || _busy) ? null : _continue,
@@ -178,9 +178,8 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                   selected == null
                       ? 'Nothing is pre-selected — tap a tier first.'
                       : selected.requiresPurchase
-                          ? '₹${selected.rupees}/yr after 7 days free · cancel '
-                              'anytime in Play · price never changes '
-                              'mid-subscription.'
+                          ? '₹${selected.rupees} once · yours forever · no '
+                              'renewal, nothing to cancel.'
                           : 'Free forever — the core program is yours.',
                   textAlign: TextAlign.center,
                   style: theme.textTheme.labelSmall?.copyWith(color: lamp.faint),
@@ -286,7 +285,7 @@ class TierCard extends StatelessWidget {
     return Semantics(
       button: true,
       selected: selected,
-      label: '${tier.priceLabel}${tier.requiresPurchase ? ' per year' : ''}. '
+      label: '${tier.priceLabel}${tier.requiresPurchase ? ' once' : ''}. '
           '${tier.meaning}${tier.isRecommended ? ' Recommended.' : ''}',
       child: GestureDetector(
         onTap: onTap,
@@ -342,7 +341,7 @@ class TierCard extends StatelessWidget {
                               ),
                               if (tier.requiresPurchase)
                                 TextSpan(
-                                  text: '/yr',
+                                  text: ' once',
                                   style: theme.textTheme.labelSmall
                                       ?.copyWith(color: lamp.gold),
                                 ),

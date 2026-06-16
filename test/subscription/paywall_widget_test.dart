@@ -54,7 +54,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.textContaining('₹499/yr after 7 days free'),
+      find.textContaining('₹499 once · yours forever'),
       findsOneWidget,
     );
     expect(find.text('Nothing is pre-selected — tap a tier first.'),
@@ -96,7 +96,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(sub.isPro, isTrue);
-    expect(sub.inTrial, isFalse);
     // Back on the originating screen.
     expect(find.text('open'), findsOneWidget);
   });

@@ -8,7 +8,6 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/widgets.dart';
-import '../logic/billing_dates.dart';
 import '../subscription_controller.dart';
 import 'paywall_screen.dart';
 
@@ -165,7 +164,6 @@ class _ProCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final price = sub.tier?.priceLabel ?? '₹0';
     final paid = sub.tier?.requiresPurchase ?? false;
-    final trial = sub.inTrial && sub.trialEndsAt != null;
 
     return _HeroCard(
       lamp: lamp,
@@ -181,27 +179,15 @@ class _ProCard extends StatelessWidget {
             spacing: AppSpacing.sm,
             runSpacing: AppSpacing.xs,
             children: [
-              if (trial) ...[
-                AppChip(
-                    label: 'trial until ${billingDate(sub.trialEndsAt!)}',
-                    variant: AppChipVariant.ok),
-                if (paid) AppChip(label: 'then $price/yr'),
-              ] else ...[
-                AppChip(label: paid ? '$price/yr' : 'granted at ₹0'),
-                if (paid && sub.renewsAt != null)
-                  AppChip(label: 'renews ${billingDate(sub.renewsAt!)}'),
-              ],
+              AppChip(label: paid ? '$price · paid once' : 'granted at ₹0'),
+              const AppChip(label: 'yours forever', variant: AppChipVariant.ok),
             ],
           ),
           const SizedBox(height: 10),
           Text(
-            trial
-                ? "Everything's open. Not for you? Cancel in Play before the "
-                    "date — you won't be charged."
-                : paid
-                    ? 'Your price stays $price — it never changes '
-                        'mid-subscription.'
-                    : 'Pro, granted at ₹0. The full protocol is yours.',
+            paid
+                ? 'Paid once, kept forever — no renewal, nothing to cancel.'
+                : 'Pro, granted at ₹0. The full protocol is yours.',
             style: theme.textTheme.bodySmall?.copyWith(color: lamp.inkMuted),
           ),
         ],
