@@ -16,11 +16,12 @@ class CrisisScreen extends StatelessWidget {
 
   final VoidCallback onContinue;
 
-  // Numbers as implemented (wired to real tel: intents).
+  // Govt of India 24×7 lines + emergency, per onboarding_copy.md S8 (numbers
+  // re-verified at ship). Wired to real tel: intents.
   static const _lines = [
     ('Tele-MANAS · 14416', 'Free · 24/7 · Hindi & English', '14416'),
-    ('iCall', 'Mon–Sat · trained counsellors', '9152987821'),
-    ('AASRA', '24/7 · confidential', '9820466726'),
+    ('KIRAN · 1800-599-0019', 'Govt of India · 24/7', '18005990019'),
+    ('Emergency · 112', 'If you are in immediate danger', '112'),
   ];
 
   /// Opens the dialer; best-effort, never throws (a crisis screen must not
