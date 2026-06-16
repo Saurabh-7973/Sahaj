@@ -3,16 +3,16 @@
 enum ProFeature {
   fullProtocol, // the full 12-week plan past the free starter content
   allSessions,
-  allArticles,
   detailedProgress,
   partnerMode,
 }
 
-/// Free-tier allowances (synthesis §8). The free tier is genuinely useful
-/// forever: the first 3 articles, all Library practice, and the 4-week
-/// Foundation of the plan. Pro unlocks the full 12-week protocol and the rest
-/// of the library reading. Pure thresholds so gating stays testable.
-const int kFreeArticleCount = 3;
+/// Free-tier allowances (synthesis §8; decision #6, revised). Genuinely useful
+/// forever: the 4-week Foundation, ALL Library practice, and ALL articles. The
+/// honest, no-shame health education is the differentiator, and the trust it
+/// builds is what converts — it must never sit behind the paywall (and the
+/// warning-signs piece is safety, not premium). Pro unlocks the guided 12-week
+/// program past Foundation: the structured journey, not the knowledge.
 const int kFreePlanWeeks = 4; // Weeks 1-4 (Foundation) are free.
 
 /// Free library sessions = the Foundation base techniques (and their weekly
@@ -39,8 +39,9 @@ bool isSessionLocked(String tag, {required bool isPro}) =>
 
 bool isFeatureLocked(ProFeature feature, {required bool isPro}) => !isPro;
 
-bool isArticleLocked(int index, {required bool isPro}) =>
-    !isPro && index >= kFreeArticleCount;
+/// Articles are all free (decision #6). The knowledge — including the
+/// warning-signs safety piece — is never gated; only the guided program is.
+bool isArticleLocked(int index, {required bool isPro}) => false;
 
 /// A plan week is Pro once it's past the free Foundation. [week] is 1-based.
 bool isPlanWeekLocked(int week, {required bool isPro}) =>

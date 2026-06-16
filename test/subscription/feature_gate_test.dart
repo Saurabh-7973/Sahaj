@@ -15,15 +15,13 @@ void main() {
   group('free tier allowances (synthesis §8)', () {
     test('pro-only features are locked for free users', () {
       expect(isFeatureLocked(ProFeature.fullProtocol, isPro: false), isTrue);
-      expect(isFeatureLocked(ProFeature.allArticles, isPro: false), isTrue);
       expect(isFeatureLocked(ProFeature.detailedProgress, isPro: false), isTrue);
     });
 
-    test('first 3 articles are free, the rest locked', () {
-      expect(isArticleLocked(0, isPro: false), isFalse);
-      expect(isArticleLocked(2, isPro: false), isFalse);
-      expect(isArticleLocked(3, isPro: false), isTrue);
-      expect(isArticleLocked(10, isPro: false), isTrue);
+    test('ALL articles are free (decision #6) — knowledge is never gated', () {
+      for (final i in [0, 2, 3, 7, 10]) {
+        expect(isArticleLocked(i, isPro: false), isFalse, reason: 'article $i');
+      }
     });
 
     test('plan Weeks 1-4 (Foundation) are free; Weeks 5-12 are Pro', () {

@@ -26,7 +26,7 @@ default, confirm-or-leave._
 | 3 | Per-persona check-in domains | OPEN — ships on baseline-derived default (low stakes) |
 | 4 | Delta display granularity | OPEN — relative-only (keep; raw scores medicalize) |
 | 5 | Personalized plan-reveal lines | **RESOLVED** — 6 lines, 1:1 to the goal taxonomy, tested |
-| 6 | **Free-session scope** | OPEN — Foundation (wks 1–4) + first 3 articles free, rest Pro. **Confirm this free/paid line** |
+| 6 | Free/paid scope | **RESOLVED** — free forever: Foundation (wks 1–4) + **ALL articles** + all library practice. Pro = weeks 5–12 guided program only. Knowledge never gated (warning-signs is safety); the soul lives in the free articles |
 | 7 | Search scope | OPEN — titles-only (keep) |
 | 8 | PIN length + lockout | **RESOLVED** — `kPinLength = 6`, no lockout |
 | 9 | Panic gesture | OPEN — deferred to v1.1 |

@@ -27,11 +27,13 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   PricingTier? _selected; // nothing pre-selected (M7 §3)
   bool _busy = false;
 
+  // Pro = the guided program past Foundation. Articles are free for everyone
+  // (decision #6), so they are never sold here.
   static const _benefits = [
-    'full 54-session library',
+    'the full 12-week program',
     'voice-guided audio',
     'weeks 5–12 adapted to you',
-    'all articles',
+    'the complete session library',
   ];
 
   @override
