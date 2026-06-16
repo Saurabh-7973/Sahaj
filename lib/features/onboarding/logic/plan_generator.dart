@@ -47,7 +47,7 @@ Plan generatePlan({
         'kegel_reverse_combined',
         'stop_start',
         'sensate_$trackTag',
-        'mindset_dopamine',
+        'expectations',
         trackTag,
         ...emphasis,
       ]),

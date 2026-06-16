@@ -180,86 +180,95 @@
     ]
   },
   "stop_start": {
-    "title": "Stop-start control",
+    "title": "Arousal awareness",
     "type": "mindset",
     "steps": [
       {
-        "title": "Frame it",
-        "seconds": 60,
-        "guidance": "Stop-start trains you to recognise and ride the point of no return. This is a mental rehearsal of that skill."
+        "title": "Settle",
+        "seconds": 120,
+        "guidance": "Sit however you're comfortable — a chair, the edge of a bed. Let your shoulders drop. Rest one hand on your belly. Breathe in slowly through your nose, and let the belly rise into your hand — not the chest. Now let it out, slow and long, like a quiet sigh. Again. In, the belly rises... out, longer than the in. With each out-breath, let a little more go — your jaw, your shoulders, the area between your sit bones.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
       },
       {
-        "title": "Rise and pause",
-        "seconds": 180,
-        "guidance": "Imagine arousal climbing. At a high point, pause and breathe until it settles. Repeat the rise and pause."
+        "title": "Find the point before no return",
+        "seconds": 240,
+        "guidance": "This trains one skill: recognising where you are on the arousal curve, and learning that you can ease off it — the same control idea as the pelvic-floor work, felt from the inside. On your own, let arousal build through self-stimulation, and before the point of no return, stop. Let it settle. Breathe. Then begin again. You're learning to feel the mid-range — the point before the point of no return — and that you can step back from it. No rush, no target; the skill is the awareness."
       },
       {
-        "title": "Integrate",
-        "seconds": 60,
-        "guidance": "Notice you can influence the wave. Control is a skill you’re building."
+        "title": "Down-regulate",
+        "seconds": 120,
+        "guidance": "Stop lifting now. Let everything down there go heavy and soft — more relaxed than when you started. A few more slow breaths, long out-breaths. Nothing to do here, nothing to achieve. Just sitting, breathing, calm. That's the session.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
       }
     ]
   },
   "sensate_solo": {
-    "title": "Sensate focus (solo)",
+    "title": "Sensate focus",
     "type": "sensate",
     "steps": [
       {
         "title": "Settle",
-        "seconds": 60,
-        "guidance": "Somewhere private and unhurried."
+        "seconds": 120,
+        "guidance": "Sit however you're comfortable — a chair, the edge of a bed. Let your shoulders drop. Rest one hand on your belly. Breathe in slowly through your nose, and let the belly rise into your hand — not the chest. Now let it out, slow and long, like a quiet sigh. Again. In, the belly rises... out, longer than the in. With each out-breath, let a little more go — your jaw, your shoulders, the area between your sit bones.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
       },
       {
-        "title": "Attend",
-        "seconds": 180,
-        "guidance": "Touch your own skin slowly, with curiosity not goal. Notice sensation for its own sake."
+        "title": "No goal but sensation",
+        "seconds": 240,
+        "guidance": "This is the opposite of performing. There is no goal here — not arousal, not anything — just noticing sensation, without it having to lead anywhere. Taking the pressure off is the whole exercise. Slowly, with attention, touch your own hands, arms, chest — unhurried. Notice texture, warmth, pressure, nothing more. Keep breathing, stay present. If arousal arrives, fine. If it doesn't, equally fine — it genuinely isn't the point. The moment it becomes a test, the pressure's back; let it just be sensation."
       },
       {
-        "title": "Close",
-        "seconds": 60,
-        "guidance": "Rest. There was nothing to achieve — only to notice."
+        "title": "Down-regulate",
+        "seconds": 120,
+        "guidance": "Stop lifting now. Let everything down there go heavy and soft — more relaxed than when you started. A few more slow breaths, long out-breaths. Nothing to do here, nothing to achieve. Just sitting, breathing, calm. That's the session.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
       }
     ]
   },
   "sensate_partnered": {
-    "title": "Sensate focus (partnered)",
+    "title": "Sensate focus",
     "type": "sensate",
     "steps": [
       {
         "title": "Settle",
-        "seconds": 60,
-        "guidance": "If your partner is present, agree this is pressure-free. If not, rehearse it in your mind."
-      },
-      {
-        "title": "Attend",
-        "seconds": 180,
-        "guidance": "Slow, curious touch with no goal of performance. Focus on giving and receiving sensation."
-      },
-      {
-        "title": "Close",
-        "seconds": 60,
-        "guidance": "Rest together or reflect. Connection over outcome."
-      }
-    ]
-  },
-  "mindset_dopamine": {
-    "title": "Resetting the reward",
-    "type": "mindset",
-    "steps": [
-      {
-        "title": "Understand",
-        "seconds": 90,
-        "guidance": "Overstimulation can dull arousal. This is about rebalancing, not shame."
-      },
-      {
-        "title": "Reflect",
         "seconds": 120,
-        "guidance": "Bring to mind real intimacy — warmth, touch, presence. Let that be the cue, not a screen."
+        "guidance": "Sit however you're comfortable — a chair, the edge of a bed. Let your shoulders drop. Rest one hand on your belly. Breathe in slowly through your nose, and let the belly rise into your hand — not the chest. Now let it out, slow and long, like a quiet sigh. Again. In, the belly rises... out, longer than the in. With each out-breath, let a little more go — your jaw, your shoulders, the area between your sit bones.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
       },
       {
-        "title": "Commit",
-        "seconds": 60,
-        "guidance": "Choose one small change for today. Small and repeated wins."
+        "title": "No goal but sensation",
+        "seconds": 240,
+        "guidance": "This is the opposite of performing. There is no goal here — not arousal, not anything — just noticing sensation, without it having to lead anywhere. Taking the pressure off is the whole exercise. Slowly, with attention, touch your own hands, arms, chest — unhurried. Notice texture, warmth, pressure, nothing more. Keep breathing, stay present. If arousal arrives, fine. If it doesn't, equally fine — it genuinely isn't the point. The moment it becomes a test, the pressure's back; let it just be sensation."
+      },
+      {
+        "title": "Down-regulate",
+        "seconds": 120,
+        "guidance": "Stop lifting now. Let everything down there go heavy and soft — more relaxed than when you started. A few more slow breaths, long out-breaths. Nothing to do here, nothing to achieve. Just sitting, breathing, calm. That's the session.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
       }
     ]
   },
@@ -305,23 +314,33 @@
     ]
   },
   "mental_rehearsal": {
-    "title": "Mental rehearsal",
+    "title": "Rehearsing ease",
     "type": "mindset",
     "steps": [
       {
-        "title": "Relax",
-        "seconds": 60,
-        "guidance": "Settle into calm. Slow breath."
+        "title": "Settle",
+        "seconds": 120,
+        "guidance": "Sit however you're comfortable — a chair, the edge of a bed. Let your shoulders drop. Rest one hand on your belly. Breathe in slowly through your nose, and let the belly rise into your hand — not the chest. Now let it out, slow and long, like a quiet sigh. Again. In, the belly rises... out, longer than the in. With each out-breath, let a little more go — your jaw, your shoulders, the area between your sit bones.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
       },
       {
-        "title": "Rehearse",
-        "seconds": 180,
-        "guidance": "Picture a calm, confident encounter from start to finish. Feel steadiness, not pressure."
+        "title": "Rehearse calm, not performance",
+        "seconds": 240,
+        "guidance": "Athletes rehearse in their heads before they perform. We'll do the calm version — not rehearsing performance, but rehearsing ease. Picture a relaxed, unhurried moment — with a partner or on your own, whichever fits. See yourself staying calm and present: breathing easy, shoulders down, no clock, no audience, nothing to prove. Imagine things unfolding slowly, and you staying relaxed through it. If anxiety shows up in the picture, practise letting it soften, right there in your mind."
       },
       {
-        "title": "Anchor",
-        "seconds": 60,
-        "guidance": "Carry that steady feeling with you. You’ve practised it."
+        "title": "Down-regulate",
+        "seconds": 120,
+        "guidance": "Stop lifting now. Let everything down there go heavy and soft — more relaxed than when you started. A few more slow breaths, long out-breaths. Nothing to do here, nothing to achieve. Just sitting, breathing, calm. That's the session.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
       }
     ]
   },
@@ -404,23 +423,33 @@
     ]
   },
   "arousal_confidence": {
-    "title": "Steady, not pressured",
+    "title": "Calm presence",
     "type": "mindset",
     "steps": [
       {
-        "title": "Frame",
-        "seconds": 90,
-        "guidance": "Arousal follows calm, not pressure. We're building ease in the body, not chasing a performance."
-      },
-      {
-        "title": "Breathe into it",
+        "title": "Settle",
         "seconds": 120,
-        "guidance": "Slow, low breaths. As the body settles, things have room to respond naturally. Nothing to push."
+        "guidance": "Sit however you're comfortable — a chair, the edge of a bed. Let your shoulders drop. Rest one hand on your belly. Breathe in slowly through your nose, and let the belly rise into your hand — not the chest. Now let it out, slow and long, like a quiet sigh. Again. In, the belly rises... out, longer than the in. With each out-breath, let a little more go — your jaw, your shoulders, the area between your sit bones.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
       },
       {
-        "title": "Anchor",
-        "seconds": 60,
-        "guidance": "Recall a moment you felt easy and at home in your body. Let that steadiness be your baseline."
+        "title": "Stay easy with arousal",
+        "seconds": 240,
+        "guidance": "Arousal and anxiety pull in opposite directions — one needs you relaxed, the other braces you. This is about staying easy with arousal, instead of tensing up around it. As arousal builds — real or imagined — check the rest of you: jaw loose, shoulders down, breath slow. Let arousal simply be present, without panic and without it becoming a performance. Confidence here isn't bravado; it's knowing your body and staying relaxed in it."
+      },
+      {
+        "title": "Down-regulate",
+        "seconds": 120,
+        "guidance": "Stop lifting now. Let everything down there go heavy and soft — more relaxed than when you started. A few more slow breaths, long out-breaths. Nothing to do here, nothing to achieve. Just sitting, breathing, calm. That's the session.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
       }
     ]
   },
@@ -442,27 +471,6 @@
         "title": "One intention",
         "seconds": 60,
         "guidance": "Set a single gentle intention: presence over performance."
-      }
-    ]
-  },
-  "dopamine_rewire": {
-    "title": "Rewiring the pull",
-    "type": "mindset",
-    "steps": [
-      {
-        "title": "Notice",
-        "seconds": 90,
-        "guidance": "Notice the pull toward a screen without judging it. Awareness is the first lever, not willpower."
-      },
-      {
-        "title": "Redirect",
-        "seconds": 120,
-        "guidance": "When the urge rises, breathe and bring to mind real connection — warmth, touch, presence. Let that be the cue."
-      },
-      {
-        "title": "Small win",
-        "seconds": 60,
-        "guidance": "Choose one screen-free choice today. Small, repeated wins rewire the pattern over time."
       }
     ]
   },
@@ -822,90 +830,6 @@
       }
     ]
   },
-  "stop_start_v2": {
-    "title": "The awareness ladder",
-    "type": "mindset",
-    "steps": [
-      {
-        "title": "Frame",
-        "seconds": 60,
-        "guidance": "Picture arousal as a ladder from one to ten. The skill is noticing the rungs."
-      },
-      {
-        "title": "Ease at the edge",
-        "seconds": 150,
-        "guidance": "As you sense the higher rungs, slow down, breathe, soften — let it settle a step before continuing."
-      },
-      {
-        "title": "Learn",
-        "seconds": 60,
-        "guidance": "Each time you ease back, you teach your body that you are in charge."
-      }
-    ]
-  },
-  "stop_start_v3": {
-    "title": "Pause and breathe",
-    "type": "mindset",
-    "steps": [
-      {
-        "title": "Set up",
-        "seconds": 45,
-        "guidance": "Get calm and unhurried."
-      },
-      {
-        "title": "Insert the pause",
-        "seconds": 150,
-        "guidance": "At the point of rising urgency, fully pause — three slow breaths — before going on. The pause is the practice."
-      },
-      {
-        "title": "Carry it",
-        "seconds": 45,
-        "guidance": "This same pause works in real moments."
-      }
-    ]
-  },
-  "mindset_dopamine_v2": {
-    "title": "Real over screen",
-    "type": "mindset",
-    "steps": [
-      {
-        "title": "Notice the cue",
-        "seconds": 75,
-        "guidance": "Spot what pulls you to a screen — boredom, stress, habit. Naming it loosens its grip."
-      },
-      {
-        "title": "Swap the cue",
-        "seconds": 120,
-        "guidance": "Decide one real alternative in advance: a walk, a call, a few breaths. Plan beats willpower."
-      },
-      {
-        "title": "Commit",
-        "seconds": 45,
-        "guidance": "Pick today's swap. One is enough."
-      }
-    ]
-  },
-  "mindset_dopamine_v3": {
-    "title": "Urge surfing",
-    "type": "mindset",
-    "steps": [
-      {
-        "title": "Watch it rise",
-        "seconds": 75,
-        "guidance": "An urge is a wave — it builds, peaks, and falls if you let it."
-      },
-      {
-        "title": "Ride, don't fight",
-        "seconds": 120,
-        "guidance": "Breathe and observe the urge without acting. Notice it soften on its own."
-      },
-      {
-        "title": "Note the win",
-        "seconds": 45,
-        "guidance": "You did not have to obey it. That is the muscle you are building."
-      }
-    ]
-  },
   "pfmt_functional_v2": {
     "title": "Anchors + your plan",
     "type": "kegel",
@@ -985,132 +909,6 @@
           "inhale": 4,
           "exhale": 6
         }
-      }
-    ]
-  },
-  "mental_rehearsal_v2": {
-    "title": "Rehearsing calm",
-    "type": "mindset",
-    "steps": [
-      {
-        "title": "Picture it",
-        "seconds": 90,
-        "guidance": "Imagine an intimate moment unfolding slowly and easily, with room to breathe."
-      },
-      {
-        "title": "Stay with ease",
-        "seconds": 120,
-        "guidance": "If tension creeps in, pause the scene, breathe, and restart calm. You are training the nervous system."
-      },
-      {
-        "title": "Anchor",
-        "seconds": 30,
-        "guidance": "Calm rehearsed is calm available."
-      }
-    ]
-  },
-  "mental_rehearsal_v3": {
-    "title": "Recovering from a stumble",
-    "type": "mindset",
-    "steps": [
-      {
-        "title": "Normalise",
-        "seconds": 75,
-        "guidance": "Moments do not always go to plan. That is human, not failure."
-      },
-      {
-        "title": "Rehearse the recovery",
-        "seconds": 135,
-        "guidance": "Picture a stumble, then yourself staying warm and unbothered — a breath, a smile, carrying on. Recovery is a skill too."
-      },
-      {
-        "title": "Close",
-        "seconds": 30,
-        "guidance": "Kindness to yourself is part of the training."
-      }
-    ]
-  },
-  "sensate_solo_v2": {
-    "title": "Breath and skin",
-    "type": "sensate",
-    "steps": [
-      {
-        "title": "Settle",
-        "seconds": 45,
-        "guidance": "Somewhere private and unhurried. Slow your breathing first."
-      },
-      {
-        "title": "Touch with the breath",
-        "seconds": 150,
-        "guidance": "Move slow, curious touch in time with your breath. No goal but to notice what each spot feels like."
-      },
-      {
-        "title": "Rest",
-        "seconds": 45,
-        "guidance": "Nothing to achieve. Just what you noticed."
-      }
-    ]
-  },
-  "sensate_solo_v3": {
-    "title": "A wider map",
-    "type": "sensate",
-    "steps": [
-      {
-        "title": "Begin",
-        "seconds": 45,
-        "guidance": "Sit or lie comfortably, unhurried."
-      },
-      {
-        "title": "Explore beyond the obvious",
-        "seconds": 150,
-        "guidance": "Bring attention to hands, forearms, chest, neck — neutral curiosity, no destination. Sensation for its own sake."
-      },
-      {
-        "title": "Close",
-        "seconds": 45,
-        "guidance": "Let the attention soften and rest."
-      }
-    ]
-  },
-  "sensate_partnered_v2": {
-    "title": "Taking turns",
-    "type": "sensate",
-    "steps": [
-      {
-        "title": "Agree",
-        "seconds": 45,
-        "guidance": "Agree it is pressure-free. If your partner is not here, rehearse it in your mind."
-      },
-      {
-        "title": "Give, then receive",
-        "seconds": 150,
-        "guidance": "One gives slow, curious touch; the other simply receives. Then swap. No goal of performance."
-      },
-      {
-        "title": "Reflect",
-        "seconds": 45,
-        "guidance": "Connection over outcome. Notice how that felt."
-      }
-    ]
-  },
-  "sensate_partnered_v3": {
-    "title": "Naming what's pleasant",
-    "type": "sensate",
-    "steps": [
-      {
-        "title": "Set the tone",
-        "seconds": 45,
-        "guidance": "Pressure-free, unhurried, together or rehearsed."
-      },
-      {
-        "title": "Say it out loud",
-        "seconds": 150,
-        "guidance": "As you give or receive touch, name simply what feels pleasant. Words build presence and lower pressure."
-      },
-      {
-        "title": "Close",
-        "seconds": 45,
-        "guidance": "Rest together. Closeness, not a test."
       }
     ]
   },
@@ -1240,48 +1038,6 @@
       }
     ]
   },
-  "arousal_confidence_v2": {
-    "title": "Body at ease",
-    "type": "mindset",
-    "steps": [
-      {
-        "title": "Relax in order",
-        "seconds": 120,
-        "guidance": "Soften feet, legs, belly, chest, shoulders, jaw — one by one. A calm body is the foundation."
-      },
-      {
-        "title": "Let it follow",
-        "seconds": 90,
-        "guidance": "With the body at ease, things respond in their own time. Nothing to force or chase."
-      },
-      {
-        "title": "Anchor",
-        "seconds": 30,
-        "guidance": "Ease first. The rest follows."
-      }
-    ]
-  },
-  "arousal_confidence_v3": {
-    "title": "Trust the build",
-    "type": "mindset",
-    "steps": [
-      {
-        "title": "Frame",
-        "seconds": 75,
-        "guidance": "Pressure works against you here. Patience works with you."
-      },
-      {
-        "title": "Breathe and wait",
-        "seconds": 120,
-        "guidance": "Slow breaths, no monitoring, no rushing. Let things build at their own pace."
-      },
-      {
-        "title": "Anchor",
-        "seconds": 30,
-        "guidance": "Trust, not effort."
-      }
-    ]
-  },
   "readiness_v2": {
     "title": "Small steps",
     "type": "mindset",
@@ -1321,48 +1077,6 @@
         "title": "Anchor",
         "seconds": 45,
         "guidance": "How you speak to yourself shapes how you show up."
-      }
-    ]
-  },
-  "dopamine_rewire_v2": {
-    "title": "Boredom without a screen",
-    "type": "mindset",
-    "steps": [
-      {
-        "title": "Sit with it",
-        "seconds": 90,
-        "guidance": "Let a dull, restless moment exist without reaching for a screen. It passes."
-      },
-      {
-        "title": "Breathe through",
-        "seconds": 120,
-        "guidance": "Three slow breaths. Notice the restlessness rise and fade on its own."
-      },
-      {
-        "title": "Note the win",
-        "seconds": 30,
-        "guidance": "You did not need the screen. That is the rewire."
-      }
-    ]
-  },
-  "dopamine_rewire_v3": {
-    "title": "The reward swap",
-    "type": "mindset",
-    "steps": [
-      {
-        "title": "Spot the reward",
-        "seconds": 75,
-        "guidance": "Screens offer a fast, hollow reward. Real life offers slower, fuller ones."
-      },
-      {
-        "title": "Choose one",
-        "seconds": 120,
-        "guidance": "Pick one real reward for today — movement, a call, sunlight, rest — and plan when."
-      },
-      {
-        "title": "Commit",
-        "seconds": 45,
-        "guidance": "One real choice, repeated, retrains the pull."
       }
     ]
   },
@@ -1585,6 +1299,37 @@
         "title": "Yours now",
         "seconds": 120,
         "guidance": "That's the thing you'll carry out of here — it's yours now, completely. The program ends in a few days; the practice doesn't. You've got your plan, your anchors, your gentle way back if you ever fall off, and the sense to know when something's a doctor's job. That's a complete set. You're ready to keep this without a program telling you to."
+      },
+      {
+        "title": "Down-regulate",
+        "seconds": 120,
+        "guidance": "Stop lifting now. Let everything down there go heavy and soft — more relaxed than when you started. A few more slow breaths, long out-breaths. Nothing to do here, nothing to achieve. Just sitting, breathing, calm. That's the session.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
+      }
+    ]
+  },
+  "expectations": {
+    "title": "Expectations and ease",
+    "type": "mindset",
+    "steps": [
+      {
+        "title": "Settle",
+        "seconds": 120,
+        "guidance": "Sit however you're comfortable — a chair, the edge of a bed. Let your shoulders drop. Rest one hand on your belly. Breathe in slowly through your nose, and let the belly rise into your hand — not the chest. Now let it out, slow and long, like a quiet sigh. Again. In, the belly rises... out, longer than the in. With each out-breath, let a little more go — your jaw, your shoulders, the area between your sit bones.",
+        "pattern": {
+          "kind": "breath",
+          "inhale": 4,
+          "exhale": 6
+        }
+      },
+      {
+        "title": "Expectations and ease",
+        "seconds": 240,
+        "guidance": "There's a lot of noise online about pornography \"rewiring\" your brain. The honest version is simpler, and less alarming: the most intense or novel stimulation can quietly become the bar you measure everything against — and ordinary, real moments can start to feel flat by comparison. That isn't damage, and it isn't a moral failure. It's expectation, and expectation is workable. Two gentle things — no abstinence test, no shame. When a comparison shows up — \"this should feel more intense\" — notice it, and let it go; just naming it loosens it. And deliberately give your attention to ordinary, present sensation without rushing toward intensity — you're widening what you respond to, not restricting yourself. If your use ever feels genuinely compulsive or distressing, that's worth attention in its own right — see a counsellor. That's self-respect, not failure."
       },
       {
         "title": "Down-regulate",

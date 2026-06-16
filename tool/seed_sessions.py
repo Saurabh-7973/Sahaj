@@ -389,10 +389,106 @@ SEED["pfmt_functional_v4"] = session(
 )
 
 
+# ── Supplementary non-PFMT sessions (Saurabh's #5 content) ───────────────────
+# Replace the thin placeholders for the non-PFMT themes used Weeks 5-12. Single
+# script per theme (no weekly variants — the _v2/_v3 placeholders are deleted
+# below so the scheduler always plays the seeded base). Solo-first, claim-free.
+
+# REQUIRED FIX: mindset_dopamine ("Resetting the reward") sold the NoFap
+# dopamine-reset model that evidence article #7 debunks. Renamed to
+# `expectations` and reframed to expectation/conditioning — no reset, no shame.
+SEED["expectations"] = session(
+    "Expectations and ease", "mindset",
+    step("Expectations and ease", 240,
+         "There's a lot of noise online about pornography \"rewiring\" your "
+         "brain. The honest version is simpler, and less alarming: the most "
+         "intense or novel stimulation can quietly become the bar you measure "
+         "everything against — and ordinary, real moments can start to feel "
+         "flat by comparison. That isn't damage, and it isn't a moral failure. "
+         "It's expectation, and expectation is workable. Two gentle things — "
+         "no abstinence test, no shame. When a comparison shows up — \"this "
+         "should feel more intense\" — notice it, and let it go; just naming "
+         "it loosens it. And deliberately give your attention to ordinary, "
+         "present sensation without rushing toward intensity — you're widening "
+         "what you respond to, not restricting yourself. If your use ever "
+         "feels genuinely compulsive or distressing, that's worth attention in "
+         "its own right — see a counsellor. That's self-respect, not failure."),
+)
+
+SEED["sensate_solo"] = session(
+    "Sensate focus", "sensate",
+    step("No goal but sensation", 240,
+         "This is the opposite of performing. There is no goal here — not "
+         "arousal, not anything — just noticing sensation, without it having "
+         "to lead anywhere. Taking the pressure off is the whole exercise. "
+         "Slowly, with attention, touch your own hands, arms, chest — "
+         "unhurried. Notice texture, warmth, pressure, nothing more. Keep "
+         "breathing, stay present. If arousal arrives, fine. If it doesn't, "
+         "equally fine — it genuinely isn't the point. The moment it becomes a "
+         "test, the pressure's back; let it just be sensation."),
+)
+# Partnered track plays the same claim-free, pressure-free practice.
+SEED["sensate_partnered"] = SEED["sensate_solo"]
+
+SEED["mental_rehearsal"] = session(
+    "Rehearsing ease", "mindset",
+    step("Rehearse calm, not performance", 240,
+         "Athletes rehearse in their heads before they perform. We'll do the "
+         "calm version — not rehearsing performance, but rehearsing ease. "
+         "Picture a relaxed, unhurried moment — with a partner or on your own, "
+         "whichever fits. See yourself staying calm and present: breathing "
+         "easy, shoulders down, no clock, no audience, nothing to prove. "
+         "Imagine things unfolding slowly, and you staying relaxed through it. "
+         "If anxiety shows up in the picture, practise letting it soften, "
+         "right there in your mind."),
+)
+
+SEED["stop_start"] = session(
+    "Arousal awareness", "mindset",
+    step("Find the point before no return", 240,
+         "This trains one skill: recognising where you are on the arousal "
+         "curve, and learning that you can ease off it — the same control idea "
+         "as the pelvic-floor work, felt from the inside. On your own, let "
+         "arousal build through self-stimulation, and before the point of no "
+         "return, stop. Let it settle. Breathe. Then begin again. You're "
+         "learning to feel the mid-range — the point before the point of no "
+         "return — and that you can step back from it. No rush, no target; the "
+         "skill is the awareness."),
+)
+
+SEED["arousal_confidence"] = session(
+    "Calm presence", "mindset",
+    step("Stay easy with arousal", 240,
+         "Arousal and anxiety pull in opposite directions — one needs you "
+         "relaxed, the other braces you. This is about staying easy with "
+         "arousal, instead of tensing up around it. As arousal builds — real "
+         "or imagined — check the rest of you: jaw loose, shoulders down, "
+         "breath slow. Let arousal simply be present, without panic and "
+         "without it becoming a performance. Confidence here isn't bravado; "
+         "it's knowing your body and staying relaxed in it."),
+)
+
+# Old placeholder tags + thin weekly variants for the non-PFMT themes: removed
+# so the scheduler always plays the seeded base. dopamine_rewire is deleted
+# outright — it's the same debunked reset framing and is now an orphan tag (no
+# goal maps to it after the goal-taxonomy rework).
+DELETE_TAGS = [
+    "mindset_dopamine", "mindset_dopamine_v2", "mindset_dopamine_v3",
+    "dopamine_rewire", "dopamine_rewire_v2", "dopamine_rewire_v3",
+    "sensate_solo_v2", "sensate_solo_v3",
+    "sensate_partnered_v2", "sensate_partnered_v3",
+    "mental_rehearsal_v2", "mental_rehearsal_v3",
+    "stop_start_v2", "stop_start_v3",
+    "arousal_confidence_v2", "arousal_confidence_v3",
+]
+
+
 def main():
     data = json.loads(SESSIONS.read_text())
     before = len(data)
     data.update(SEED)
+    for tag in DELETE_TAGS:
+        data.pop(tag, None)
     SESSIONS.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
     print(f"tags: {before} -> {len(data)} ( +{len(data)-before} new, "
           f"{len(SEED)} seeded )")
