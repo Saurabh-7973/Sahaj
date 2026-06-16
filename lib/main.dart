@@ -28,9 +28,11 @@ import 'features/library/article_catalog.dart';
 import 'features/sessions/session_audio.dart';
 import 'features/sessions/session_catalog.dart';
 import 'features/settings/preferences_controller.dart';
+import 'features/subscription/revenuecat_repository.dart';
 import 'features/subscription/subscription_controller.dart';
 import 'features/subscription/subscription_repository.dart';
 import 'firebase_options.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -92,12 +94,20 @@ Future<void> main() async {
     }
   } catch (_) {/* non-fatal — reminder simply won't be re-armed this launch */}
 
-  // Subscription (Phase 6). Repo defaults to Noop until the RevenueCat key is
-  // wired; the cached entitlement (incl. local ₹0 grant) persists and survives
-  // offline. refresh() is guarded so a billing hiccup never blocks launch.
+  // Subscription (Phase 6). One-time lifetime unlock. The repo stays Noop until
+  // the RevenueCat key is provided (kRevenueCatApiKey empty) — only then do we
+  // configure the SDK and use the real backend. Either way the cached
+  // entitlement (incl. the local ₹0 grant) persists and survives offline.
   final subscriptionStore = await SubscriptionStore.open();
+  SubscriptionRepository subscriptionRepo = const NoopSubscriptionRepository();
+  if (kRevenueCatApiKey.isNotEmpty) {
+    try {
+      await Purchases.configure(PurchasesConfiguration(kRevenueCatApiKey));
+      subscriptionRepo = const RevenueCatSubscriptionRepository();
+    } catch (_) {/* keep Noop — never block launch on a billing init failure */}
+  }
   final subscription = SubscriptionController(
-    const NoopSubscriptionRepository(),
+    subscriptionRepo,
     subscriptionStore,
   );
   final savedSub = subscriptionStore.load();

@@ -13,7 +13,6 @@ import '../../shared/widgets/widgets.dart';
 import '../notifications/notification_service.dart';
 import '../notifications/reminder_coordinator.dart';
 import '../onboarding/onboarding_controller.dart';
-import '../onboarding/widgets/selectable_option.dart';
 import '../me/checkin_controller.dart';
 import '../security/lock_controller.dart';
 import '../security/pin_pad.dart';
@@ -30,13 +29,6 @@ import 'preferences_controller.dart';
 /// Privacy + settings (synthesis section 9 / 210). Reached from the Me tab.
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
-
-  static const _disguiseLabels = {
-    DisguiseName.none: 'No disguise',
-    DisguiseName.calendar: 'Calendar',
-    DisguiseName.notes: 'Notes',
-    DisguiseName.wellness: 'Wellness',
-  };
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -103,23 +95,11 @@ class SettingsPage extends ConsumerWidget {
               },
             ),
           ),
-          const SizedBox(height: AppSpacing.md),
-          Text('App name on the home screen',
-              style: theme.textTheme.labelMedium),
-          const SizedBox(height: AppSpacing.sm),
-          for (final d in DisguiseName.values)
-            SelectableOption(
-              label: _disguiseLabels[d]!,
-              selected: prefs.disguiseName == d,
-              onTap: () =>
-                  ref.read(preferencesControllerProvider).setDisguiseName(d),
-            ),
-          Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.xs),
-            child: Text('Renaming the icon arrives in a later update.',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                )),
+          const Padding(
+            padding: EdgeInsets.only(top: AppSpacing.xs),
+            child: Text(
+                'In Book Mode the home-screen icon and name become “Notebook”. '
+                'A choice of disguise names is coming in a later update.'),
           ),
           const SizedBox(height: AppSpacing.xl),
           Text('Reminders', style: theme.textTheme.titleMedium),

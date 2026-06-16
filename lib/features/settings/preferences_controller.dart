@@ -3,16 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/preferences_store.dart';
 
-/// In-app disguise label (drives the native icon/name swap, deferred).
-enum DisguiseName { none, calendar, notes, wellness }
-
-DisguiseName _disguiseByName(String? name) {
-  for (final d in DisguiseName.values) {
-    if (d.name == name) return d;
-  }
-  return DisguiseName.none;
-}
-
 /// Holds + persists privacy/disguise/notification preferences.
 class PreferencesController extends ChangeNotifier {
   PreferencesController([this._store]);
@@ -20,7 +10,6 @@ class PreferencesController extends ChangeNotifier {
   final PreferencesStore? _store;
 
   bool bookMode = false;
-  DisguiseName disguiseName = DisguiseName.none;
   bool notificationsEnabled = false;
 
   /// Hide the streak counter from the progress dashboard (agency over shame —
@@ -45,11 +34,6 @@ class PreferencesController extends ChangeNotifier {
 
   void setBookMode(bool v) {
     bookMode = v;
-    _persist();
-  }
-
-  void setDisguiseName(DisguiseName v) {
-    disguiseName = v;
     _persist();
   }
 
@@ -91,7 +75,6 @@ class PreferencesController extends ChangeNotifier {
 
   void reset() {
     bookMode = false;
-    disguiseName = DisguiseName.none;
     notificationsEnabled = false;
     hideStreak = false;
     reminderHour = 21;
@@ -111,7 +94,6 @@ class PreferencesController extends ChangeNotifier {
 
   Map<String, dynamic> toJson() => {
         'bookMode': bookMode,
-        'disguiseName': disguiseName.name,
         'notificationsEnabled': notificationsEnabled,
         'hideStreak': hideStreak,
         'reminderHour': reminderHour,
@@ -124,7 +106,6 @@ class PreferencesController extends ChangeNotifier {
 
   void loadFrom(Map<String, dynamic> json) {
     bookMode = (json['bookMode'] as bool?) ?? false;
-    disguiseName = _disguiseByName(json['disguiseName'] as String?);
     notificationsEnabled = (json['notificationsEnabled'] as bool?) ?? false;
     hideStreak = (json['hideStreak'] as bool?) ?? false;
     reminderHour = (json['reminderHour'] as int?) ?? 21;
