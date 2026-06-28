@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../../core/analytics/events.dart';
 import '../../core/theme/app_background.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/widgets.dart';
+import '../me/checkin_controller.dart';
 import '../onboarding/onboarding_controller.dart';
+import '../sessions/progress_controller.dart';
+import '../settings/account.dart';
+import '../settings/erase_confirm_screen.dart';
+import '../settings/launcher_disguise.dart';
+import '../settings/preferences_controller.dart';
+import '../subscription/subscription_controller.dart';
 import 'lock_controller.dart';
 import 'pin_pad.dart';
 
@@ -30,6 +38,7 @@ class _BiometricGateState extends ConsumerState<BiometricGate> {
   bool _unlocked = false;
   bool _checked = false;
   bool _showPin = false;
+  bool _showErase = false;
 
   @override
   void initState() {
@@ -85,9 +94,48 @@ class _BiometricGateState extends ConsumerState<BiometricGate> {
         _checked = true;
       });
 
+  /// Last-resort recovery from the lock screen: a user who can neither pass
+  /// biometrics nor recall their PIN would otherwise be sealed out of their own
+  /// local data forever (no cloud copy to restore from). Wipe-and-restart is
+  /// the honest path — the same erase the settings screen runs — after which we
+  /// drop the gate and let the router redirect to onboarding.
+  void _eraseEverything() {
+    ref.read(appEventsProvider).accountDeleted();
+    wipeAllData(
+      onboarding: ref.read(onboardingControllerProvider),
+      progress: ref.read(progressControllerProvider),
+      preferences: ref.read(preferencesControllerProvider),
+      subscription: ref.read(subscriptionControllerProvider),
+      checkins: ref.read(checkinControllerProvider),
+    );
+    ref.read(lockControllerProvider).clearPin();
+    ref.read(launcherDisguiseProvider).setDisguise(false);
+    setState(() => _showErase = false);
+    _open();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_unlocked) return widget.child;
+
+    if (_showErase) {
+      // The gate sits above the app's router, so there's no ambient Navigator
+      // for EraseConfirmScreen to pop against. Host it in a tiny local one with
+      // an invisible base page beneath: "Keep my data" / back pops the confirm
+      // off, which fires onDidRemovePage and returns us to the PIN pad.
+      return Navigator(
+        onDidRemovePage: (_) => setState(() {
+          _showErase = false;
+          _showPin = true;
+        }),
+        pages: [
+          const MaterialPage<void>(child: SizedBox.shrink()),
+          MaterialPage<void>(
+            child: EraseConfirmScreen(onErase: _eraseEverything),
+          ),
+        ],
+      );
+    }
 
     if (_showPin) {
       final lock = ref.read(lockControllerProvider);
@@ -104,7 +152,11 @@ class _BiometricGateState extends ConsumerState<BiometricGate> {
                     _maybeAuth();
                   }
                 : null,
-        onForgot: widget.onForgotPin,
+        onForgot: widget.onForgotPin ??
+            () => setState(() {
+                  _showPin = false;
+                  _showErase = true;
+                }),
       );
     }
 
