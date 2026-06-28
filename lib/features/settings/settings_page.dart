@@ -79,7 +79,15 @@ class SettingsPage extends ConsumerWidget {
               subtitle: const Text(
                   'Open into a plain reading screen; double-tap to reveal'),
               value: prefs.bookMode,
-              onChanged: (v) {
+              onChanged: (v) async {
+                // Turning it OFF is immediate. Turning it ON hides the app
+                // behind a different name + icon, so teach that first —
+                // otherwise the cover slams over the app and the user has no
+                // idea what to look for or how to get back in.
+                if (v) {
+                  final ok = await _confirmBookMode(context);
+                  if (ok != true) return;
+                }
                 ref.read(preferencesControllerProvider).setBookMode(v);
                 // Swap the launcher icon/label to match (M8 native).
                 ref.read(launcherDisguiseProvider).setDisguise(v);
@@ -266,6 +274,71 @@ class SettingsPage extends ConsumerWidget {
     } catch (_) {
       await Share.share(json, subject: 'Backup');
     }
+  }
+
+  // Before hiding the app behind a new name + icon, show the user exactly what
+  // to look for and how to get back in. Without this the cover drops over the
+  // app with no warning and no taught escape hatch.
+  Future<bool?> _confirmBookMode(BuildContext context) {
+    final theme = Theme.of(context);
+    return showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Turn on Book Mode'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF5B6B7A),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.edit_outlined,
+                      color: Colors.white, size: 24),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Notebook', style: theme.textTheme.titleMedium),
+                      Text('your new home-screen name & icon',
+                          style: theme.textTheme.bodySmall),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 18),
+            const Text(
+                'On the home screen this app becomes “Notebook” with a pencil '
+                'icon. The Sahaj name and icon disappear.'),
+            const SizedBox(height: 12),
+            const Text(
+                'To open the real app next time: tap Notebook to launch it, '
+                'then double-tap anywhere on the notes screen.'),
+            const SizedBox(height: 12),
+            Text('Remember this — there is no other way back in.',
+                style: theme.textTheme.bodySmall),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Turn on'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _setPin(BuildContext context, WidgetRef ref) async {

@@ -2,6 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- Firebase + future cloud sync. Auto-added in debug; required for release. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Haptic session cues (M1) via VibrationEffect waveforms. -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <!-- Biometric app lock (local_auth). -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
     <!-- Daily reminder notifications (flutter_local_notifications).

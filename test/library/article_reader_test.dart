@@ -72,6 +72,36 @@ void main() {
     expect(find.text('Put it into practice'), findsNothing);
   });
 
+  testWidgets('markdown body renders — no raw ###, ** or - markers leak',
+      (tester) async {
+    const article = Article(
+      slug: 'm',
+      title: 'Markdown body',
+      category: 'Health',
+      readMinutes: 2,
+      body: 'An opening paragraph that earns the drop cap.\n\n'
+          '### What the research shows\n\n'
+          '**For erections.** A trial taught men a programme.\n\n'
+          'A few honest caveats:\n'
+          '- This helps many men, but not all.\n'
+          '- See a doctor if something feels wrong.',
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.dark(),
+        home: const ArticleReaderPage(article: article),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // The heading text renders without its hashes.
+    expect(find.text('What the research shows'), findsOneWidget);
+    // No raw markdown punctuation survives anywhere on screen.
+    expect(find.textContaining('###'), findsNothing);
+    expect(find.textContaining('**'), findsNothing);
+    expect(find.textContaining('- This helps'), findsNothing);
+  });
+
   testWidgets('heritage article: heritage eyebrow + canon line, no badge',
       (tester) async {
     const article = Article(

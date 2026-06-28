@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Splash window background. The Flutter UI is always dark (themeMode is
+         forced dark), so the launch window must be dark too in BOTH system
+         day/night — otherwise a light-mode device flashes a white screen before
+         the dark app paints. Matches the LampBackground base tone. -->
+    <color name="splash_bg">#1D1812</color>
+</resources>

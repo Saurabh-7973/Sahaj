@@ -12,7 +12,9 @@ import '../../library/logic/library_logic.dart';
 import '../../library/pages/article_reader_page.dart';
 import '../../library/pages/preview_sheet.dart';
 import '../../library/widgets/library_widgets.dart';
+import '../../sessions/logic/haptic_cues.dart';
 import '../../sessions/pages/session_player_page.dart';
+import '../../settings/preferences_controller.dart';
 import '../../sessions/progress_controller.dart';
 import '../../sessions/session_audio.dart';
 import '../../sessions/session_catalog.dart';
@@ -230,11 +232,18 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
     final startedAt = DateTime.now();
     var completion = 0.0;
     var holdSeconds = 0;
+    final prefs = ref.read(preferencesControllerProvider);
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => SessionPlayerPage(
           session: session,
           audio: ref.read(sessionAudioFactoryProvider)(),
+          // Without this the player fell back to NoopHapticCues — free practice
+          // from the library had no haptics at all.
+          haptics: prefs.hapticsEnabled
+              ? ref.read(hapticCuesProvider)
+              : const NoopHapticCues(),
+          hapticsEnabled: prefs.hapticsEnabled,
           onHoldSeconds: (s) => holdSeconds = s,
           onComplete: (pct) {
             completion = pct;
@@ -311,7 +320,16 @@ class _SearchBar extends StatelessWidget {
               cursorColor: lamp.gold,
               decoration: InputDecoration(
                 isDense: true,
+                // The global InputDecorationTheme fills + outlines fields; the
+                // search field is its own pill, so strip all of that or it
+                // renders a second box inside this one.
+                filled: false,
+                fillColor: Colors.transparent,
+                contentPadding: EdgeInsets.zero,
                 border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
                 hintText: 'Search reading & practice',
                 hintStyle: theme.textTheme.bodySmall?.copyWith(color: lamp.faint),
               ),

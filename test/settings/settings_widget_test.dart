@@ -31,6 +31,12 @@ void main() {
     expect(prefs.bookMode, isFalse);
     await tester.tap(find.widgetWithText(SwitchListTile, 'Book Mode'));
     await tester.pumpAndSettle();
+    // Enabling Book Mode first explains the new name/icon + how to get back in;
+    // the pref only flips once the user confirms.
+    expect(prefs.bookMode, isFalse);
+    expect(find.text('Turn on Book Mode'), findsOneWidget);
+    await tester.tap(find.widgetWithText(FilledButton, 'Turn on'));
+    await tester.pumpAndSettle();
     expect(prefs.bookMode, isTrue);
   });
 }

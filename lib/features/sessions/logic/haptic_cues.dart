@@ -20,32 +20,55 @@ abstract class HapticCueEngine {
   Future<void> sessionDone();
 }
 
-/// Default mapping on Flutter's portable presets.
+/// Default mapping. Drives the native Vibrator with explicit VibrationEffect
+/// waveforms (see [MainActivity]) rather than Flutter's HapticFeedback presets:
+/// those route through Android's touch-feedback path, which obeys the system
+/// "touch vibration intensity" setting and is imperceptible (or dropped) on many
+/// devices — DECISION #8. A waveform at full amplitude buzzes through a mattress.
+///
+/// Waveform format: parallel `timings`/`amplitudes` lists. Each slot plays for
+/// `timings[i]` ms at `amplitudes[i]` (0 = off/gap, 255 = max). The leading
+/// `0`-amplitude slot is a zero-length lead-in the platform expects.
 class SystemHapticCues implements HapticCueEngine {
   const SystemHapticCues();
 
-  static const _gap = Duration(milliseconds: 140);
+  static const _channel = MethodChannel('sahaj/haptics');
 
-  @override
-  Future<void> squeeze() => HapticFeedback.lightImpact();
+  static const _med = 200; // medium amplitude
+  static const _heavy = 255; // heavy amplitude
+  static const _soft = 160; // soft amplitude
+  static const _gap = 110; // silence between taps (ms)
 
-  @override
-  Future<void> release() async {
-    await HapticFeedback.lightImpact();
-    await Future<void>.delayed(_gap);
-    await HapticFeedback.lightImpact();
-  }
-
-  @override
-  Future<void> phaseChange() => HapticFeedback.heavyImpact();
-
-  @override
-  Future<void> sessionDone() async {
-    for (var i = 0; i < 3; i++) {
-      if (i > 0) await Future<void>.delayed(_gap);
-      await HapticFeedback.selectionClick();
+  Future<void> _vibrate(List<int> timings, List<int> amplitudes) async {
+    try {
+      await _channel.invokeMethod<void>('vibrate', {
+        'timings': timings,
+        'amplitudes': amplitudes,
+      });
+    } on PlatformException {
+      // No vibrator / unsupported platform — cues are an enhancement, not a
+      // requirement, so silently degrade.
+    } on MissingPluginException {
+      // Non-Android host (tests, desktop): no-op.
     }
   }
+
+  // The four cues stay distinguishable: 1 medium tick vs 2 medium vs 1 long
+  // heavy vs 3 soft taps.
+  @override
+  Future<void> squeeze() => _vibrate([0, 70], [0, _med]);
+
+  @override
+  Future<void> release() => _vibrate([0, 70, _gap, 70], [0, _med, 0, _med]);
+
+  @override
+  Future<void> phaseChange() => _vibrate([0, 220], [0, _heavy]);
+
+  @override
+  Future<void> sessionDone() => _vibrate(
+        [0, 80, _gap, 80, _gap, 80],
+        [0, _soft, 0, _soft, 0, _soft],
+      );
 }
 
 /// For tests and the "haptics off" preference.

@@ -18,8 +18,12 @@ class SahajApp extends ConsumerWidget {
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.dark,
       routerConfig: ref.watch(routerProvider),
-      builder: (context, child) => BookModeCover(
-        child: BiometricGate(child: child ?? const SizedBox.shrink()),
+      // Gate OUTSIDE the cover: authenticate once, then the cover sits over the
+      // unlocked app. The old order re-mounted the gate every time the cover was
+      // dismissed — so a double-tap to reveal re-fired the fingerprint prompt
+      // and locked the user back out.
+      builder: (context, child) => BiometricGate(
+        child: BookModeCover(child: child ?? const SizedBox.shrink()),
       ),
     );
   }

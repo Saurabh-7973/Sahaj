@@ -90,40 +90,46 @@ class _PelvisPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..color = lamp.sand.withValues(alpha: 0.85);
 
-    // Two pelvic walls.
+    // A pelvis cross-section is bilaterally symmetric, so the right wall and
+    // anchor are exact mirrors of the left about the centre axis (cx) — the
+    // walls used to be hand-drawn independently and drifted several units apart.
+    const cx = 120.0;
+    double mx(double x) => 2 * cx - x; // mirror an x across the centre
+
+    // Left pelvic wall (top → floor), then the same path mirrored as the right.
     canvas.drawPath(
       Path()
-        ..moveTo(p(78, 14).dx, p(78, 14).dy)
-        ..cubicTo(p(56, 46).dx, p(56, 46).dy, p(50, 84).dx, p(50, 84).dy,
-            p(58, 116).dx, p(58, 116).dy)
+        ..moveTo(p(78, 16).dx, p(78, 16).dy)
+        ..cubicTo(p(56, 48).dx, p(56, 48).dy, p(50, 86).dx, p(50, 86).dy,
+            p(58, 118).dx, p(58, 118).dy)
         ..cubicTo(p(64, 142).dx, p(64, 142).dy, p(82, 158).dx, p(82, 158).dy,
             p(106, 164).dx, p(106, 164).dy),
       line,
     );
     canvas.drawPath(
       Path()
-        ..moveTo(p(164, 18).dx, p(164, 18).dy)
-        ..cubicTo(p(182, 50).dx, p(182, 50).dy, p(188, 90).dx, p(188, 90).dy,
-            p(176, 124).dx, p(176, 124).dy)
-        ..cubicTo(p(169, 144).dx, p(169, 144).dy, p(155, 156).dx, p(155, 156).dy,
-            p(136, 162).dx, p(136, 162).dy),
+        ..moveTo(p(mx(78), 16).dx, p(mx(78), 16).dy)
+        ..cubicTo(p(mx(56), 48).dx, p(mx(56), 48).dy, p(mx(50), 86).dx,
+            p(mx(50), 86).dy, p(mx(58), 118).dx, p(mx(58), 118).dy)
+        ..cubicTo(p(mx(64), 142).dx, p(mx(64), 142).dy, p(mx(82), 158).dx,
+            p(mx(82), 158).dy, p(mx(106), 164).dx, p(mx(106), 164).dy),
       line,
     );
 
-    // Anchor points.
+    // Anchor points — mirrored pair at the same height.
     final anchor = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.2
       ..color = lamp.sand;
-    canvas.drawCircle(p(72, 124), 8 * sx, anchor);
-    canvas.drawCircle(p(168, 130), 8 * sx, anchor);
+    canvas.drawCircle(p(72, 126), 8 * sx, anchor);
+    canvas.drawCircle(p(mx(72), 126), 8 * sx, anchor);
 
-    // The floor curve recurs — glowing ochre.
+    // The floor curve recurs — glowing ochre, symmetric about cx.
     canvas.drawPath(
       Path()
-        ..moveTo(p(72, 124).dx, p(72, 124).dy)
-        ..cubicTo(p(104, 154).dx, p(104, 154).dy, p(138, 156).dx, p(138, 156).dy,
-            p(168, 130).dx, p(168, 130).dy),
+        ..moveTo(p(72, 126).dx, p(72, 126).dy)
+        ..cubicTo(p(96, 156).dx, p(96, 156).dy, p(mx(96), 156).dx,
+            p(mx(96), 156).dy, p(mx(72), 126).dx, p(mx(72), 126).dy),
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3.2
@@ -131,7 +137,7 @@ class _PelvisPainter extends CustomPainter {
         ..shader = LinearGradient(colors: [lamp.gold, const Color(0xFFB97F2E)])
             .createShader(Offset.zero & size),
     );
-    canvas.drawCircle(p(120, 146), 2.4 * sx, Paint()..color = lamp.gold);
+    canvas.drawCircle(p(cx, 150), 2.4 * sx, Paint()..color = lamp.gold);
   }
 
   @override
@@ -188,14 +194,14 @@ class _VignettesPainter extends CustomPainter {
             .createShader(Offset.zero & size),
     );
 
-    // control — a wave + up-tick.
+    // control — a wave + up-tick, centred on the medallion (x=130).
     canvas.drawPath(
       Path()
-        ..moveTo(p(112, 66).dx, p(112, 66).dy)
-        ..cubicTo(p(117, 58).dx, p(117, 58).dy, p(121, 74).dx, p(121, 74).dy,
-            p(126, 66).dx, p(126, 66).dy)
-        ..cubicTo(p(131, 58).dx, p(131, 58).dy, p(135, 74).dx, p(135, 74).dy,
-            p(140, 66).dx, p(140, 66).dy),
+        ..moveTo(p(116, 66).dx, p(116, 66).dy)
+        ..cubicTo(p(121, 58).dx, p(121, 58).dy, p(125, 74).dx, p(125, 74).dy,
+            p(130, 66).dx, p(130, 66).dy)
+        ..cubicTo(p(135, 58).dx, p(135, 58).dy, p(139, 74).dx, p(139, 74).dy,
+            p(144, 66).dx, p(144, 66).dy),
       ink,
     );
     canvas.drawLine(p(130, 46), p(130, 56),

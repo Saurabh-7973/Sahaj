@@ -131,21 +131,43 @@ class _ArticleReaderPageState extends State<ArticleReaderPage> {
     );
   }
 
-  // Split the markdown body into typed blocks.
+  // Split the markdown body into typed blocks. Line-based so a single
+  // paragraph can be followed by a bullet list without a blank line between
+  // them — headings (#/##/###), quotes (> ), and bullets (- / *) each break
+  // the running paragraph; blank lines do too.
   List<_Block> _parseBlocks(String body) {
     final out = <_Block>[];
-    for (final raw in body.split(RegExp(r'\n\s*\n'))) {
-      final p = raw.trim();
-      if (p.isEmpty) continue;
-      if (p.startsWith('## ')) {
-        out.add(_Block(_BlockKind.heading, p.substring(3).trim()));
-      } else if (p.startsWith('> ')) {
-        out.add(_Block(_BlockKind.quote,
-            p.substring(2).replaceAll('\n> ', ' ').trim()));
+    final para = <String>[];
+    void flush() {
+      if (para.isEmpty) return;
+      out.add(_Block(_BlockKind.para, para.join(' ').trim()));
+      para.clear();
+    }
+
+    for (final rawLine in body.split('\n')) {
+      final line = rawLine.trim();
+      if (line.isEmpty) {
+        flush();
+      } else if (line.startsWith('### ')) {
+        flush();
+        out.add(_Block(_BlockKind.heading, line.substring(4).trim(), level: 3));
+      } else if (line.startsWith('## ')) {
+        flush();
+        out.add(_Block(_BlockKind.heading, line.substring(3).trim(), level: 2));
+      } else if (line.startsWith('# ')) {
+        flush();
+        out.add(_Block(_BlockKind.heading, line.substring(2).trim(), level: 2));
+      } else if (line.startsWith('> ')) {
+        flush();
+        out.add(_Block(_BlockKind.quote, line.substring(2).trim()));
+      } else if (line.startsWith('- ') || line.startsWith('* ')) {
+        flush();
+        out.add(_Block(_BlockKind.bullet, line.substring(2).trim()));
       } else {
-        out.add(_Block(_BlockKind.para, p.replaceAll('\n', ' ')));
+        para.add(line);
       }
     }
+    flush();
     return out;
   }
 
@@ -156,9 +178,45 @@ class _ArticleReaderPageState extends State<ArticleReaderPage> {
     for (final b in blocks) {
       switch (b.kind) {
         case _BlockKind.heading:
+          final isSub = b.level >= 3;
           widgets.add(Padding(
-            padding: const EdgeInsets.fromLTRB(0, 18, 0, 8),
-            child: Text(b.text, style: theme.textTheme.headlineMedium),
+            padding: EdgeInsets.fromLTRB(0, isSub ? 16 : 18, 0, isSub ? 6 : 8),
+            child: Text(
+              b.text,
+              style: isSub
+                  ? theme.textTheme.titleLarge?.copyWith(
+                      fontFamily: AppTypography.display,
+                      fontSize: 18.5,
+                      height: 1.25,
+                      fontWeight: FontWeight.w600,
+                      color: lamp.sand,
+                    )
+                  : theme.textTheme.headlineMedium,
+            ),
+          ));
+        case _BlockKind.bullet:
+          widgets.add(Padding(
+            padding: const EdgeInsets.only(bottom: 9),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 11, left: 2, right: 12),
+                  child: Container(
+                    width: 5,
+                    height: 5,
+                    decoration:
+                        BoxDecoration(color: lamp.gold, shape: BoxShape.circle),
+                  ),
+                ),
+                Expanded(
+                  child: Text.rich(TextSpan(
+                    children: _inlineMarkdown(
+                        b.text, AppTypography.reader(lamp.inkMuted)),
+                  )),
+                ),
+              ],
+            ),
           ));
         case _BlockKind.quote:
           widgets.add(const Padding(
@@ -180,7 +238,10 @@ class _ArticleReaderPageState extends State<ArticleReaderPage> {
           } else {
             widgets.add(Padding(
               padding: const EdgeInsets.only(bottom: 14),
-              child: Text(b.text, style: AppTypography.reader(lamp.inkMuted)),
+              child: Text.rich(TextSpan(
+                children:
+                    _inlineMarkdown(b.text, AppTypography.reader(lamp.inkMuted)),
+              )),
             ));
           }
           firstPara = false;
@@ -190,12 +251,43 @@ class _ArticleReaderPageState extends State<ArticleReaderPage> {
   }
 }
 
-enum _BlockKind { heading, quote, para }
+enum _BlockKind { heading, quote, para, bullet }
 
 class _Block {
-  const _Block(this.kind, this.text);
+  const _Block(this.kind, this.text, {this.level = 0});
   final _BlockKind kind;
   final String text;
+
+  /// Heading depth (2 or 3); 0 for non-headings.
+  final int level;
+}
+
+/// Renders inline `**bold**` and `*italic*` markers into styled spans. Anything
+/// else passes through as plain text in [base]. Bold is matched before italic
+/// so `**x**` never gets read as two stray asterisks.
+List<InlineSpan> _inlineMarkdown(String text, TextStyle base) {
+  final spans = <InlineSpan>[];
+  final re = RegExp(r'\*\*(.+?)\*\*|\*(.+?)\*');
+  var i = 0;
+  for (final m in re.allMatches(text)) {
+    if (m.start > i) {
+      spans.add(TextSpan(text: text.substring(i, m.start), style: base));
+    }
+    if (m.group(1) != null) {
+      spans.add(TextSpan(
+          text: m.group(1),
+          style: base.copyWith(fontWeight: FontWeight.w700)));
+    } else {
+      spans.add(TextSpan(
+          text: m.group(2),
+          style: base.copyWith(fontStyle: FontStyle.italic)));
+    }
+    i = m.end;
+  }
+  if (i < text.length) {
+    spans.add(TextSpan(text: text.substring(i), style: base));
+  }
+  return spans;
 }
 
 class _DropCapParagraph extends StatelessWidget {
@@ -223,7 +315,7 @@ class _DropCapParagraph extends StatelessWidget {
                 color: lamp.gold,
               ),
             ),
-            TextSpan(text: rest, style: AppTypography.reader(lamp.inkMuted)),
+            ..._inlineMarkdown(rest, AppTypography.reader(lamp.inkMuted)),
           ],
         ),
       ),

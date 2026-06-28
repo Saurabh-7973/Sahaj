@@ -6,11 +6,14 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    <!-- Centred in the 108 viewport and scaled to fill the safe zone (was 2.4x
+         offset low-right, so the glyph read as a tiny pencil floating in a grey
+         disc — which is what made the launcher/splash look broken). -->
     <group
-        android:scaleX="2.4"
-        android:scaleY="2.4"
-        android:translateX="32.4"
-        android:translateY="32.4">
+        android:scaleX="3.2"
+        android:scaleY="3.2"
+        android:translateX="18"
+        android:translateY="13.2">
         <!-- pencil -->
         <path
             android:strokeColor="#EAF0F5"

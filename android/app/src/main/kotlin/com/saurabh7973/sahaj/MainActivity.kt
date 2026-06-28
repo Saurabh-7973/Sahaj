@@ -1,7 +1,12 @@
 package com.saurabh7973.sahaj
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -11,6 +16,7 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterFragmentActivity() {
 
     private val channel = "sahaj/launcher_disguise"
+    private val hapticsChannel = "sahaj/haptics"
     private val sahajAlias = "com.saurabh7973.sahaj.SahajLauncher"
     private val notesAlias = "com.saurabh7973.sahaj.NotesLauncher"
 
@@ -30,6 +36,50 @@ class MainActivity : FlutterFragmentActivity() {
                     else -> result.notImplemented()
                 }
             }
+
+        // Haptic cues (M1): drive the Vibrator directly with explicit waveform
+        // amplitudes. Flutter's HapticFeedback presets route through the
+        // touch-feedback path, which obeys the system "touch vibration
+        // intensity" setting and is imperceptible (or ignored) on many devices.
+        // A VibrationEffect waveform uses the full motor amplitude instead.
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, hapticsChannel)
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "vibrate" -> {
+                        val timings = (call.argument<List<Number>>("timings") ?: emptyList())
+                            .map { it.toLong() }.toLongArray()
+                        val amplitudes = (call.argument<List<Number>>("amplitudes") ?: emptyList())
+                            .map { it.toInt() }.toIntArray()
+                        vibrateWaveform(timings, amplitudes)
+                        result.success(null)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
+    }
+
+    private fun vibrator(): Vibrator =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val mgr = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            mgr.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+
+    private fun vibrateWaveform(timings: LongArray, amplitudes: IntArray) {
+        if (timings.isEmpty()) return
+        val vib = vibrator()
+        if (!vib.hasVibrator()) return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && vib.hasAmplitudeControl()) {
+            vib.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // No amplitude control: fall back to on/off timings only.
+            vib.vibrate(VibrationEffect.createWaveform(timings, -1))
+        } else {
+            @Suppress("DEPRECATION")
+            vib.vibrate(timings, -1)
+        }
     }
 
     private fun setDisguise(disguised: Boolean) {
